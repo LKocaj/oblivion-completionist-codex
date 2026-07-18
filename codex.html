@@ -170,6 +170,8 @@
   .q-giver{font-size:.98rem;color:var(--text);margin:0 0 10px}
   .q-giver b{font-family:var(--display);font-weight:600;font-size:.66rem;letter-spacing:.1em;
     text-transform:uppercase;color:var(--gold-soft);margin-right:9px;position:relative;top:-1px}
+  .q-giver-link{color:var(--gold-soft);text-decoration:none;border-bottom:1px dotted rgba(228,200,119,.5);transition:.15s}
+  .q-giver-link:hover{color:var(--gold-bright);border-bottom-color:var(--gold-bright)}
   .q-obj{font-size:.98rem;color:var(--muted);font-style:italic;margin:0 0 9px !important;
     padding-left:12px;border-left:2px solid var(--edge)}
   .q-walk{font-size:1rem;color:var(--text);margin:0 0 10px;line-height:1.62}
@@ -856,6 +858,41 @@ const GIVER_RAW = {
 const GIVERS={};
 for(const k in GIVER_RAW){GIVERS[norm(k)]=GIVER_RAW[k]}
 
+/* Link a quest-giver's name to their UESP page (which lists their location, schedule, reward & fame).
+   Overrides handle titles/namespaces; everything else falls back to Oblivion:<name>. null = no link. */
+const NAME_WIKI = {
+  "the gray fox":"Oblivion:Gray Fox",
+  "the night mother":"Oblivion:Night Mother",
+  "the prophet":"Oblivion:The Prophet",
+  "the black hand":"Oblivion:Arquen",
+  "the villagers of aleswell":"Oblivion:Diram Serethi",
+  "the beggars of the imperial city":null,
+  "the long forgotten note":null,
+  "captain carius & townsfolk":null,
+  "haskill":"Shivering:Haskill",
+  "sheogorath":"Shivering:Sheogorath",
+  "relmyna verenim":"Shivering:Relmyna Verenim",
+};
+const GIVER_TITLE=/^(Emperor|Empress|King|Queen|Count|Countess|Captain|Guardsman|Legionnaire|Arch-Mage|Lord|Lady|Sir|Prior|Brother|Sister|Master)\s+/;
+function escHtml(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function giverPage(name){
+  const key=name.trim().toLowerCase();
+  if(key in NAME_WIKI)return NAME_WIKI[key];
+  let n=name.trim().replace(/^The\s+/,"").replace(GIVER_TITLE,"");
+  if(!n)return null;
+  return "Oblivion:"+n;
+}
+function giverHTML(str){
+  // wrap the leading NPC name (up to the first " — ", ", " or " (") in a wiki link; keep the rest as context
+  let idx=str.length;
+  for(const sep of [" — ",", "," ("]){const i=str.indexOf(sep);if(i>-1&&i<idx)idx=i}
+  const name=str.slice(0,idx), rest=str.slice(idx);
+  const page=giverPage(name);
+  if(!page)return escHtml(str);
+  const url="https://en.uesp.net/wiki/"+page.replace(/ /g,"_");
+  return '<a class="q-giver-link" href="'+url+'" target="_blank" rel="noopener">'+escHtml(name)+'</a>'+escHtml(rest);
+}
+
 /* ---------- State ---------- */
 const STORE_KEY="oblivion_checklist_v2", COLLAPSE_KEY="oblivion_collapsed_v2", VIEW_KEY="oblivion_view_v2";
 function slug(s){return s.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/(^-|-$)/g,"")}
@@ -900,7 +937,7 @@ function render(){
       if(q.o||walk||!q.x){
         detail='<div class="q-detail">'+
           (showLoc?'<p class="loc-tag">📍 '+SECT[q.loc].t+'</p>':'')+
-          (giver?'<p class="q-giver"><b>Quest-giver</b> '+giver+'</p>':'')+
+          (giver?'<p class="q-giver"><b>Quest-giver</b> '+giverHTML(giver)+'</p>':'')+
           (q.o?'<p class="q-obj">'+q.o+'</p>':'')+
           (walk?'<p class="q-walk">'+walk+'</p>':(q.o?'':'<p class="q-walk">Full walkthrough steps are on the linked page.</p>'))+
           (bug?'<div class="q-bug warn"><b>⚠ Known bug:</b> '+bug+'</div>':'')+
