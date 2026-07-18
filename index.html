@@ -3,967 +3,1015 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Oblivion Remastered — Completionist Quest Checklist</title>
+<title>Oblivion Remastered — A Cyrodiil Companion</title>
+<meta name="description" content="A fan-made cinematic companion to The Elder Scrolls IV: Oblivion Remastered — orbit the Imperial City above Lake Rumare, then open the completionist codex.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ccircle cx='32' cy='34' r='26' fill='%230e0c07'/%3E%3Cpath d='M32 6 L38 30 L34 30 L34 58 L30 58 L30 30 L26 30 Z' fill='%23c9a24b'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Cinzel+Decorative:wght@400;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
 <style>
   :root{
     --bg:#0e0c07; --bg2:#14100a;
-    --panel:#16120c; --panel2:#1d1810; --panel3:#241e14;
-    --edge:#3a3020; --edge-soft:#2a2317; --edge-bright:#5a4a2c;
+    --panel:rgba(16,12,7,.58); --panel-edge:rgba(201,162,75,.16);
     --gold:#c9a24b; --gold-soft:#e4c877; --gold-bright:#f4e2a4; --gold-deep:#8a6c2a;
-    --ivory:#efe6cf; --text:#e3d8bf; --muted:#9d9075; --faint:#6f6550;
-    --done:#8bb56a; --done-deep:#4d6a38;
-    --accent:#c07c34; --danger:#c1583b; --link:#abc5dd;
+    --ivory:#efe6cf; --text:#e3d8bf; --muted:#a3966f; --faint:#6f6550;
+    --ember:#c0562a; --ember-bright:#e0762e;
     --display:'Cinzel','Palatino Linotype',Georgia,serif;
+    --deco:'Cinzel Decorative','Cinzel',Georgia,serif;
     --serif:'EB Garamond','Palatino Linotype','Book Antiqua',Georgia,serif;
   }
   *{box-sizing:border-box}
-  html,body{margin:0;padding:0}
   html{scroll-behavior:smooth}
+  html,body{margin:0;padding:0}
   body{
-    background:
-      radial-gradient(1100px 520px at 50% -140px,rgba(150,116,48,.28),transparent 68%),
-      radial-gradient(900px 900px at 82% 120%,rgba(80,60,28,.14),transparent 60%),
-      linear-gradient(180deg,var(--bg2),var(--bg));
-    background-attachment:fixed;
-    color:var(--text);font-family:var(--serif);font-size:17px;
-    line-height:1.56;padding:0 0 100px;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--serif);
+    font-size:17.5px;line-height:1.6;
+    -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+    overflow-x:hidden;
   }
-  /* fine parchment grain */
-  body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:1;opacity:.05;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
   ::selection{background:rgba(201,162,75,.28);color:var(--gold-bright)}
 
-  /* ---------- Hero ---------- */
-  header.hero{position:relative;z-index:2;text-align:center;padding:60px 22px 34px;
-    border-bottom:1px solid var(--edge-soft)}
-  header.hero::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:1px;
-    background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:.55}
-  .eyebrow{font-family:var(--display);font-weight:600;font-size:.72rem;letter-spacing:.42em;
-    text-transform:uppercase;color:var(--gold-deep);margin:0 0 16px;padding-left:.42em}
-  h1{font-family:var(--display);margin:0;font-size:clamp(2.1rem,6vw,3.6rem);font-weight:800;
-    letter-spacing:.02em;line-height:1.05;
-    background:linear-gradient(178deg,var(--gold-bright) 8%,var(--gold-soft) 42%,var(--gold) 62%,var(--gold-deep) 100%);
+  /* ============ Layer 0 — static painted fallback (always beneath the canvas) ============ */
+  .bg-fallback{
+    position:fixed;inset:0;z-index:0;pointer-events:none;
+    background:
+      radial-gradient(120% 90% at 68% 108%, rgba(224,118,46,.20), transparent 55%),
+      radial-gradient(90% 70% at 30% 112%, rgba(150,82,32,.26), transparent 60%),
+      radial-gradient(140% 100% at 50% 118%, rgba(90,58,26,.35), transparent 70%),
+      linear-gradient(180deg,#070604 0%, #0d0a06 34%, #1b1109 66%, #2c1a0d 88%, #3a2210 100%);
+  }
+  /* a quiet tower silhouette for the no-WebGL world */
+  .bg-fallback::before{
+    content:"";position:absolute;left:50%;bottom:0;width:min(46vw,520px);height:62vh;
+    transform:translateX(-50%);
+    background:linear-gradient(180deg, rgba(6,5,3,.0), rgba(6,5,3,.85) 30%, #060503 70%);
+    clip-path:polygon(46.5% 0%, 53.5% 0%, 55% 18%, 60% 20%, 61% 44%, 68% 47%, 69% 100%, 31% 100%, 32% 47%, 39% 44%, 40% 20%, 45% 18%);
+    opacity:0;transition:opacity 1.2s ease;
+  }
+  .bg-fallback::after{ /* water-line glow */
+    content:"";position:absolute;left:0;right:0;bottom:0;height:26vh;
+    background:linear-gradient(180deg, transparent, rgba(224,157,70,.10) 55%, rgba(224,157,70,.16));
+    opacity:0;transition:opacity 1.2s ease;
+  }
+  body.no-webgl .bg-fallback::before,
+  body.no-webgl .bg-fallback::after{opacity:1}
+
+  /* ============ Layer 1 — the living scene ============ */
+  #scene{
+    position:fixed;inset:0;z-index:1;display:block;
+    width:100%;height:100%;
+    opacity:0;transition:opacity 1.6s ease;
+    touch-action:pan-y;
+    cursor:grab;
+  }
+  body.webgl-on #scene{opacity:1}
+  #scene.dragging{cursor:grabbing}
+  body.no-webgl #scene{display:none}
+
+  /* film grain + vignette over the scene, under the content */
+  .grain{
+    position:fixed;inset:0;z-index:2;pointer-events:none;opacity:.05;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .vignette{
+    position:fixed;inset:0;z-index:2;pointer-events:none;
+    background:radial-gradient(120% 100% at 50% 42%, transparent 55%, rgba(0,0,0,.42) 100%);
+  }
+
+  /* ============ Chrome ============ */
+  .topbar{
+    position:fixed;top:0;left:0;right:0;z-index:20;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:20px clamp(20px,4vw,44px);
+    pointer-events:none;
+    background:linear-gradient(180deg, rgba(8,6,4,.55), transparent);
+  }
+  .topbar .mark{
+    font-family:var(--display);font-weight:700;font-size:.78rem;letter-spacing:.38em;
+    color:var(--gold);text-transform:uppercase;padding-left:.38em;
+  }
+  .topbar a.codex-link{
+    pointer-events:auto;
+    font-family:var(--display);font-weight:600;font-size:.72rem;letter-spacing:.26em;
+    text-transform:uppercase;color:var(--gold-soft);text-decoration:none;
+    border:1px solid rgba(201,162,75,.35);border-radius:2px;
+    padding:9px 16px 8px 18px;
+    transition:border-color .3s ease,color .3s ease,background .3s ease;
+    background:rgba(10,8,5,.35);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  }
+  .topbar a.codex-link:hover{border-color:var(--gold);color:var(--gold-bright);background:rgba(201,162,75,.08)}
+
+  /* ============ Hero ============ */
+  .hero{
+    position:relative;z-index:10;
+    min-height:100vh;min-height:100svh;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;padding:96px 22px 110px;
+    pointer-events:none; /* let drags fall through to the scene */
+  }
+  .hero::before{ /* soft scrim so the title holds against the lit city */
+    content:"";position:absolute;left:50%;top:50%;width:min(120vw,1100px);height:74vh;
+    transform:translate(-50%,-52%);pointer-events:none;
+    background:radial-gradient(closest-side, rgba(7,5,3,.44), rgba(7,5,3,.22) 55%, transparent 75%);
+  }
+  .hero > *{position:relative}
+  .hero .eyebrow{
+    margin:0 0 26px;font-family:var(--display);font-weight:600;
+    font-size:clamp(.62rem,1.6vw,.78rem);letter-spacing:.52em;text-transform:uppercase;
+    color:var(--gold);padding-left:.52em;
+    opacity:0;animation:rise 1.1s .15s ease forwards;
+  }
+  .hero .eyebrow::before,.hero .eyebrow::after{
+    content:"";display:inline-block;vertical-align:middle;width:42px;height:1px;
+    background:linear-gradient(90deg,transparent,var(--gold-deep));margin:0 16px 3px 0;
+  }
+  .hero .eyebrow::after{background:linear-gradient(90deg,var(--gold-deep),transparent);margin:0 0 3px 16px}
+  .hero h1{
+    margin:0;font-family:var(--deco);font-weight:700;
+    font-size:clamp(3.4rem,12.5vw,8.6rem);line-height:1.02;letter-spacing:.03em;
+    background:linear-gradient(177deg,#fdf3cf 6%,var(--gold-bright) 26%,var(--gold-soft) 48%,var(--gold) 66%,var(--gold-deep) 96%);
     -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:var(--gold-soft);
-    filter:drop-shadow(0 2px 1px rgba(0,0,0,.55))}
-  .rule{display:flex;align-items:center;justify-content:center;gap:16px;margin:22px auto 20px;max-width:340px}
-  .rule::before,.rule::after{content:"";height:1px;flex:1;
-    background:linear-gradient(90deg,transparent,var(--edge-bright))}
-  .rule::after{background:linear-gradient(90deg,var(--edge-bright),transparent)}
-  .rule span{color:var(--gold);font-size:.78rem;letter-spacing:.2em;text-shadow:0 0 12px rgba(201,162,75,.5)}
-  .subtitle{color:var(--muted);font-size:1.06rem;line-height:1.62;margin:0 auto;max-width:680px;font-style:italic}
+    filter:drop-shadow(0 3px 2px rgba(0,0,0,.6)) drop-shadow(0 22px 44px rgba(201,140,50,.18));
+    opacity:0;animation:rise 1.2s .3s ease forwards;
+  }
+  .hero .subline{
+    margin:18px 0 0;font-family:var(--display);font-weight:600;
+    font-size:clamp(.8rem,2.4vw,1.12rem);letter-spacing:.62em;text-transform:uppercase;
+    color:var(--ivory);padding-left:.62em;
+    opacity:0;animation:rise 1.1s .5s ease forwards;
+  }
+  .hero .tagline{
+    margin:30px auto 0;max-width:560px;
+    font-size:clamp(1.02rem,2.5vw,1.22rem);font-style:italic;color:var(--muted);
+    text-shadow:0 1px 12px rgba(0,0,0,.7);
+    opacity:0;animation:rise 1.1s .68s ease forwards;
+  }
+  .cta-row{
+    display:flex;gap:18px;flex-wrap:wrap;justify-content:center;margin-top:44px;
+    opacity:0;animation:rise 1.1s .86s ease forwards;
+  }
+  .btn{
+    pointer-events:auto;display:inline-block;text-decoration:none;
+    font-family:var(--display);font-weight:700;font-size:.8rem;
+    letter-spacing:.24em;text-transform:uppercase;
+    padding:17px 34px 15px 36px;border-radius:2px;
+    transition:transform .35s cubic-bezier(.2,.8,.2,1),box-shadow .35s ease,background .35s ease,border-color .35s ease,color .35s ease;
+  }
+  .btn-primary{
+    color:#1c1406;
+    background:linear-gradient(178deg,var(--gold-bright),var(--gold-soft) 45%,var(--gold));
+    border:1px solid rgba(244,226,164,.6);
+    box-shadow:0 10px 34px rgba(201,140,50,.28), inset 0 1px 0 rgba(255,246,214,.7);
+  }
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 16px 44px rgba(214,153,58,.4), inset 0 1px 0 rgba(255,246,214,.8)}
+  .btn-ghost{
+    color:var(--gold-soft);background:rgba(10,8,5,.3);
+    border:1px solid rgba(201,162,75,.4);
+    backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  }
+  .btn-ghost:hover{border-color:var(--gold);color:var(--gold-bright);background:rgba(201,162,75,.09);transform:translateY(-2px)}
+  .scroll-cue{
+    position:absolute;left:50%;bottom:30px;transform:translateX(-50%);
+    display:flex;flex-direction:column;align-items:center;gap:12px;
+    opacity:0;animation:rise 1.2s 1.25s ease forwards;
+  }
+  .scroll-cue span{
+    font-family:var(--display);font-weight:600;font-size:.58rem;
+    letter-spacing:.44em;text-transform:uppercase;color:var(--faint);padding-left:.44em;
+  }
+  .scroll-cue i{
+    display:block;width:1px;height:52px;
+    background:linear-gradient(180deg,var(--gold),transparent);
+    animation:cueDrift 2.6s ease-in-out infinite;
+  }
+  .drag-hint{
+    position:absolute;right:clamp(18px,3.4vw,40px);bottom:32px;
+    font-family:var(--display);font-weight:600;font-size:.58rem;letter-spacing:.3em;
+    text-transform:uppercase;color:var(--faint);
+    display:none;
+  }
+  body.webgl-on .drag-hint{display:block;opacity:0;animation:rise 1.2s 1.5s ease forwards}
+  @keyframes rise{from{opacity:0;transform:translateY(26px)}to{opacity:1;transform:none}}
+  @keyframes cueDrift{0%,100%{transform:translateY(0);opacity:.9}50%{transform:translateY(9px);opacity:.4}}
 
-  .wrap{position:relative;z-index:2;max-width:940px;margin:0 auto;padding:0 20px}
+  /* ============ Sections ============ */
+  main{position:relative;z-index:10;pointer-events:none}
+  section{padding:0 clamp(20px,4.5vw,48px);margin:0 auto;max-width:1120px}
+  .panel{
+    pointer-events:auto;position:relative;
+    background:var(--panel);
+    border:1px solid var(--panel-edge);
+    border-radius:4px;
+    backdrop-filter:blur(16px) saturate(1.1);-webkit-backdrop-filter:blur(16px) saturate(1.1);
+    box-shadow:0 30px 80px rgba(0,0,0,.45), inset 0 1px 0 rgba(244,226,164,.06);
+    padding:clamp(38px,6vw,74px) clamp(26px,5.6vw,72px);
+    margin-bottom:clamp(90px,14vh,160px);
+  }
+  .panel::before{ /* corner accents */
+    content:"";position:absolute;inset:10px;pointer-events:none;border-radius:2px;
+    background:
+      linear-gradient(var(--gold) 0 0) top left / 26px 1px,
+      linear-gradient(var(--gold) 0 0) top left / 1px 26px,
+      linear-gradient(var(--gold) 0 0) bottom right / 26px 1px,
+      linear-gradient(var(--gold) 0 0) bottom right / 1px 26px;
+    background-repeat:no-repeat;opacity:.45;
+  }
+  .kicker{
+    margin:0 0 14px;font-family:var(--display);font-weight:600;
+    font-size:.68rem;letter-spacing:.46em;text-transform:uppercase;color:var(--gold);padding-left:.46em;
+  }
+  h2{
+    margin:0 0 22px;font-family:var(--display);font-weight:700;
+    font-size:clamp(1.7rem,4.6vw,2.7rem);line-height:1.12;letter-spacing:.015em;color:var(--ivory);
+  }
+  h2 em{
+    font-style:normal;
+    background:linear-gradient(178deg,var(--gold-bright),var(--gold));
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:var(--gold-soft);
+  }
+  .lede{max-width:62ch;font-size:clamp(1.04rem,2.3vw,1.2rem);color:var(--text)}
+  .lede + .lede{margin-top:1em}
+  .rule{height:1px;margin:34px 0;background:linear-gradient(90deg,var(--gold-deep),transparent 70%);opacity:.5;border:0}
 
-  /* ---------- Toolbar ---------- */
-  .toolbar{position:sticky;top:0;z-index:20;background:rgba(14,12,7,.86);
-    backdrop-filter:blur(10px) saturate(1.1);-webkit-backdrop-filter:blur(10px) saturate(1.1);
-    border-bottom:1px solid var(--edge-soft);padding:12px 20px;margin-bottom:26px;
-    box-shadow:0 10px 30px -20px rgba(0,0,0,.9)}
-  .toolbar-inner{max-width:940px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:14px}
-  .seg{display:flex;border:1px solid var(--edge);border-radius:10px;overflow:hidden;
-    background:linear-gradient(180deg,var(--panel2),var(--panel))}
-  .seg button{border:0;border-radius:0;background:transparent;padding:9px 17px;
-    font-family:var(--display);font-weight:600;font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;
-    color:var(--muted);transition:.18s}
-  .seg button:hover{color:var(--gold-soft)}
-  .seg button.active{background:linear-gradient(180deg,#4a3c1e,#33290f);color:var(--gold-bright);
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.08),inset 0 -6px 12px -6px rgba(0,0,0,.7)}
-  .bar-track{position:relative;flex:1;min-width:160px;height:16px;background:#0b0906;
-    border:1px solid var(--edge);border-radius:11px;overflow:hidden;
-    box-shadow:inset 0 2px 4px rgba(0,0,0,.6)}
-  .bar-fill{position:relative;height:100%;width:0;border-radius:11px;
-    background:linear-gradient(90deg,var(--gold-deep),var(--gold) 55%,var(--gold-bright));
-    box-shadow:0 0 14px rgba(201,162,75,.4);transition:width .5s cubic-bezier(.2,.8,.2,1)}
-  .bar-fill::after{content:"";position:absolute;inset:0;
-    background:linear-gradient(100deg,transparent 20%,rgba(255,255,255,.45),transparent 80%);
-    transform:translateX(-120%);animation:sheen 4s ease-in-out infinite}
-  @keyframes sheen{0%{transform:translateX(-120%)}55%,100%{transform:translateX(360%)}}
-  .bar-label{font-family:var(--display);font-weight:600;font-size:.82rem;letter-spacing:.06em;
-    color:var(--gold-soft);white-space:nowrap}
-  .btns{display:flex;gap:8px;flex-wrap:wrap}
-  button{font-family:var(--display);font-weight:500;font-size:.72rem;letter-spacing:.06em;cursor:pointer;
-    background:linear-gradient(180deg,var(--panel3),var(--panel2));color:var(--text);
-    border:1px solid var(--edge);border-radius:8px;padding:8px 13px;transition:.16s}
-  button:hover{border-color:var(--gold);color:var(--gold-bright);
-    box-shadow:0 0 0 3px rgba(201,162,75,.1)}
-  button.danger:hover{border-color:var(--danger);color:#eaa088;box-shadow:0 0 0 3px rgba(193,88,59,.12)}
+  .spacer-hero{height:14vh}
 
-  /* ---------- Phase cards ---------- */
-  .phase{position:relative;background:linear-gradient(180deg,var(--panel2),var(--panel));
-    border:1px solid var(--edge-soft);border-radius:15px;margin-bottom:18px;overflow:hidden;
-    box-shadow:inset 0 1px 0 rgba(255,255,255,.025),0 16px 40px -26px rgba(0,0,0,.9)}
-  .phase::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
-    background:linear-gradient(180deg,var(--gold-bright),var(--gold-deep));opacity:.4;transition:opacity .25s}
-  .phase:hover::before{opacity:.95}
-  .phase-head{display:flex;align-items:center;gap:14px;padding:17px 20px;cursor:pointer;user-select:none;
-    background:linear-gradient(180deg,rgba(58,48,32,.28),transparent)}
-  .phase-head:hover{background:linear-gradient(180deg,rgba(74,60,30,.34),transparent)}
-  .chev{transition:transform .22s;color:var(--gold);font-size:.72rem;width:14px}
-  .phase.collapsed .chev{transform:rotate(-90deg)}
-  .phase-title{flex:1;font-family:var(--display);font-size:1.12rem;font-weight:700;letter-spacing:.04em;
-    color:var(--gold-soft);line-height:1.25}
-  .phase-title small{display:block;font-family:var(--serif);font-size:.9rem;color:var(--muted);
-    font-weight:400;font-style:italic;letter-spacing:0;margin-top:3px}
-  .phase-count{font-family:var(--display);font-weight:600;font-size:.78rem;color:var(--muted);
-    white-space:nowrap;letter-spacing:.04em}
-  .phase-mini{height:6px;background:#0b0906;border-radius:4px;width:88px;overflow:hidden;
-    border:1px solid var(--edge-soft);box-shadow:inset 0 1px 2px rgba(0,0,0,.6)}
-  .phase-mini>i{display:block;height:100%;width:0;border-radius:4px;
-    background:linear-gradient(90deg,var(--gold-deep),var(--gold-soft));transition:width .45s ease}
-  .phase-body{padding:6px 12px 14px}
-  .phase.collapsed .phase-body{display:none}
+  /* cities grid */
+  .city-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(201,162,75,.14);border:1px solid rgba(201,162,75,.14);margin-top:40px}
+  .city{background:rgba(12,9,5,.72);padding:26px 24px 24px;transition:background .35s ease}
+  .city:hover{background:rgba(30,22,11,.82)}
+  .city h3{
+    margin:0 0 8px;font-family:var(--display);font-weight:700;font-size:1.02rem;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--gold-soft);
+  }
+  .city p{margin:0;font-size:.95rem;color:var(--muted);line-height:1.5}
+  .city .num{
+    display:block;font-family:var(--display);font-size:.6rem;letter-spacing:.3em;
+    color:var(--gold-deep);margin-bottom:12px;
+  }
+  .city.capital h3{color:var(--gold-bright)}
+  .city.capital{background:rgba(38,27,12,.8)}
 
-  /* ---------- Notes ---------- */
-  .note{margin:10px 8px 14px;padding:12px 15px;background:rgba(77,106,56,.1);
-    border:1px solid rgba(77,106,56,.35);border-left:3px solid var(--done);border-radius:8px;
-    color:#c7d6b3;font-size:.92rem;line-height:1.55}
-  .note.warn{background:rgba(192,124,52,.1);border-color:rgba(192,124,52,.4);
-    border-left-color:var(--accent);color:#e6c89c}
+  /* guild cards */
+  .guild-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:18px;margin-top:40px}
+  .guild{
+    position:relative;border:1px solid rgba(201,162,75,.2);border-radius:3px;
+    background:linear-gradient(180deg,rgba(24,17,9,.85),rgba(13,10,6,.85));
+    padding:30px 24px 26px;
+    transition:transform .4s cubic-bezier(.2,.8,.2,1),border-color .4s ease,box-shadow .4s ease;
+  }
+  .guild:hover{transform:translateY(-6px);border-color:rgba(228,200,119,.55);box-shadow:0 22px 44px rgba(0,0,0,.5)}
+  .guild .sigil{
+    font-family:var(--deco);font-size:1.7rem;line-height:1;color:var(--gold);
+    display:block;margin-bottom:16px;
+  }
+  .guild h3{margin:0 0 10px;font-family:var(--display);font-weight:700;font-size:1.04rem;letter-spacing:.06em;color:var(--ivory)}
+  .guild p{margin:0;font-size:.94rem;color:var(--muted);line-height:1.55}
+  .guild.dark{border-color:rgba(192,86,42,.4);background:linear-gradient(180deg,rgba(34,13,8,.85),rgba(14,8,5,.85))}
+  .guild.dark .sigil{color:var(--ember-bright)}
+  .guild.dark:hover{border-color:rgba(224,118,46,.7)}
 
-  /* ---------- Quest rows ---------- */
-  ul.quests{list-style:none;margin:0;padding:0}
-  li.q{position:relative;border-radius:10px;margin:1px 0;transition:background .15s}
-  li.q::before{content:"";position:absolute;left:2px;top:9px;bottom:9px;width:2px;border-radius:2px;
-    background:var(--gold);opacity:0;transition:opacity .18s}
-  li.q:hover{background:rgba(201,162,75,.055)}
-  li.q:hover::before{opacity:.5}
-  li.q.open{background:rgba(201,162,75,.045)}
-  .q-row{display:flex;align-items:flex-start;gap:13px;padding:11px 13px}
-  input[type=checkbox]{appearance:none;-webkit-appearance:none;width:21px;height:21px;margin:2px 0 0;flex:none;
-    border:1.5px solid var(--edge-bright);border-radius:6px;background:linear-gradient(180deg,#100d08,#171207);
-    cursor:pointer;position:relative;transition:.18s;box-shadow:inset 0 1px 2px rgba(0,0,0,.55)}
-  input[type=checkbox]:hover{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,162,75,.14)}
-  input[type=checkbox]:checked{border-color:var(--gold-soft);
-    background:linear-gradient(180deg,var(--gold-bright),var(--gold-deep));
-    box-shadow:0 0 12px rgba(201,162,75,.45)}
-  input[type=checkbox]:checked::after{content:"";position:absolute;left:6px;top:2px;width:6px;height:11px;
-    border:solid #1c1507;border-width:0 2.5px 2.5px 0;transform:rotate(45deg)}
-  .q-main{flex:1;cursor:pointer;display:flex;align-items:flex-start;gap:9px}
-  .q-caret{color:var(--faint);font-size:.66rem;margin-top:7px;transition:transform .22s,color .18s;flex:none}
-  li.q:hover .q-caret{color:var(--gold)}
-  li.q.open .q-caret{transform:rotate(90deg);color:var(--gold)}
-  .q-name{font-size:1.05rem;color:var(--ivory);line-height:1.4}
-  li.q.done .q-name{color:var(--faint);text-decoration:line-through;text-decoration-color:rgba(201,162,75,.35)}
-  li.q.done input[type=checkbox]{opacity:.9}
-  .q-sub{display:block;font-size:.85rem;color:var(--muted);margin-top:1px}
+  /* beyond the gate */
+  .dlc-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:40px}
+  .dlc{
+    border:1px solid rgba(201,162,75,.2);border-radius:3px;padding:34px 30px 30px;
+    background:linear-gradient(180deg,rgba(22,16,9,.85),rgba(12,9,5,.85));
+  }
+  .dlc h3{margin:0 0 6px;font-family:var(--display);font-weight:700;font-size:1.25rem;letter-spacing:.05em;color:var(--gold-soft)}
+  .dlc .sub{display:block;font-family:var(--display);font-size:.62rem;letter-spacing:.34em;text-transform:uppercase;color:var(--gold-deep);margin-bottom:16px}
+  .dlc p{margin:0;color:var(--muted);font-size:.99rem}
+  .dlc.isles{border-color:rgba(155,120,190,.28)}
+  .dlc.isles h3{color:#cdb6e6}
+  .dlc.isles .sub{color:#8a72a6}
 
-  .badge{font-family:var(--display);font-weight:600;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;
-    padding:3px 9px;border-radius:20px;border:1px solid;vertical-align:middle;margin-left:9px;white-space:nowrap;
-    position:relative;top:-1px}
-  .badge.start{color:var(--gold-bright);border-color:var(--gold-deep);background:rgba(138,108,42,.18)}
-  .badge.lvl{color:#a6c1e0;border-color:#3f5a72;background:rgba(30,52,72,.4)}
-  .badge.home{color:#d6b1e0;border-color:#6a4f78;background:rgba(48,28,60,.4)}
-  .badge.rank{color:#e0b998;border-color:#78573f;background:rgba(60,40,24,.4)}
+  /* closing */
+  .closing{text-align:center}
+  .closing h2{font-size:clamp(2rem,5.6vw,3.3rem)}
+  .closing .lede{margin:0 auto}
+  .closing .cta-row{margin-top:40px;opacity:1;animation:none}
 
-  /* ---------- Quest detail ---------- */
-  .q-detail{display:none;padding:4px 16px 16px 47px}
-  li.q.open .q-detail{display:block;animation:reveal .28s ease}
-  @keyframes reveal{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
-  .q-detail p{margin:0 0 9px;font-size:.98rem}
-  .loc-tag{font-family:var(--display);font-weight:600;font-size:.74rem;letter-spacing:.08em;
-    color:var(--gold-soft);text-transform:uppercase}
-  .q-giver{font-size:.98rem;color:var(--text);margin:0 0 10px}
-  .q-giver b{font-family:var(--display);font-weight:600;font-size:.66rem;letter-spacing:.1em;
-    text-transform:uppercase;color:var(--gold-soft);margin-right:9px;position:relative;top:-1px}
-  .q-obj{font-size:.98rem;color:var(--muted);font-style:italic;margin:0 0 9px !important;
-    padding-left:12px;border-left:2px solid var(--edge)}
-  .q-walk{font-size:1rem;color:var(--text);margin:0 0 10px;line-height:1.62}
-  .q-link{display:inline-block;font-family:var(--display);font-weight:500;font-size:.76rem;letter-spacing:.04em;
-    color:var(--link);text-decoration:none;border-bottom:1px dotted rgba(171,197,221,.6);padding-bottom:2px;transition:.16s}
-  .q-link:hover{color:#cfe2f2;border-bottom-color:#cfe2f2}
-  .q-bug{font-size:.86rem;color:var(--muted);margin-top:8px}
-  .q-bug.warn{display:block;color:#eac89c;background:linear-gradient(180deg,rgba(74,53,25,.5),rgba(42,29,16,.6));
-    border:1px solid #6a4d28;border-left:3px solid var(--accent);border-radius:8px;padding:10px 13px;margin:10px 0;
-    font-size:.9rem;line-height:1.55}
-  .q-bug.warn b{color:#f4bc7c;font-family:var(--display);font-weight:600;font-size:.82rem;letter-spacing:.03em}
+  footer{
+    position:relative;z-index:10;text-align:center;
+    padding:110px 22px 54px;pointer-events:auto;
+    background:linear-gradient(180deg, rgba(8,6,4,0), rgba(8,6,4,.72) 34%, rgba(8,6,4,.94) 70%);
+  }
+  footer p{margin:0;font-size:.86rem;color:var(--muted);text-shadow:0 1px 8px rgba(0,0,0,.8)}
+  footer p + p{margin-top:8px}
+  footer .fleur{color:var(--gold-deep);font-size:1.05rem;margin-bottom:14px;display:block}
 
-  /* ---------- Footer / flash ---------- */
-  footer{position:relative;z-index:2;text-align:center;color:var(--muted);font-size:.9rem;
-    margin-top:34px;padding:0 20px;line-height:1.7;font-style:italic}
-  footer b{font-style:normal;color:var(--gold-soft);font-weight:600}
-  a{color:var(--gold-soft)}
-  .save-flash{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:50;
-    background:linear-gradient(180deg,#33290f,#221a09);border:1px solid var(--gold);
-    color:var(--gold-bright);font-family:var(--display);font-weight:600;font-size:.8rem;letter-spacing:.06em;
-    padding:10px 20px;border-radius:9px;opacity:0;transition:opacity .3s;pointer-events:none;
-    box-shadow:0 12px 30px -12px rgba(0,0,0,.8),0 0 20px rgba(201,162,75,.2)}
-  .save-flash.show{opacity:1}
+  /* reveal on scroll */
+  .reveal{opacity:0;transform:translateY(34px);transition:opacity 1s ease,transform 1s cubic-bezier(.2,.8,.2,1)}
+  .reveal.in{opacity:1;transform:none}
 
+  @media (max-width:860px){
+    .city-grid{grid-template-columns:repeat(2,1fr)}
+    .dlc-grid{grid-template-columns:1fr}
+  }
   @media (max-width:560px){
-    body{font-size:16px}
-    header.hero{padding:44px 18px 28px}
-    .bar-label{display:none}.phase-mini{display:none}
-    .q-detail{padding-left:22px}
-    .toolbar-inner{gap:10px}
+    .city-grid{grid-template-columns:1fr}
+    .topbar .mark{letter-spacing:.24em;font-size:.68rem}
+    .drag-hint{display:none !important}
+    .btn{padding:15px 26px 13px 28px}
+  }
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto}
+    .hero .eyebrow,.hero h1,.hero .subline,.hero .tagline,.cta-row,.scroll-cue,body.webgl-on .drag-hint{animation:none;opacity:1;transform:none}
+    .scroll-cue i{animation:none}
+    .reveal{opacity:1;transform:none;transition:none}
+    .btn,.guild{transition:none}
+    #scene{transition:none}
   }
 </style>
+<script type="importmap">
+{ "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }
+</script>
 </head>
 <body>
+
+<div class="bg-fallback" aria-hidden="true"></div>
+<canvas id="scene" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+
+<nav class="topbar">
+  <span class="mark">IV · Cyrodiil</span>
+  <a class="codex-link" href="codex.html">Open the Codex</a>
+</nav>
+
 <header class="hero">
   <p class="eyebrow">The Elder Scrolls IV · Remastered</p>
-  <h1>The Completionist’s Codex</h1>
-  <div class="rule" aria-hidden="true"><span>✦ · ✦ · ✦</span></div>
-  <p class="subtitle">Every guild, the main quest, both DLCs, all fifteen Daedric shrines, side quests and collectibles — charted end to end. Switch between the location view and the optimal-order run, open any quest for its walkthrough and known bugs, and your progress is inscribed automatically.</p>
+  <h1>Oblivion</h1>
+  <p class="subline">Remastered</p>
+  <p class="tagline">The Emperor is slain, the Dragonfires stand cold, and across Cyrodiil the gates are opening.</p>
+  <div class="cta-row">
+    <a class="btn btn-primary" href="codex.html">Enter the Codex</a>
+    <a class="btn btn-ghost" href="#crisis">Explore Cyrodiil</a>
+  </div>
+  <div class="scroll-cue" aria-hidden="true"><span>Descend</span><i></i></div>
+  <div class="drag-hint" aria-hidden="true">Drag to orbit the city</div>
 </header>
 
-<div class="toolbar">
-  <div class="toolbar-inner">
-    <div class="seg" id="viewSeg">
-      <button data-view="loc" class="active">By Location</button>
-      <button data-view="opt">Optimal Order</button>
-    </div>
-    <div class="bar-track"><div class="bar-fill" id="overallFill"></div></div>
-    <div class="bar-label" id="overallLabel">0 / 0</div>
-    <div class="btns">
-      <button id="expandAll">Expand</button>
-      <button id="collapseAll">Collapse</button>
-      <button id="exportBtn">↓ Backup</button>
-      <button id="importBtn">↑ Load</button>
-      <button id="resetBtn" class="danger">Reset</button>
-      <input type="file" id="importFile" accept="application/json" hidden>
-    </div>
-  </div>
-</div>
+<main>
+  <div class="spacer-hero" aria-hidden="true"></div>
 
-<div class="wrap" id="phases"></div>
+  <section id="crisis">
+    <div class="panel reveal">
+      <p class="kicker">Third Era · 433</p>
+      <h2>The <em>Oblivion</em> Crisis</h2>
+      <p class="lede">On a night without omen, assassins cut down Uriel Septim VII in the tunnels beneath the Imperial City, and the Dragonfires that warded the mortal world went dark. Above every province the sky tore open, and burning gates spilled the legions of Mehrunes Dagon onto the soil of Cyrodiil.</p>
+      <p class="lede">Out of a forgotten cell walked a prisoner with no name and no past, carrying the last wish of a dying Emperor — find the lost heir, and shut the jaws of Oblivion.</p>
+    </div>
+  </section>
+
+  <section id="cities">
+    <div class="panel reveal">
+      <p class="kicker">The Heartland Province</p>
+      <h2>Nine Cities of <em>Cyrodiil</em></h2>
+      <p class="lede">From the snows of the Jerall Mountains to the marshes of the Lower Niben, each city keeps its own count, its own crest, and its own quiet troubles.</p>
+      <div class="city-grid">
+        <div class="city"><span class="num">I</span><h3>Anvil</h3><p>Sea light washes the Gold Coast harbor, its chapel, and its ghosts.</p></div>
+        <div class="city"><span class="num">II</span><h3>Bravil</h3><p>A crooked river town where luck is bought from the Lucky Old Lady.</p></div>
+        <div class="city"><span class="num">III</span><h3>Bruma</h3><p>Snow buries the Jerall passes while Nord timber keeps the hearths burning.</p></div>
+        <div class="city"><span class="num">IV</span><h3>Cheydinhal</h3><p>Willow water runs beneath painted doors in the shadow of the Valus range.</p></div>
+        <div class="city"><span class="num">V</span><h3>Chorrol</h3><p>Great oaks and honest stonework stand guard at the edge of the deep forest.</p></div>
+        <div class="city"><span class="num">VI</span><h3>Kvatch</h3><p>The hilltop city burned first — and its survivors refuse to let it end there.</p></div>
+        <div class="city"><span class="num">VII</span><h3>Leyawiin</h3><p>Swamp-warm and stubborn, it straddles the slow water of the Lower Niben.</p></div>
+        <div class="city"><span class="num">VIII</span><h3>Skingrad</h3><p>Vineyards climb the terraces while the count keeps to his high castle.</p></div>
+        <div class="city capital"><span class="num">IX</span><h3>Imperial City</h3><p>The heart of the Empire rises in white stone from the middle of Lake Rumare.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="guilds">
+    <div class="panel reveal">
+      <p class="kicker">Factions &amp; Fellowships</p>
+      <h2>Choose Your <em>Guild</em></h2>
+      <p class="lede">Every hall in Cyrodiil keeps a ledger with an empty line at the bottom. Sign the one that suits the life you intend to lead.</p>
+      <div class="guild-grid">
+        <div class="guild"><span class="sigil">⚔</span><h3>The Fighters Guild</h3><p>Honest coin for dangerous work — and a rival company that fights dirty.</p></div>
+        <div class="guild"><span class="sigil">✦</span><h3>The Mages Guild</h3><p>Earn a recommendation in every city and the Arcane University opens its gates.</p></div>
+        <div class="guild"><span class="sigil">☽</span><h3>The Thieves Guild</h3><p>The Gray Fox pays well for quiet hands, and asks no questions worth answering.</p></div>
+        <div class="guild dark"><span class="sigil">✥</span><h3>The Dark Brotherhood</h3><p>You slept, and someone marked it. The Night Mother already knows your name.</p></div>
+        <div class="guild"><span class="sigil">♛</span><h3>The Arena</h3><p>Climb from Pit Dog to Grand Champion before a crowd that roars for blood.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="beyond">
+    <div class="panel reveal">
+      <p class="kicker">The Expansions</p>
+      <h2>Beyond the <em>Gate</em></h2>
+      <p class="lede">When the Crisis is settled, two stranger roads remain — one paved with holy relics, the other with beautiful madness.</p>
+      <div class="dlc-grid">
+        <div class="dlc">
+          <h3>Knights of the Nine</h3>
+          <span class="sub">The Crusader's Road</span>
+          <p>A pilgrimage to every wayshrine in Cyrodiil gathers the scattered Relics of the Crusader — armor fit to stand against Umaril the Unfeathered and his ayleid host.</p>
+        </div>
+        <div class="dlc isles">
+          <h3>Shivering Isles</h3>
+          <span class="sub">The Realm of Sheogorath</span>
+          <p>A strange door opens in Niben Bay onto the Madgod's divided kingdom — Mania in gold and bloom, Dementia in rot and shadow, and a throne that may soon need filling.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="begin">
+    <div class="panel closing reveal">
+      <p class="kicker">The Complete Ledger</p>
+      <h2>Begin your <em>completionist</em> run</h2>
+      <p class="lede">Every quest, every guild rank, every gate closed and shrine appeased — the Codex tracks the whole province in a single ledger, so nothing in Cyrodiil goes unfinished.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="codex.html">Enter the Codex</a>
+      </div>
+    </div>
+  </section>
+</main>
 
 <footer>
-  Progress is stored locally in your browser (nothing uploaded). Use <b>Backup</b> to export a file you can reload anywhere with <b>Load</b>.<br>
-  Quest links go to UESP — each page includes a <b>Bugs</b> section with known issues and fixes. Lists cross-checked against UESP, Game8 &amp; the Oblivion Remastered wiki.
+  <span class="fleur">❦</span>
+  <p>A fan-made companion, built for the love of Cyrodiil.</p>
+  <p>Not affiliated with Bethesda Softworks or ZeniMax Media. The Elder Scrolls and Oblivion are trademarks of their respective owners.</p>
 </footer>
 
-<div class="save-flash" id="flash">Saved ✓</div>
-
 <script>
-/* ---------- Section metadata ---------- */
-const SECT = {
-  // optimal phases
-  setup:{t:"Phase 1 — Setup & First Homes",s:"Escape the sewers, grab a free base, then a cheap home.",note:{type:"ok",text:"Start with Zero Visibility for a permanent free room, then optionally buy Benirus Manor. Pause the main quest — enemies and Oblivion Gates scale to your level."}},
-  arena:{t:"Phase 2 — The Arena",s:"Imperial City. Fast early gold + combat leveling.",note:{type:"ok",text:"Fight to Grand Champion in chunks. Do 'Origin of the Gray Prince' before the Champion match for the full story."}},
-  fighters:{t:"Phase 3 — Fighters Guild",s:"Low requirements, spread across Cyrodiil."},
-  mages:{t:"Phase 4 — Mages Guild",s:"Seven city recommendations, then the Arcane University.",note:{type:"ok",text:"You need a recommendation from every city's hall before the University opens — a natural time to sweep up city side quests."}},
-  thieves:{t:"Phase 5 — Thieves Guild",s:"Meet Armand Christophe at night in the IC Waterfront.",note:{type:"ok",text:"Rank up by selling stolen goods to fences. Meetings happen at night — don't carry a bounty."}},
-  brotherhood:{t:"Phase 6 — Dark Brotherhood",s:"Kill an innocent, then sleep. Longest, most rewarding line.",note:{type:"warn",text:"The Purification wipes out your own sanctuary — do every earlier contract first. Rewards include Shadowmere."}},
-  main:{t:"Phase 7 — Main Quest",s:"Close the gates and finish the story.",note:{type:"warn",text:"Save the finale for near the end — areas and NPCs close off once the story concludes."}},
-  kotn:{t:"Phase 8 — Knights of the Nine (DLC)",s:"Begins in Anvil at the Chapel of Dibella.",note:{type:"ok",text:"Rewards the full Crusader's Relics set. Crimes break your holy status — play clean here."}},
-  daedric:{t:"Phase 9 — Daedric Shrine Quests",s:"All 15 artifacts. Several have level minimums.",note:{type:"warn",text:"Bring each shrine's offering (see Materials). Boethiah & Clavicus Vile need Level 20."}},
-  shivering:{t:"Phase 10 — Shivering Isles (DLC)",s:"A second full questline via the door in Niben Bay.",note:{type:"warn",text:"Best at high level. Ritual of Accession permanently locks Mania or Dementia."}},
-  cities:{t:"Phase 11 — City & Side Quests",s:"Sweep these while touring for recommendations."},
-  dlcx:{t:"Phase 12 — Other DLC & Plug-ins",s:"Standalone dungeons and player homes."},
-  offerings:{t:"Phase 13 — Daedric Shrine Offerings",s:"The item each shrine demands before its quest.",note:{type:"warn",text:"A Prince won't speak without the right offering. Stockpile these while exploring."}},
-  materials:{t:"Phase 14 — Collection Quests & Key Materials",s:"The big 'gather X' quests and quest-specific ingredients.",note:{type:"ok",text:"Nirnroot glows near water; Ayleid Statues sit in ruins you'll already clear. Keep a running stash."}},
-  // location: cities
-  Anvil:{t:"Anvil",s:"Quests based in and around Anvil."},
-  Bravil:{t:"Bravil",s:"Quests based in and around Bravil."},
-  Bruma:{t:"Bruma",s:"Quests based in and around Bruma."},
-  Cheydinhal:{t:"Cheydinhal",s:"Quests based in and around Cheydinhal."},
-  Chorrol:{t:"Chorrol",s:"Quests based in and around Chorrol."},
-  Leyawiin:{t:"Leyawiin",s:"Quests based in and around Leyawiin."},
-  Skingrad:{t:"Skingrad",s:"Quests based in and around Skingrad."},
-  "Imperial City":{t:"Imperial City",s:"Quests based in the Imperial City and its districts."},
-  // location: guilds (your order)
-  gMages:{t:"Mages Guild",s:"Recommendations, then the Arcane University line.",note:{type:"ok",text:"Your pick to run first. Get all seven recommendations to unlock the University."}},
-  gFighters:{t:"Fighters Guild",s:"The full Fighters Guild questline."},
-  gBrotherhood:{t:"Dark Brotherhood",s:"The full assassin questline.",note:{type:"warn",text:"The Purification is a point of no return — finish earlier contracts first."}},
-  gThieves:{t:"Thieves Guild",s:"The full Gray Fox questline."},
-  gArena:{t:"The Arena",s:"Imperial City bloodsport — ranks to Grand Champion."},
-  // location: misc
-  mMain:{t:"Main Quest",s:"The Oblivion Crisis, start to finish."},
-  mKotN:{t:"Knights of the Nine (DLC)",s:"The Crusader's Relics questline (starts in Anvil)."},
-  mShivering:{t:"Shivering Isles (DLC)",s:"Sheogorath's realm — a full second questline."},
-  mDaedric:{t:"Daedric Shrine Quests",s:"All 15 Prince artifacts (level-gated)."},
-  mDLC:{t:"Other DLC & Plug-ins",s:"Standalone dungeons and player homes."},
-  mWild:{t:"Wilderness & Small Settlements",s:"Quests out in the world, not in a city."},
-  mMaterials:{t:"Materials & Collectibles",s:"Offerings, gather-quests and quest ingredients."},
-};
-const ORDER_OPT = ["setup","arena","fighters","mages","thieves","brotherhood","main","kotn","daedric","shivering","cities","dlcx","offerings","materials"];
-const ORDER_LOC = ["Anvil","Bravil","Bruma","Cheydinhal","Chorrol","Leyawiin","Skingrad","Imperial City","gMages","gFighters","gBrotherhood","gThieves","gArena","mMain","mKotN","mShivering","mDaedric","mDLC","mWild","mMaterials"];
+  // Watchdog: if the 3D module never initializes (blocked CDN, old browser), settle into the painted fallback.
+  window.__oblivion3D = false;
+  setTimeout(function(){
+    if(!window.__oblivion3D){ document.body.classList.add('no-webgl'); }
+  }, 5000);
 
-/* ---------- Master quest list ----------
-   fields: n=name, opt=optimal phase, loc=location section,
-   o=objective text, b=badge{c,t}, u=UESP slug override, x=not a linkable quest */
-const Q = [
-  // --- Setup ---
-  {n:"The Tutorial (escape the Imperial sewers)",opt:"setup",loc:"mMain",u:"The_Tutorial",o:"Break out of the Imperial Prison with the Emperor, who names you before he dies, and take the Amulet of Kings. Then set the main story aside for a while."},
-  {n:"Zero Visibility",opt:"setup",loc:"mWild",b:{c:"start",t:"Start here"},u:"Zero_Visibility",o:"The mage Ancotar accidentally turned the whole village of Aleswell invisible. Find him at nearby Fort and reverse the spell — the innkeeper then gives you a free room for life."},
-  {n:"Where Spirits Have Lease",opt:"setup",loc:"Anvil",b:{c:"home",t:"Home"},u:"Where_Spirits_Have_Lease",o:"Buy the cheap, haunted Benirus Manor from Velwyn Benirus in Anvil, then lift the curse plaguing it to claim a free furnished home."},
-  // --- Arena ---
-  {n:"Pit Dog → Brawler → Bloodletter",opt:"arena",loc:"gArena",x:1,o:"The opening Arena ranks in the Imperial City Arena District — roughly three matches per rank, with rising payouts."},
-  {n:"Myrmidon → Warrior → Gladiator",opt:"arena",loc:"gArena",x:1,o:"The middle Arena ranks. Keep an eye on your gear durability between bouts."},
-  {n:"Hero",opt:"arena",loc:"gArena",x:1,o:"Includes the team fight where Porkchop the boar fights at your side."},
-  {n:"Origin of the Gray Prince",opt:"arena",loc:"gArena",b:{c:"lvl",t:"Optional"},u:"Origin_of_the_Gray_Prince",o:"Help Arena grand champion Agronak gro-Malog uncover his noble/vampiric heritage. Completing it before the Champion match makes him refuse to fight you."},
-  {n:"Champion (defeat the Gray Prince)",opt:"arena",loc:"gArena",x:1,o:"The decisive title bout against Agronak gro-Malog, the Gray Prince."},
-  {n:"Grand Champion",opt:"arena",loc:"gArena",x:1,o:"Claim the title, then take optional endless matches (including the Blademaster) for gold and fame."},
-  // --- Fighters Guild ---
-  {n:"A Rat Problem",opt:"fighters",loc:"gFighters",u:"A_Rat_Problem",o:"Anvil: clear the rats from Arvena Thelas's basement — then deal with the mountain lions someone released to kill them."},
-  {n:"The Unfortunate Shopkeeper",opt:"fighters",loc:"gFighters",u:"The_Unfortunate_Shopkeeper",o:"Recover stolen goods for a shopkeeper being robbed."},
-  {n:"The Desolate Mine",opt:"fighters",loc:"gFighters",u:"The_Desolate_Mine",o:"Deliver supplies and defend guild fighters at a mine ambush."},
-  {n:"Unfinished Business",opt:"fighters",loc:"gFighters",u:"Unfinished_Business",o:"Drive marauders out of a farm the guild has been hired to protect."},
-  {n:"Drunk and Disorderly",opt:"fighters",loc:"gFighters",u:"Drunk_and_Disorderly",o:"Handle a rowdy Nord causing trouble at an inn."},
-  {n:"Den of Thieves",opt:"fighters",loc:"gFighters",u:"Den_of_Thieves",o:"Recover stolen property from a bandit hideout."},
-  {n:"Amelion's Debt",opt:"fighters",loc:"gFighters",u:"Amelion's_Debt",o:"Retrieve an heirloom from Amelion Tomb to settle a family debt."},
-  {n:"The Master's Son",opt:"fighters",loc:"gFighters",u:"The_Master's_Son",o:"Rescue guild-master Vilena Donton's reckless son Viranus on a contract gone wrong."},
-  {n:"More Unfinished Business",opt:"fighters",loc:"gFighters",u:"More_Unfinished_Business",o:"Follow up on the Blackwood Company undercutting the guild."},
-  {n:"Azani Blackheart",opt:"fighters",loc:"gFighters",u:"Azani_Blackheart",o:"Hunt down the marauder leader Azani Blackheart."},
-  {n:"The Fugitives",opt:"fighters",loc:"gFighters",u:"The_Fugitives",o:"Track down escaped fugitives for a bounty."},
-  {n:"The Wandering Scholar",opt:"fighters",loc:"gFighters",u:"The_Wandering_Scholar",o:"Escort/rescue a scholar menaced on the road."},
-  {n:"Trolls of Forsaken Mine",opt:"fighters",loc:"gFighters",u:"Trolls_of_Forsaken_Mine",o:"Clear the trolls infesting the Forsaken Mine."},
-  {n:"The Stone of St. Alessia",opt:"fighters",loc:"gFighters",u:"The_Stone_of_St._Alessia",o:"Recover the stolen Stone of St. Alessia for Chorrol."},
-  {n:"The Noble's Daughter",opt:"fighters",loc:"gFighters",u:"The_Noble's_Daughter",o:"Investigate the disappearance tied to the Blackwood Company."},
-  {n:"Mystery at Harlun's Watch",opt:"fighters",loc:"gFighters",u:"Mystery_at_Harlun's_Watch",o:"Investigate creatures terrorising the hamlet of Harlun's Watch."},
-  {n:"Information Gathering",opt:"fighters",loc:"gFighters",u:"Information_Gathering",o:"Infiltrate the Blackwood Company by joining as a spy."},
-  {n:"Infiltration",opt:"fighters",loc:"gFighters",u:"Infiltration",o:"Go undercover on a Blackwood contract and witness the truth about their methods."},
-  {n:"The Hist",opt:"fighters",loc:"gFighters",u:"The_Hist",o:"Finale: confront the Blackwood Company, high on Hist sap, and end their threat."},
-  // --- Mages Guild ---
-  {n:"Anvil Recommendation",opt:"mages",loc:"gMages",u:"Anvil_Recommendation",o:"Earn the Anvil guild hall's recommendation for Carahil."},
-  {n:"Bravil Recommendation",opt:"mages",loc:"gMages",u:"Bravil_Recommendation",o:"Earn Bravil's recommendation by helping Kud-Ei with Henantier."},
-  {n:"Bruma Recommendation",opt:"mages",loc:"gMages",u:"Bruma_Recommendation",o:"Earn Bruma's recommendation by investigating Jsashe's coven."},
-  {n:"Cheydinhal Recommendation",opt:"mages",loc:"gMages",u:"Cheydinhal_Recommendation",o:"Earn Cheydinhal's recommendation resolving the Falcar/well affair."},
-  {n:"Chorrol Recommendation",opt:"mages",loc:"gMages",u:"Chorrol_Recommendation",o:"Earn Chorrol's recommendation by recovering a stolen book."},
-  {n:"Leyawiin Recommendation",opt:"mages",loc:"gMages",u:"Leyawiin_Recommendation",o:"Earn Leyawiin's recommendation dealing with Dagail's amulet."},
-  {n:"Skingrad Recommendation",opt:"mages",loc:"gMages",u:"Skingrad_Recommendation",o:"Earn Skingrad's recommendation via 'Fingers of the Mountain'."},
-  {n:"A Mage's Staff",opt:"mages",loc:"gMages",u:"A_Mage's_Staff",o:"Arcane University line begins — craft your staff of office."},
-  {n:"Ulterior Motives",opt:"mages",loc:"gMages",u:"Ulterior_Motives",o:"Investigate the necromancer threat at the University's request."},
-  {n:"Vahtacen's Secret",opt:"mages",loc:"gMages",u:"Vahtacen's_Secret",o:"Decode the Ayleid ruin Vahtacen with the right spells."},
-  {n:"Necromancer's Moon",opt:"mages",loc:"gMages",u:"Necromancer's_Moon",o:"Learn how necromancers draw power from the Shade of the Revenant."},
-  {n:"Liberation or Apprehension?",opt:"mages",loc:"gMages",u:"Liberation_or_Apprehension%3F",o:"Respond to the necromancer attack on the Bruma guild hall."},
-  {n:"Information at a Price",opt:"mages",loc:"gMages",u:"Information_at_a_Price",o:"Consult Mannimarco's former ally for intelligence."},
-  {n:"A Plot Revealed",opt:"mages",loc:"gMages",u:"A_Plot_Revealed",o:"Defend the Arcane University from a necromancer strike."},
-  {n:"The Bloodworm Helm",opt:"mages",loc:"gMages",u:"The_Bloodworm_Helm",o:"Recover a necromantic artifact from Fort Ontus."},
-  {n:"The Necromancer's Amulet",opt:"mages",loc:"gMages",u:"The_Necromancer's_Amulet",o:"Retrieve the stolen Necromancer's Amulet."},
-  {n:"Ambush",opt:"mages",loc:"gMages",u:"Ambush",o:"Spring the trap on the way to confront the King of Worms."},
-  {n:"Confront the King",opt:"mages",loc:"gMages",u:"Confront_the_King",o:"Finale: defeat Mannimarco, the King of Worms, and become Arch-Mage."},
-  {n:"Alchemy Acquisitions",opt:"mages",loc:"gMages",u:"Alchemy_Acquisitions",o:"Post-questline Arch-Mage errand to stock the University."},
-  // --- Thieves Guild ---
-  {n:"Finding the Thieves Guild",opt:"thieves",loc:"gThieves",u:"Finding_the_Thieves_Guild",o:"Hear the rumors and seek the Gray Fox's guild at the IC Waterfront at night."},
-  {n:"May the Best Thief Win",opt:"thieves",loc:"gThieves",u:"May_the_Best_Thief_Win",o:"Audition against two rivals — steal Amantius Allectus's diary without killing anyone."},
-  {n:"Untaxing the Poor",opt:"thieves",loc:"gThieves",u:"Untaxing_the_Poor",o:"Steal the tax records from the Imperial Watch to ease the Waterfront's burden."},
-  {n:"The Elven Maiden",opt:"thieves",loc:"gThieves",u:"The_Elven_Maiden",o:"Steal a painting, 'The Elven Maiden', from a private home."},
-  {n:"Ahdarji's Heirloom",opt:"thieves",loc:"gThieves",u:"Ahdarji's_Heirloom",o:"Leyawiin: recover a ring from Castle Leyawiin for the Khajiit Ahdarji."},
-  {n:"Misdirection",opt:"thieves",loc:"gThieves",u:"Misdirection",o:"Free the imprisoned fence Armand Christophe's associate."},
-  {n:"Lost Histories",opt:"thieves",loc:"gThieves",u:"Lost_Histories",o:"Recover a stolen guild journal that threatens to expose members."},
-  {n:"Taking Care of Lex",opt:"thieves",loc:"gThieves",u:"Taking_Care_of_Lex",o:"Get Imperial Watch Captain Hieronymus Lex reassigned away from the Waterfront."},
-  {n:"Turning a Blind Eye",opt:"thieves",loc:"gThieves",u:"Turning_a_Blind_Eye",o:"Steal a rare book detailing the history of the Gray Cowl."},
-  {n:"Arrow of Extrication",opt:"thieves",loc:"gThieves",u:"Arrow_of_Extrication",o:"Recover a special arrow needed to enter the sealed Ayleid ruin."},
-  {n:"Boots of Springheel Jak",opt:"thieves",loc:"gThieves",u:"Boots_of_Springheel_Jak",o:"Retrieve the legendary boots from the tomb of the master thief."},
-  {n:"The Ultimate Heist",opt:"thieves",loc:"gThieves",u:"The_Ultimate_Heist",o:"Finale: infiltrate the Imperial Palace and steal an Elder Scroll for the Gray Fox."},
-  // --- Dark Brotherhood ---
-  {n:"A Knife in the Dark",opt:"brotherhood",loc:"gBrotherhood",u:"A_Knife_in_the_Dark",o:"After Lucien Lachance visits you in your sleep, prove yourself by killing Rufio at the Inn of Ill Omen."},
-  {n:"A Watery Grave",opt:"brotherhood",loc:"gBrotherhood",u:"A_Watery_Grave",o:"Assassinate a captain aboard a moored ship."},
-  {n:"Accidents Happen",opt:"brotherhood",loc:"gBrotherhood",u:"Accidents_Happen",o:"Stage a death so it looks like an accident for the bonus."},
-  {n:"Scheduled for Execution",opt:"brotherhood",loc:"gBrotherhood",u:"Scheduled_for_Execution",o:"Kill a target hiding inside a prison."},
-  {n:"The Assassinated Man",opt:"brotherhood",loc:"gBrotherhood",u:"The_Assassinated_Man",o:"Eliminate a man who faked his own death."},
-  {n:"The Lonely Wanderer",opt:"brotherhood",loc:"gBrotherhood",u:"The_Lonely_Wanderer",o:"Silence a reclusive target for the bonus without being seen."},
-  {n:"Bad Medicine",opt:"brotherhood",loc:"gBrotherhood",u:"Bad_Medicine",o:"Wipe out a mercenary camp on contract."},
-  {n:"Whodunit?",opt:"brotherhood",loc:"gBrotherhood",u:"Whodunit%3F",o:"The famous Summitmist Manor party — pick off five guests one by one without raising alarm for the full bonus."},
-  {n:"Permanent Retirement",opt:"brotherhood",loc:"gBrotherhood",u:"Permanent_Retirement",o:"Assassinate a retired adventurer in his fortified home."},
-  {n:"Of Secret and Shadow",opt:"brotherhood",loc:"gBrotherhood",u:"Of_Secret_and_Shadow",o:"Lucien reveals a traitor in the family and orders the Purification."},
-  {n:"The Purification",opt:"brotherhood",loc:"gBrotherhood",b:{c:"lvl",t:"Irreversible"},u:"The_Purification",o:"Point of no return: eliminate every member of your own Cheydinhal sanctuary. Nets you the horse Shadowmere."},
-  {n:"Affairs of a Wizard",opt:"brotherhood",loc:"gBrotherhood",u:"Affairs_of_a_Wizard",o:"First dead-drop contract after the Purification."},
-  {n:"Next of Kin",opt:"brotherhood",loc:"gBrotherhood",u:"Next_of_Kin",o:"Eliminate an entire family line on contract."},
-  {n:"Broken Vows",opt:"brotherhood",loc:"gBrotherhood",u:"Broken_Vows",o:"Carry out a dead-drop assassination."},
-  {n:"Final Justice",opt:"brotherhood",loc:"gBrotherhood",u:"Final_Justice",o:"Kill a former Brotherhood member turned informer."},
-  {n:"A Matter of Honor",opt:"brotherhood",loc:"gBrotherhood",u:"A_Matter_of_Honor",o:"A contract aboard the Marie Elena ship."},
-  {n:"The Coldest Sleep",opt:"brotherhood",loc:"gBrotherhood",u:"The_Coldest_Sleep",o:"Track a target to a frozen cave."},
-  {n:"A Kiss Before Dying",opt:"brotherhood",loc:"gBrotherhood",u:"A_Kiss_Before_Dying",o:"The traitor's plot unravels — uncover who is killing the family."},
-  {n:"Following a Lead",opt:"brotherhood",loc:"gBrotherhood",u:"Following_a_Lead",o:"Investigate the traitor behind the sanctuary murders."},
-  {n:"Honor Thy Mother",opt:"brotherhood",loc:"gBrotherhood",u:"Honor_Thy_Mother",o:"Finale: confront the traitor and become the Night Mother's Listener."},
-  {n:"Whispers of Death (Listener contracts)",opt:"brotherhood",loc:"gBrotherhood",x:1,u:"The_Dark_Brotherhood",o:"Ongoing dead-drop contracts you receive as Listener after the questline ends."},
-  // --- Main Quest ---
-  {n:"Deliver the Amulet",opt:"main",loc:"mMain",u:"Deliver_the_Amulet",o:"Take the Amulet of Kings to Jauffre at Weynon Priory near Chorrol."},
-  {n:"Breaking the Siege of Kvatch",opt:"main",loc:"mMain",u:"Breaking_the_Siege_of_Kvatch",o:"Close the Oblivion Gate outside the ruined city of Kvatch."},
-  {n:"The Battle for Castle Kvatch",opt:"main",loc:"mMain",u:"The_Battle_for_Castle_Kvatch",o:"Retake Castle Kvatch and find Martin, the Emperor's heir."},
-  {n:"Weynon Priory",opt:"main",loc:"mMain",u:"Weynon_Priory",o:"Defend the priory from a Mythic Dawn attack and recover the Amulet."},
-  {n:"The Path of Dawn",opt:"main",loc:"mMain",u:"The_Path_of_Dawn",o:"Decipher the Mythic Dawn commentaries to infiltrate their cult."},
-  {n:"Dagon Shrine",opt:"main",loc:"mMain",u:"Dagon_Shrine",o:"Go undercover in the Mythic Dawn's hidden shrine and steal the Mysterium Xarxes."},
-  {n:"Spies",opt:"main",loc:"mMain",u:"Spies",o:"Root out the Mythic Dawn spies in Bruma."},
-  {n:"Blood of the Daedra",opt:"main",loc:"mMain",u:"Blood_of_the_Daedra",o:"Obtain a Daedric artifact to power Martin's ritual."},
-  {n:"Blood of the Divines",opt:"main",loc:"mMain",u:"Blood_of_the_Divines",o:"Recover Tiber Septim's armor from Sancre Tor."},
-  {n:"Miscarcand",opt:"main",loc:"mMain",u:"Miscarcand",o:"Retrieve a Great Welkynd Stone from the Ayleid ruin Miscarcand."},
-  {n:"Defense of Bruma",opt:"main",loc:"mMain",u:"Defense_of_Bruma",o:"Rally Bruma's defense against the coming Daedric assault."},
-  {n:"Allies for Bruma",opt:"main",loc:"mMain",u:"Allies_for_Bruma",o:"Persuade the other counts to send troops to defend Bruma."},
-  {n:"The Great Gate",opt:"main",loc:"mMain",u:"The_Great_Gate",o:"Survive the great Oblivion Gate at the Battle of Bruma and capture a Sigil Stone."},
-  {n:"Paradise",opt:"main",loc:"mMain",u:"Paradise",o:"Enter Mankar Camoran's Paradise to recover the Amulet of Kings."},
-  {n:"Light the Dragonfires",opt:"main",loc:"mMain",u:"Light_the_Dragonfires",o:"Finale: escort Martin to the Imperial City for the climactic ending. Do this last."},
-  // --- Knights of the Nine ---
-  {n:"Pilgrimage",opt:"kotn",loc:"mKotN",u:"Pilgrimage",o:"Visit the Nine wayshrines to prove your worth (starts at Anvil's Chapel of Dibella)."},
-  {n:"The Shrine of the Crusader",opt:"kotn",loc:"mKotN",u:"The_Shrine_of_the_Crusader",o:"Locate the lost shrine and claim the Helm of the Crusader."},
-  {n:"Priory of the Nine",opt:"kotn",loc:"mKotN",u:"Priory_of_the_Nine",o:"Restore the Knights' priory and recover the cuirass."},
-  {n:"Nature's Fury",opt:"kotn",loc:"mKotN",u:"Nature's_Fury",o:"Recover a relic guarded by the Divine of nature."},
-  {n:"The Path of the Righteous",opt:"kotn",loc:"mKotN",u:"The_Path_of_the_Righteous",o:"Follow the trials to the next relic."},
-  {n:"Wisdom of the Ages",opt:"kotn",loc:"mKotN",u:"Wisdom_of_the_Ages",o:"Retrieve a relic from an ancient tomb."},
-  {n:"Stendarr's Mercy",opt:"kotn",loc:"mKotN",u:"Stendarr's_Mercy",o:"Prove mercy to earn a Crusader relic."},
-  {n:"The Faithful Squire",opt:"kotn",loc:"mKotN",u:"The_Faithful_Squire",o:"Recover the gauntlets tied to a fallen knight's tale."},
-  {n:"The Sword of the Crusader",opt:"kotn",loc:"mKotN",u:"The_Sword_of_the_Crusader",o:"Claim the sword of the Crusader from its resting place."},
-  {n:"The Blessing of Talos",opt:"kotn",loc:"mKotN",u:"The_Blessing_of_Talos",o:"Gather the knights for the final march."},
-  {n:"Umaril the Unfeathered",opt:"kotn",loc:"mKotN",u:"Umaril_the_Unfeathered",o:"Finale: defeat Umaril on both the mortal and divine planes."},
-  // --- Daedric shrines ---
-  {n:"Azura",opt:"daedric",loc:"mDaedric",b:{c:"lvl",t:"Lvl 2+"},u:"Azura",o:"Free trapped worshippers from vampirism. Reward: Azura's Star (reusable soul gem). Offering: Glow Dust."},
-  {n:"Sheogorath",opt:"daedric",loc:"mDaedric",b:{c:"lvl",t:"Lvl 2+"},u:"Sheogorath",o:"Trigger a fake apocalypse in a superstitious village. Reward: Wabbajack. Offering: Lesser Soul Gem + Yarn + Head of Lettuce."},
-  {n:"Namira",opt:"daedric",loc:"mDaedric",b:{c:"lvl",t:"Lvl 5+"},u:"Namira",o:"Aid outcast worshippers against townsfolk. Reward: Ring of Namira. Requires very low Personality; no item."},
-  {n:"Vaermina",opt:"daedric",loc:"mDaedric",b:{c:"lvl",t:"Lvl 5+"},u:"Vaermina",o:"Enter a cursed dream. Reward: Skull of Corruption. Offering: Black Soul Gem."},
-  {n:"Sanguine",opt:"daedric",loc:"mDaedric",b:{c:"lvl",t:"Lvl 8+"},u:"Sanguine",o:"Cast a prank spell on a noble's dinner party. Reward: Sanguine Rose. Offering: Cyrodiilic Brandy."},
-  {n:"Malacath",opt:"daedric",loc:"mDaedric",b:{c:"lvl",t:"Lvl 10+"},u:"Malacath",o:"Avenge slaughtered Orc worshippers. Reward: Volendrung. Offering: Troll Fat."},
-  {n:"Meridia",opt:"daedric",loc:"mDaedric",b:{c:"lvl",t:"Lvl 10+"},u:"Meridia",o:"Purge necromancers defiling her shrine. Reward: Ring of Khajiiti. Offering: Bonemeal, Ectoplasm, or Mort Flesh."},
-  {n:"Nocturnal",opt:"daedric",loc:"mDaedric",b:{c:"lvl",t:"Lvl 10+"},u:"Nocturnal",o:"Recover the stolen Skeleton Key. Reward: the Skeleton Key. No item offering."},
-  {n:"Peryite",opt:"daedric",loc:"mDaedric",b:{c:"lvl",t:"Lvl 10+"},u:"Peryite",o:"Enter a frozen tableau of trapped worshippers. Reward: Spellbreaker. No item offering."},
-  {n:"Mephala",opt:"daedric",loc:"mDaedric",b:{c:"lvl",t:"Lvl 15+"},u:"Mephala",o:"Sow deadly discord between two feuding families. Reward: Ebony Blade. Offering: Nightshade."},
-  {n:"Hermaeus Mora",opt:"daedric",loc:"mDaedric",b:{c:"lvl",t:"Lvl 17+"},u:"Hermaeus_Mora",o:"Trap ten souls to fill his artifact. Reward: Oghma Infinium. No item offering."},
-  {n:"Hircine",opt:"daedric",loc:"mDaedric",b:{c:"lvl",t:"Lvl 17+"},u:"Hircine",o:"Hunt a unique beast in the wild. Reward: Savior's Hide or Ring of Hircine. Offering: Bear or Wolf Pelt."},
-  {n:"Molag Bal",opt:"daedric",loc:"mDaedric",b:{c:"lvl",t:"Lvl 17+"},u:"Molag_Bal",o:"Corrupt a virtuous man into murder. Reward: Mace of Molag Bal. Offering: Lion Pelt."},
-  {n:"Boethiah",opt:"daedric",loc:"mDaedric",b:{c:"lvl",t:"Lvl 20+"},u:"Boethia",o:"Fight through the Tournament of Ten Bloods. Reward: Goldbrand. Offering: Daedra Heart."},
-  {n:"Clavicus Vile",opt:"daedric",loc:"mDaedric",b:{c:"lvl",t:"Lvl 20+"},u:"Clavicus_Vile",o:"Track down a cursed sword and its owner. Reward: Masque of Clavicus Vile. Offering: 500 gold."},
-  // --- Shivering Isles ---
-  {n:"A Door in Niben Bay",opt:"shivering",loc:"mShivering",u:"A_Door_in_Niben_Bay",o:"Enter the mysterious door on an island in Niben Bay to reach the Shivering Isles."},
-  {n:"Through the Fringe of Madness",opt:"shivering",loc:"mShivering",u:"Through_the_Fringe_of_Madness",o:"Survive the Gatekeeper and the Fringe to gain audience with Sheogorath."},
-  {n:"Baiting the Trap",opt:"shivering",loc:"mShivering",u:"Baiting_the_Trap",o:"Begin Sheogorath's tasks to hold back the Greymarch."},
-  {n:"A Better Mousetrap",opt:"shivering",loc:"mShivering",u:"A_Better_Mousetrap",o:"Rebuild the realm's defenses."},
-  {n:"Understanding Madness",opt:"shivering",loc:"mShivering",u:"Understanding_Madness",o:"Tour Mania and Dementia to grasp the realm."},
-  {n:"The Cold Flame of Agnon",opt:"shivering",loc:"mShivering",u:"The_Cold_Flame_of_Agnon",o:"Retrieve the flame needed to reforge the realm's guardian."},
-  {n:"Ritual of Accession",opt:"shivering",loc:"mShivering",b:{c:"lvl",t:"Choice"},u:"Ritual_of_Accession",o:"Permanently choose Mania or Dementia — this changes rewards and later content."},
-  {n:"Ritual of Mania / Ritual of Dementia",opt:"shivering",loc:"mShivering",x:1,u:"Ritual_of_Dementia",o:"Complete whichever ritual matches the side you chose."},
-  {n:"Retaking the Fringe",opt:"shivering",loc:"mShivering",u:"Retaking_the_Fringe",o:"Push back the invading forces of Order at the Fringe."},
-  {n:"Rebuilding the Gatekeeper",opt:"shivering",loc:"mShivering",u:"Rebuilding_the_Gatekeeper",o:"Craft a new Gatekeeper to guard the realm."},
-  {n:"The Helpless Army",opt:"shivering",loc:"mShivering",u:"The_Helpless_Army",o:"Restore the Golden Saints and Dark Seducers to fight."},
-  {n:"Symbols of Office",opt:"shivering",loc:"mShivering",u:"Symbols_of_Office",o:"Recover the raiment and staff of Sheogorath."},
-  {n:"The Roots of Madness",opt:"shivering",loc:"mShivering",u:"The_Roots_of_Madness",o:"Fight to the source of Order's incursion."},
-  {n:"The End of Order",opt:"shivering",loc:"mShivering",u:"The_End_of_Order",o:"Destroy Jyggalag's forces and the wellspring of Order."},
-  {n:"The Prince of Madness",opt:"shivering",loc:"mShivering",u:"The_Prince_of_Madness",o:"Finale: ascend as the new Sheogorath."},
-  {n:"Shivering Isles side quests",opt:"shivering",loc:"mShivering",x:1,u:"Shivering:Quests",o:"Also do New Sheoth tasks: The Museum of Oddities, Addiction, The Lady of Paranoia, Ushnar's Terror, Falling Awake, and more."},
-  // --- City & side quests (loc = city from research) ---
-  {n:"The Ghost Ship of Anvil",opt:"cities",loc:"Anvil",u:"The_Ghost_Ship_of_Anvil",o:"In Anvil, board the newly docked Serpent's Wake — its crew was murdered — and hunt the killer haunting the ship."},
-  {n:"The Siren's Deception",opt:"cities",loc:"Anvil",u:"The_Siren's_Deception",o:"In Anvil, expose the Sirens — a gang of beautiful thieves led by Faustina Cartia who lure and rob sailors."},
-  {n:"Caught in the Hunt",opt:"cities",loc:"Bravil",u:"Caught_in_the_Hunt",o:"Ursanne Loche in Bravil asks you to save her husband, who is being hunted for sport by Kurdan gro-Dragol on Fort Grief island."},
-  {n:"The Forlorn Watchman",opt:"cities",loc:"Bravil",u:"The_Forlorn_Watchman_(quest)",o:"Prompted at Silverhome-on-the-Water in Bravil, investigate the ghost at Bawnwatch Camp and the fate of the ship Emma May."},
-  {n:"A Brotherhood Betrayed",opt:"cities",loc:"Bruma",u:"A_Brotherhood_Betrayed",o:"In Bruma, investigate Bradon Lirrian's murder and track down the killer — the vampire Raynil Dralas."},
-  {n:"Lifting the Vale",opt:"cities",loc:"Bruma",u:"Lifting_the_Vale",o:"Countess Narina Carvain of Bruma sends you to retrieve the Draconian Madstone from Fort Pale Pass."},
-  {n:"Sins of the Father",opt:"cities",loc:"Bruma",u:"Sins_of_the_Father",o:"In Bruma, the imprisoned Jorundr enlists your help over hidden loot and his partner's death."},
-  {n:"Two Sides of the Coin",opt:"cities",loc:"Bruma",u:"Two_Sides_of_the_Coin",o:"Arnora in Bruma asks you to recover stolen gold — forcing a choice between her and her jailed lover Jorundr."},
-  {n:"A Brush with Death",opt:"cities",loc:"Cheydinhal",u:"A_Brush_with_Death",o:"Cheydinhal painter Rythe Lythandas has vanished into his own painting; enter the painted world and rescue him."},
-  {n:"Corruption and Conscience",opt:"cities",loc:"Cheydinhal",u:"Corruption_and_Conscience",o:"In Cheydinhal, expose or eliminate the corrupt Guard Captain Ulrich Leland who extorts the townsfolk."},
-  {n:"The Wayward Knight",opt:"cities",loc:"Cheydinhal",u:"The_Wayward_Knight",o:"Count Indarys of Cheydinhal asks you to rescue his son Farwil and the Knights of the Thorn from an Oblivion gate."},
-  {n:"Through a Nightmare, Darkly",opt:"cities",loc:"Cheydinhal",u:"Through_a_Nightmare,_Darkly",o:"In Cheydinhal, enter the comatose Henantier's dream world and recover the items needed to wake him."},
-  {n:"A Shadow Over Hackdirt",opt:"cities",loc:"Chorrol",u:"A_Shadow_Over_Hackdirt",o:"Chorrol shopkeeper Seed-Neeus asks you to find her missing daughter Dar-Ma in the sinister hamlet of Hackdirt."},
-  {n:"Canvas the Castle",opt:"cities",loc:"Chorrol",u:"Canvas_the_Castle",o:"Countess Valga of Castle Chorrol hires you to recover a portrait stolen from her throne room."},
-  {n:"Legacy Lost",opt:"cities",loc:"Chorrol",u:"Legacy_Lost",o:"The reunited Jemane twins in Chorrol ask you to reclaim their ancestral home, Weatherleah, from ogres."},
-  {n:"Separated at Birth",opt:"cities",loc:"Chorrol",u:"Separated_at_Birth",o:"Reunite Chorrol's Reynald Jemane with his long-lost twin brother Guilbert (found in Cheydinhal)."},
-  {n:"The Killing Field",opt:"cities",loc:"Chorrol",u:"The_Killing_Field",o:"Valus Odiil in Chorrol asks you to help his two sons defend Odiil Farm from creature attacks."},
-  {n:"Knights of the White Stallion",opt:"cities",loc:"Leyawiin",u:"Knights_of_the_White_Stallion",o:"Count Caro of Leyawiin sends you to slay the marauder leader Black Brugo at Telepe to join the Order."},
-  {n:"Mazoga the Orc",opt:"cities",loc:"Leyawiin",u:"Mazoga_the_Orc_(quest)",o:"In Castle Leyawiin, help the Orc Mazoga hunt down Mogens Wind-Shifter at Fisherman's Rock."},
-  {n:"Raid on Greyland",opt:"cities",loc:"Leyawiin",u:"Raid_on_Greyland",o:"Outside Leyawiin, a legionnaire sends you to kill the skooma dealer Kylius Lonavo at Greyland."},
-  {n:"Whom Gods Annoy",opt:"cities",loc:"Leyawiin",u:"Whom_Gods_Annoy",o:"Rosentia Gallenus in Leyawiin is plagued by multiplying scamps; deposit the Staff of the Everscamp at Darkfathom Cave."},
-  {n:"Helping Hands",opt:"cities",loc:"Skingrad",u:"Helping_Hands",o:"After buying Rosethorn Hall in Skingrad, hire the out-of-work Nord Eyja as your housekeeper."},
-  {n:"Paranoia",opt:"cities",loc:"Skingrad",u:"Paranoia",o:"The paranoid Wood Elf Glarthir in Skingrad hires you to spy on townsfolk he's sure are plotting against him."},
-  {n:"The Rosethorn Cache",opt:"cities",loc:"Skingrad",u:"The_Rosethorn_Cache",o:"After buying Rosethorn Hall in Skingrad, decipher clues to find the previous owner's hidden cache."},
-  {n:"Vampire Cure",opt:"cities",loc:"Skingrad",u:"Vampire_Cure",o:"Count Hassildor of Skingrad seeks a cure for vampirism; find the witch Melisande and gather the ingredients (see Materials)."},
-  {n:"An Unexpected Voyage",opt:"cities",loc:"Imperial City",u:"An_Unexpected_Voyage",o:"Aboard the Bloated Float inn-ship at the IC Waterfront, foil the smugglers who've set sail with you knocked out."},
-  {n:"Imperial Corruption",opt:"cities",loc:"Imperial City",u:"Imperial_Corruption",o:"Imperial City beggars ask you to gather testimony exposing the corrupt Watch Captain Audens Avidius."},
-  {n:"Order of the Virtuous Blood",opt:"cities",loc:"Imperial City",u:"Order_of_the_Virtuous_Blood_(quest)",o:"In the Imperial City, hunt an accused vampire — only to discover the Order's own Seridur is the real one."},
-  {n:"Unfriendly Competition",opt:"cities",loc:"Imperial City",u:"Unfriendly_Competition",o:"Jensine in the IC Market District asks you to investigate rival trader Thoronir and the grave-robber supplying him."},
-  {n:"The Collector",opt:"cities",loc:"Imperial City",u:"The_Collector",o:"Lord Umbacano in the Imperial City pays well for Ayleid Statues; recover the ten from ruins and deliver them."},
-  {n:"Secrets of the Ayleids",opt:"cities",loc:"Imperial City",u:"Secrets_of_the_Ayleids",o:"Umbacano hires you to recover rare Ayleid relics and inscriptions for his collection."},
-  {n:"Nothing You Can Possess",opt:"cities",loc:"Imperial City",u:"Nothing_You_Can_Possess",o:"Umbacano finale: retrieve the Crown of Nenalata and choose whether to give it to him or to the scholar Herminia Cinna."},
-  {n:"Goblin Trouble",opt:"cities",loc:"mWild",u:"Goblin_Trouble",o:"Barthel Gernand at Crestbridge Camp wants to found Cropsford; clear the goblins blocking the site."},
-  {n:"Tears of the Savior",opt:"cities",loc:"mWild",u:"Tears_of_the_Savior",o:"Fisherman Aelwin Merowald in Weye asks you to gather twelve pearls from the slaughterfish of Lake Rumare."},
-  {n:"Buy a house — Imperial City",opt:"cities",loc:"Imperial City",b:{c:"home",t:"Home"},u:"Houses",o:"Purchase the Talos Plaza District house from the estate agent."},
-  {n:"Buy a house — Bravil",opt:"cities",loc:"Bravil",b:{c:"home",t:"Home"},u:"Houses",o:"Purchase the Bravil house."},
-  {n:"Buy a house — Bruma",opt:"cities",loc:"Bruma",b:{c:"home",t:"Home"},u:"Houses",o:"Purchase the Bruma house."},
-  {n:"Buy a house — Cheydinhal",opt:"cities",loc:"Cheydinhal",b:{c:"home",t:"Home"},u:"Houses",o:"Purchase the Cheydinhal house."},
-  {n:"Buy a house — Chorrol",opt:"cities",loc:"Chorrol",b:{c:"home",t:"Home"},u:"Houses",o:"Purchase the Chorrol house."},
-  {n:"Buy a house — Leyawiin",opt:"cities",loc:"Leyawiin",b:{c:"home",t:"Home"},u:"Houses",o:"Purchase the Leyawiin house."},
-  {n:"Buy Rosethorn Hall — Skingrad",opt:"cities",loc:"Skingrad",b:{c:"home",t:"Home"},u:"Houses",o:"Purchase Rosethorn Hall, the largest player home, in Skingrad — unlocks Helping Hands & The Rosethorn Cache."},
-  // --- Other DLC & plug-ins ---
-  {n:"Mehrunes' Razor",opt:"dlcx",loc:"mDLC",u:"Mehrunes_Razor",o:"Clear the lost city of Varsa Baalim for the artifact dagger. The toughest DLC dungeon — save it for later."},
-  {n:"The Vile Lair — Deepscorn Hollow",opt:"dlcx",loc:"mDLC",b:{c:"home",t:"Home"},u:"Deepscorn_Hollow",o:"Claim and outfit an evil-themed underground lair."},
-  {n:"Frostcrag Spire — Wizard's Tower",opt:"dlcx",loc:"mDLC",b:{c:"home",t:"Home"},u:"Frostcrag_Spire",o:"Claim a mage's tower near Bruma with enchanting and alchemy stations."},
-  {n:"The Thieves' Den — Dunbarrow Cove",opt:"dlcx",loc:"mDLC",b:{c:"home",t:"Home"},u:"Dunbarrow_Cove",o:"Find the Bloody Hand crew and claim a pirate ship home."},
-  {n:"Fighter's Stronghold — Battlehorn Castle",opt:"dlcx",loc:"mDLC",b:{c:"home",t:"Home"},u:"Battlehorn_Castle",o:"Defend and claim the castle near Chorrol."},
-  {n:"The Orrery",opt:"dlcx",loc:"mDLC",u:"The_Orrery",o:"Repair the Imperial City observatory for a passive bonus."},
-  {n:"Spell Tomes & Horse Armor",opt:"dlcx",loc:"mDLC",x:1,u:"Official_Plug-ins",o:"Minor plug-ins — collect for completeness."},
-  // --- Daedric offerings (loc mMaterials) ---
-  {n:"Azura — Glow Dust",opt:"offerings",loc:"mMaterials",b:{c:"lvl",t:"Lvl 2+"},x:1,o:"Loot Glow Dust from will-o-the-wisps to offer at Azura's shrine."},
-  {n:"Sheogorath — Lesser Soul Gem + Yarn + Head of Lettuce",opt:"offerings",loc:"mMaterials",b:{c:"lvl",t:"Lvl 2+"},x:1,o:"Three separate items required at Sheogorath's shrine."},
-  {n:"Vaermina — Black Soul Gem",opt:"offerings",loc:"mMaterials",b:{c:"lvl",t:"Lvl 5+"},x:1,o:"Offer a Black Soul Gem at Vaermina's shrine."},
-  {n:"Namira — no item (needs very low Personality)",opt:"offerings",loc:"mMaterials",b:{c:"lvl",t:"Lvl 5+"},x:1,o:"Lower your Personality (e.g. with a Drain spell) to be worthy."},
-  {n:"Sanguine — Cyrodiilic Brandy",opt:"offerings",loc:"mMaterials",b:{c:"lvl",t:"Lvl 8+"},x:1,o:"Buy Cyrodiilic Brandy from a tavern to offer."},
-  {n:"Malacath — Troll Fat",opt:"offerings",loc:"mMaterials",b:{c:"lvl",t:"Lvl 10+"},x:1,o:"Loot Troll Fat from trolls."},
-  {n:"Meridia — Bonemeal, Ectoplasm, or Mort Flesh",opt:"offerings",loc:"mMaterials",b:{c:"lvl",t:"Lvl 10+"},x:1,o:"Any one undead ingredient works."},
-  {n:"Nocturnal — no item required",opt:"offerings",loc:"mMaterials",b:{c:"lvl",t:"Lvl 10+"},x:1,o:"Just meet the level requirement."},
-  {n:"Peryite — no item required",opt:"offerings",loc:"mMaterials",b:{c:"lvl",t:"Lvl 10+"},x:1,o:"Just meet the level requirement."},
-  {n:"Mephala — Nightshade",opt:"offerings",loc:"mMaterials",b:{c:"lvl",t:"Lvl 15+"},x:1,o:"Offer a Nightshade plant."},
-  {n:"Hermaeus Mora — no item (trap 10 souls in the quest)",opt:"offerings",loc:"mMaterials",b:{c:"lvl",t:"Lvl 17+"},x:1,o:"Bring soul gems to fill during the quest."},
-  {n:"Hircine — Bear Pelt or Wolf Pelt",opt:"offerings",loc:"mMaterials",b:{c:"lvl",t:"Lvl 17+"},x:1,o:"Loot a bear or wolf pelt to offer."},
-  {n:"Molag Bal — Lion Pelt",opt:"offerings",loc:"mMaterials",b:{c:"lvl",t:"Lvl 17+"},x:1,o:"Loot a Lion Pelt (mountain lions) to offer."},
-  {n:"Boethiah — Daedra Heart",opt:"offerings",loc:"mMaterials",b:{c:"lvl",t:"Lvl 20+"},x:1,o:"Offer a Daedra Heart (dropped by Dremora / found at Daedric shrines)."},
-  {n:"Clavicus Vile — 500 gold",opt:"offerings",loc:"mMaterials",b:{c:"lvl",t:"Lvl 20+"},x:1,o:"Bring 500 gold to offer."},
-  // --- Collection quests & materials ---
-  {n:"Nirnroot ×100 total — Seeking Your Roots",opt:"materials",loc:"mMaterials",b:{c:"start",t:"Collect"},u:"Seeking_Your_Roots",o:"Give Nirnroot to Sinderion (West Weald Inn basement, Skingrad). Reward tiers unlock at 10, 30, 60 and 100 delivered."},
-  {n:"Ayleid Statues ×10 — The Collector",opt:"materials",loc:"mMaterials",b:{c:"start",t:"Collect"},u:"The_Collector",o:"Sell ten Ayleid Statues to Umbacano in the Imperial City; leads into Nothing You Can Possess & Secrets of the Ayleids."},
-  {n:"Vampire Dust — Order of the Virtuous Blood",opt:"materials",loc:"mMaterials",b:{c:"start",t:"Collect"},u:"Order_of_the_Virtuous_Blood_(quest)",o:"Looted from any vampire; used by the Order and for alchemy."},
-  {n:"Oddities — The Museum of Oddities (SI)",opt:"materials",loc:"mMaterials",b:{c:"start",t:"Collect"},u:"Shivering:The_Museum_of_Oddities",o:"Bring rare oddity items (Fork of Horripilation, Two-Toed Tom, etc.) to Una Armina in Crucible."},
-  {n:"◆ Vampire Cure recipe — Melisande (near Skingrad)",opt:"materials",loc:"mMaterials",x:1,u:"Vampire_Cure",o:"Only needed if you contract vampirism. Gather all five items below, then see Melisande."},
-  {n:"Bloodgrass ×6",opt:"materials",loc:"mMaterials",x:1,o:"Common inside Oblivion Gates."},
-  {n:"Garlic ×5",opt:"materials",loc:"mMaterials",x:1,o:"Hangs in most farmhouses and inns."},
-  {n:"Nightshade ×5",opt:"materials",loc:"mMaterials",x:1,o:"Grows around ruins and graveyards."},
-  {n:"Argonian Blood ×1",opt:"materials",loc:"mMaterials",x:1,o:"Use Melisande's knife on any Argonian NPC."},
-  {n:"Ashes of Hindaril ×1",opt:"materials",loc:"mMaterials",x:1,o:"Defeat the master vampire Hindaril at Redwater Slough."},
-  {n:"◆ Crusader's Relics — Knights of the Nine",opt:"materials",loc:"mMaterials",x:1,u:"Knights_of_the_Nine",o:"Assembled across the DLC; each piece is a quest step, not a random find."},
-  {n:"Helm, Cuirass, Gauntlets, Greaves, Boots & Shield of the Crusader",opt:"materials",loc:"mMaterials",x:1,o:"Six armor relics gathered through the KotN questline."},
-  {n:"Mace of the Crusader & Sword of the Crusader",opt:"materials",loc:"mMaterials",x:1,o:"The two Crusader weapons."},
-];
+  // Scroll-reveal for the panels (independent of WebGL).
+  (function(){
+    var els = document.querySelectorAll('.reveal');
+    if(!('IntersectionObserver' in window)){
+      els.forEach ? els.forEach(function(el){el.classList.add('in')}) : null;
+      return;
+    }
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(en){
+        if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); }
+      });
+    }, {threshold:.16, rootMargin:'0px 0px -40px 0px'});
+    els.forEach(function(el){ io.observe(el); });
+  })();
+</script>
 
-/* ---------- Walkthroughs + known bugs (keyed by normalized quest name) ---------- */
-function norm(s){return s.toLowerCase().replace(/[^a-z0-9]+/g,"")}
-const WALK = {
-  // Fighters Guild
-  "aratproblem":{w:"Get the contract from Azzan at the Anvil Fighters Guild, then visit Arvena Thelas, whose pet rats are being killed. Clear the mountain lions from her basement, then hunt more with Pinarus Inventius. Catch neighbour Quill-Weave planting bait and choose to expose or spare her.",bug:"Talking to Arvena on the bench outside before starting can break it; enter her house to trigger the quest."},
-  "theunfortunateshopkeeper":{w:"See Azzan, then talk to Norbert Lelles at his store in Anvil harbour about repeated break-ins. Wait inside the shop overnight (about 11pm-1am) until three thieves break in, kill them, and report back.",bug:"In Remastered his shop can stay locked so it never opens; reload or enter during open hours."},
-  "thedesolatemine":{w:"Burz gro-Khash in Cheydinhal gives you steel weapons for three fighters (Rienna, Elidor, Brag gro-Bharg) at the Desolate Mine to the northwest. Hand each their weapon, clear the goblins, then return to Burz.",bug:"A rockfall trap at the mine's rear can instantly kill your companions — trigger it yourself before they reach it."},
-  "unfinishedbusiness":{w:"Modryn Oreyn in Chorrol reports Maglir abandoned a contract. Find him at the West Weald Inn in Skingrad; recover Brenus Astis' journal from Fallen Rock Cave, then report Maglir or cover for him.",bug:"Rocks at the cave's dead-end are scripted to fall and can trap you; don't save there — reload or use TCL to escape."},
-  "drunkanddisorderly":{w:"Modryn sends you to Leyawiin to calm three angry guildmates at the Five Claws Lodge. Talk to Margarte, gather five ectoplasm from undead in the Chapel of Zenithar undercroft, tell the fighters, then report to Modryn.",bug:""},
-  "denofthieves":{w:"Azzan sends you to recover a client's stolen property from a thieves' cave hideout. Defeat the thieves, retrieve the goods, and report back for your reward.",bug:""},
-  "ameliondebt":{w:"Burz sends you to Biene Amelion in Water's Edge, who owes 1000 gold. Either pay it or recover her grandfather's enchanted sword and cuirass from Amelion Tomb to sell, then report to Burz.",bug:"Entering Biene's house counts as trespassing; NPCs also grumble about raiding the tomb even if you just paid."},
-  "themasterson":{w:"Modryn fears guildmaster Vilena Donton's son Viranus took a dangerous solo contract. Travel to the site to assist him, only to find he's been slain. Return to break the news to Modryn and Vilena.",bug:""},
-  "moreunfinishedbusiness":{w:"Modryn reports Maglir defaulted again. Find him at the Lonely Suitor Lodge in Bravil — he's joined the Blackwood Company. Collect ten imp gall (Robber's Glen Cave), give them to Aryarie at the Bravil Mages Guild, then report to Modryn.",bug:""},
-  "azaniblackheart":{w:"Modryn gives you a personal contract on the marauder leader Azani Blackheart. Travel to his Ayleid ruin hideout, fight through his marauders, kill him, and take proof back to Modryn.",bug:""},
-  "thefugitives":{w:"Burz in Cheydinhal sends you after escaped fugitives. Ask around Bravil for their location, then head to Bloodmayne Cave and kill all four across its two zones. Return to Burz.",bug:"Avoid the alternative Bloodmayne Cave entrance — it's blocked by a rock wall and forces backtracking; use the main entrance."},
-  "thewanderingscholar":{w:"Azzan sends you to meet Elante of Alinor at Brittlerock Cave and escort her to the Daedric shrine of Molag Bal within. Clear the way or protect her as she fights through, then return to Azzan.",bug:""},
-  "trollsofforsakenmine":{w:"Burz tasks you with clearing the trolls from the Forsaken Mine. Travel there, kill the trolls infesting it, and return to Burz for your reward and advancement.",bug:""},
-  "thestoneofstalessia":{w:"Modryn assigns you to recover the stolen Stone of St. Alessia. Track the thieves to their hideout, defeat them, reclaim the Stone, and report to Modryn — suspicion falls on the Blackwood Company.",bug:""},
-  "thenoblesdaughter":{w:"Modryn sends you to investigate a contract the Blackwood Company mishandled involving a noble's daughter. Gather evidence of their reckless methods and report your findings to Modryn.",bug:""},
-  "mysteryatharlunswatch":{w:"Burz sends you to the hamlet of Harlun's Watch, frightened by strange marsh lights. Investigate Swampy Cave, deal with the will-o-the-wisps and creatures, and report back to the villagers and Burz.",bug:""},
-  "informationgathering":{w:"Modryn asks you to go undercover and join the rival Blackwood Company in Leyawiin. Sign up and go on a contract to an Ayleid ruin, where you're given hallucinogenic Hist sap. Report to Modryn.",bug:""},
-  "infiltration":{w:"Still undercover, you join a Blackwood raid on Water's Edge. Under Hist sap the company massacres the innocent villagers, believing them enemies. Escape and report the atrocity to Modryn.",bug:""},
-  "thehist":{w:"Finale: join Modryn to assault the Blackwood Company HQ in Leyawiin. Fight through the company and destroy the Hist tree at its heart. Return to be named the new Master of the Fighters Guild.",bug:""},
-  // Mages Guild
-  "anvilrecommendation":{w:"See Carahil at the Anvil Mages Guild. Meet Arielle Jurard at Brina Cross Inn, then travel the Gold Road with two battlemage escorts and kill the rogue mage Caminalda. Report back to Carahil.",bug:"Caminalda sometimes won't emerge; find her hiding in nearby trees and talk to her to trigger the ambush."},
-  "bravilrecommendation":{w:"Kud-Ei asks you to recover a stolen staff. Track Varon Vamori, learn he sold it to Soris Arenim in the Imperial City, then buy it back (200g) or persuade Soris's wife. Return it to Kud-Ei.",bug:"Conflicts with 'Through a Nightmare, Darkly' (same giver) — finish that first, or on PC use setstage 0002D936 10."},
-  "brumarecommendation":{w:"Jeanne Frasoric asks you to find missing mage J'skar. Either help Volanaro (steal Jeanne's Manual of Spellcraft) to reveal him, or use Detect Life to find the invisible mage yourself. Report to Jeanne.",bug:"Volanaro may not register that you're carrying the Manual of Spellcraft; wait until noon next day and speak to him again."},
-  "cheydinhalrecommendation":{w:"Get a key from Deetsan and use a Buoyancy spell to recover the Ring of Burden from the guild well. Falcar has fled — search his room for two Black Soul Gems and give them to Deetsan.",bug:"Using up the Black Soul Gems elsewhere breaks it (PC: player.additem 0003C7FC 2). Recover the ring within three days or the body vanishes."},
-  "chorrolrecommendation":{w:"Teekeeus asks you to deal with the exiled mage Earana. She points you to the book 'Fingers of the Mountain' at Cloud Top to the northwest — take it from the charred corpse and give it to Teekeeus.",bug:"Duplicating the book on your first Cloud Top visit makes the quest uncompletable — take only the single copy."},
-  "leyawiinrecommendation":{w:"Dagail sends you to recover her lost amulet. Learn it's at Fort Blueblood; clear the marauders, take Manduin's Amulet from the coffin, then confront and defeat the traitor Kalthar before returning it.",bug:"You must confront Kalthar after taking the amulet — leaving the fort first can block completion."},
-  "skingradrecommendation":{w:"Adrienne Berene asks you to find missing mage Erthor, hiding in Bleak Flats Cave west of Skingrad. Clear the zombies and escort Erthor back to Adrienne.",bug:"Erthor may refuse to follow or won't stop; kill all zombies to fix following, or reload / use setstage MG01Destruct 70."},
-  "amagesstaff":{w:"Retrieve staff wood from Wellspring Cave, killing the necromancers beyond it. Give it to Raminus Polus, choose a Destruction/Illusion/Mysticism enchant from Delmar, then collect the finished staff next day.",bug:"Sometimes not all necromancers spawn (or they drown), stalling it — check the shores nearby, or use setstage MG08MagesStaff 30."},
-  "ulteriormotives":{w:"Raminus sends you to fetch a book from Count Skingrad. Visit the castle, wait a day, then meet Mercator, who ambushes you with necromancers until Count Hassildor intervenes. Return the Count's message to Raminus.",bug:"After stage 40 Hassildor may refuse to talk, blocking Vampire Cure later; fix by choosing the 'Janus Hassildor' topic with Raminus."},
-  "vahtacenssecret":{w:"At the Ayleid ruin Vahtacen, solve the pillar puzzle by casting Fire Damage, Frost Damage, Damage Magicka, then Fortify Magicka on it. Proceed and take the Ancient Elven Helm for Irlav Jarol.",bug:"In Remastered spells can miss the pillar depending where they strike; stand directly in front of the room's door so all four register."},
-  "necromancersmoon":{w:"Ask Tar-Meena about the book 'Necromancer's Moon', then via Bothiel go to Dark Fissure. Witness the necromancers' ritual during the Shade of the Revenant, take a Worm Anchorite's note, and return to Raminus.",bug:"Running this alongside the Orrery plugin can send Bothiel into inaccessible areas — disable the Orrery temporarily."},
-  "liberationorapprehension":{w:"Arch-Mage Traven sends you to Nenyond Twyll to rescue informant Mucianus Allias. Kill the necromancer Mariette Rielle, find Mucianus turned into an unsavable Worm Thrall, and report to Traven, then Raminus.",bug:"You may not actually be promoted to Warlock afterward; on PC fix with player.setfactionrank 22296 6."},
-  "informationataprice":{w:"Count Hassildor asks you to remove the vampires in Bloodcrust Cavern and the vampire hunters in Skingrad. Handle both, then get his intel on Mannimarco and deliver it to Traven.",bug:"If you kill the vampires yourself after talking to Eridor you can't persuade the hunters to leave — wait for the hunters' markers in Bloodcrust Cavern first."},
-  "aplotrevealed":{w:"Traven sends you to the Bruma Mages Guild, found ablaze and overrun with undead. Kill the necromancer Camilla Lollia, speak with survivor J'skar, then return to the University.",bug:"Two days later Traven silently starts The Bloodworm Helm — if you loot the helm in Fort Teleman before returning, the questline breaks (PC: addtopic C088 / addtopic C089)."},
-  "thebloodwormhelm":{w:"Traven sends you to Fort Teleman to recover the Bloodworm Helm from Irlav Jarol's body. Fight through the necromancers, take the helm, and return it to Traven.",bug:"Looting the helm before Traven officially assigns the quest leaves no hand-over dialogue — don't enter Fort Teleman early."},
-  "thenecromancersamulet":{w:"At Fort Ontus, find Caranya in the Understreets — she's a traitor, so kill her and take the Necromancer's Amulet. Fight your way out past the mages and return it to Traven.",bug:"Striking the guild mages first counts as murder even here; talk to all of them before confronting Caranya."},
-  "ambush":{w:"Meet the battlemages at Silorn and position them before the necromancers emerge. Fight Falcar and his allies, pursue Falcar inside, and take the Colossal Black Soul Gem from his body for Traven.",bug:"Killing Falcar before he turns hostile counts as murder and starts the Dark Brotherhood questline — talk to him first."},
-  "confronttheking":{w:"Traven names you Arch-Mage and soul-traps himself to shield you from Mannimarco's enchantment. Travel to Echo Cave, fight through, and defeat the King of Worms, Mannimarco.",bug:"Mannimarco can become unhittable after his speech; workarounds include resetting the cell, reflect spells, or fall damage. Don't kill him before he speaks."},
-  "alchemyacquisitions":{w:"Julienne Fanis tells you of the Enchanted Chest in the Arch-Mage's quarters. Place one ingredient inside and return within 24 hours to collect ten more; wait a week before reusing it.",bug:"On PC a scripting error can make one loaf of bread produce 10 carrots instead of duplicating it (fixed by the Unofficial Patch)."},
-  // Thieves Guild
-  "findingthethievesguild":{w:"Ask commoners about the Gray Fox — or get arrested — to hear of a midnight meeting. Go to the Garden of Dareloth in the Imperial City Waterfront after dark to meet Armand Christophe.",bug:""},
-  "maythebestthiefwin":{w:"Beat rivals Amusei and Methredhel to steal Amantius Allectus's diary from his Talos Plaza house, then give it to Armand to join. No killing allowed.",bug:"If a rival grabs the diary first, pickpocket it back from them. Killing anyone during the audition fails it."},
-  "untaxingthepoor":{w:"Armand sends you to steal the tax records from Hieronymus Lex's office in the Imperial Watch tower and hand them over to relieve the Waterfront's poor.",bug:"Sneak or use Chameleon — being seen leaving raises a bounty. Clear any bounty before the next night meeting."},
-  "theelvenmaiden":{w:"Break into the target's home, steal the painting 'The Elven Maiden', and deliver it to your Doyen fence. A tragic backstory unfolds around the piece.",bug:""},
-  "ahdarjisheirloom":{w:"For Ahdarji in Leyawiin, recover her ring — worn by Countess Alessia Caro in Castle Leyawiin. Pickpocket it (easiest while she sleeps), learn it's a deeper Gray Fox matter, and return it.",bug:"Pickpocketing the Countess is tricky — save first. If she leaves the castle the quest can stall."},
-  "misdirection":{w:"Retrieve Hrormir's Icestaff from the Arcane University and use it to embarrass and distract Captain Hieronymus Lex, as the Gray Fox directs.",bug:""},
-  "losthistories":{w:"A guild ledger that could expose members has gone missing. Track down the thief and recover the journal before it falls into the wrong hands.",bug:""},
-  "takingcareoflex":{w:"Get Imperial Watch Captain Hieronymus Lex off the Waterfront for good — gather the citizens' petition/arrange his transfer as the Gray Fox instructs.",bug:""},
-  "turningablindeye":{w:"Steal a rare book detailing the history of the Gray Cowl of Nocturnal from a guarded collection, revealing the curse behind the cowl.",bug:""},
-  "arrowofextrication":{w:"Recover the special Arrow of Extrication, needed to breach the sealed Ayleid ruin for the guild's final heist.",bug:""},
-  "bootsofspringheeljak":{w:"Find the tomb of the legendary thief Springheel Jak and claim his boots, which will help you reach the Elder Scroll in the Ultimate Heist.",bug:"The boots become a quest item — don't lose or sell them before the final quest."},
-  "theultimateheist":{w:"Infiltrate the Imperial Palace, use the Skeleton Key and Boots of Springheel Jak to reach the Old Way beneath, and steal an Elder Scroll for the Gray Fox — breaking the Cowl's curse.",bug:"Very long stealth dungeon; bring the Skeleton Key and expect tough guards and undead."},
-  // Dark Brotherhood
-  "aknifeinthedark":{w:"After you murder an innocent, Lucien Lachance visits you in your sleep. Prove yourself by killing the retired soldier Rufio in the Inn of Ill Omen's back room, then join the Cheydinhal sanctuary.",bug:""},
-  "awaterygrave":{w:"Kill Captain Gaston Tussaud aboard the Marie Elena at the Imperial City Waterfront. Sneak aboard, find his cabin, and eliminate him.",bug:""},
-  "accidentshappen":{w:"Kill Baenlin in Bruma. For the bonus, loosen the mounted trophy above his chair so it falls on him instead of attacking directly.",bug:"Don't let his nephew Gromm catch you — the accidental-kill bonus fails if you're seen or attack Baenlin directly."},
-  "scheduledforexecution":{w:"Break into a prison to kill Valen Dreth. Enter via the sewers; for the bonus, kill no guards along the way.",bug:""},
-  "theassassinatedman":{w:"Reach Francois Motierre in Chorrol and help stage his 'death', then kill the enforcer Hides-His-Heart who arrives to collect his debt.",bug:""},
-  "thelonelywanderer":{w:"Assassinate the target at their isolated home; for the bonus, complete the kill without being detected.",bug:""},
-  "badmedicine":{w:"Travel to the mercenary camp and wipe out the entire Blackwater Brigands company on contract.",bug:""},
-  "whodunit":{w:"At a locked-door party in Summitmist Manor, Skingrad, kill all five guests. For the full bonus, turn them against each other and stay unseen so each body is discovered alone.",bug:"Guests panic and flee when they find a corpse — isolate them one at a time. A guest can occasionally get stuck on furniture."},
-  "permanentretirement":{w:"Kill the retired Adamus Phillida at his villa. For the bonus, catch him off-duty and unarmored (swimming) using the poisoned apple or an arrow, and take his severed finger.",bug:"The bonus requires killing him while off-duty, not in his Legion armor."},
-  "ofsecretandshadow":{w:"Lucien reveals a traitor is exposing the family and orders you to purify the entire sanctuary.",bug:""},
-  "thepurification":{w:"Kill every member of the Cheydinhal sanctuary. Afterward you receive the horse Shadowmere and begin taking dead-drop contracts.",bug:"Point of no return — finish every other sanctuary contract first, as these NPCs are gone forever."},
-  "affairsofawizard":{w:"Collect your orders from the dead drop and assassinate the assigned target, a reclusive wizard, then leave payment at the next drop.",bug:""},
-  "nextofkin":{w:"A dead-drop contract to eliminate an entire family — the last of a bloodline — in a single outing.",bug:""},
-  "brokenvows":{w:"Retrieve your dead-drop orders and carry out the assigned assassination discreetly.",bug:""},
-  "finaljustice":{w:"Track and kill a former Brotherhood member turned informer, per your dead-drop instructions.",bug:""},
-  "amatterofhonor":{w:"A dead-drop contract aboard a ship — board the vessel and eliminate the target.",bug:""},
-  "thecoldestsleep":{w:"Follow your dead-drop orders to a frozen cave and assassinate the target hiding within.",bug:""},
-  "akissbeforedying":{w:"Sanctuary members are turning up dead. Begin investigating the traitor behind the killings as the family unravels.",bug:""},
-  "followingalead":{w:"Follow the trail to Applewatch and uncover the traitor manipulating the Black Hand from the shadows.",bug:""},
-  "honorthymother":{w:"Confront the traitor Mathieu Bellamont at Applewatch, protect the Night Mother, and rise to become her Listener.",bug:""},
-  // Main Quest
-  "delivertheamulet":{w:"Take the Amulet of Kings to Jauffre at Weynon Priory near Chorrol. He sends you to find Uriel's lost heir, Martin, a priest in Kvatch.",bug:""},
-  "breakingthesiegeofkvatch":{w:"Reach ruined Kvatch, help Savlian Matius's guards, and enter the Oblivion Gate. Fight to the sigil tower, take the Sigil Stone to close the gate, then aid the assault.",bug:"Guard NPCs can die and stall the assault — hang back and let them lead. Take the Sigil Stone from the top of the tower to close the gate."},
-  "thebattleforcastlekvatch":{w:"Storm Castle Kvatch with the guards, clear the daedra, and find Martin. Escort him safely out and on to Weynon Priory.",bug:""},
-  "weynonpriory":{w:"Return to find the priory under Mythic Dawn attack. Defend Jauffre, discover the Amulet stolen, then flee with Martin to Cloud Ruler Temple in Bruma.",bug:"Prior Maborel's horse outside is free to take after the attack."},
-  "thepathofdawn":{w:"At Cloud Ruler Temple, decode the four Mythic Dawn Commentaries. Buy Volume IV from the First Edition bookshop in the Imperial City, then meet the cult contact to be led to their shrine.",bug:""},
-  "dagonshrine":{w:"Go undercover into the hidden Mythic Dawn shrine, surrender your gear, sit through Mankar Camoran's sermon, then steal the Mysterium Xarxes and fight your way out.",bug:"Grab your confiscated equipment from the chest before fleeing the shrine."},
-  "spies":{w:"Back in Bruma, root out the Mythic Dawn spies feeding the enemy. Read Jearl's orders, then track and stop the courier.",bug:""},
-  "bloodofthedaedra":{w:"Martin needs a Daedric artifact for his ritual. Complete any Daedric shrine quest to obtain one (Azura's Star is easy and low-level), then give it to Martin.",bug:""},
-  "bloodofthedivines":{w:"Recover the Armor of Tiber Septim from Sancre Tor. Fight through undead, free the trapped ghosts, and take the armor for Martin's ritual.",bug:""},
-  "miscarcand":{w:"Recover a Great Welkynd Stone from the Ayleid ruin Miscarcand. Defeat the King of Miscarcand's ghost and take the stone from the central chamber.",bug:""},
-  "defenseofbruma":{w:"Meet Martin's war council at Cloud Ruler Temple, plan Bruma's defense, and agree to open a small Oblivion Gate to capture a Great Sigil Stone.",bug:""},
-  "alliesforbruma":{w:"Travel to the other counties and persuade each Count to send troops to defend Bruma, closing Oblivion Gates outside their cities to win their support.",bug:"Some counts require their city's gate closed first — check each ruler's dialogue."},
-  "thegreatgate":{w:"At the Battle of Bruma, survive the massive Oblivion Gate, reach the war machine, and capture the Great Sigil Stone before the siege crawler destroys the city.",bug:"Keep Martin alive — he's essential. Lower the difficulty for this fight if your allies fall too fast."},
-  "paradise":{w:"Use the Great Sigil Stone to open a portal to Mankar Camoran's Paradise. Fight through it, kill Camoran, and reclaim the Amulet of Kings.",bug:""},
-  "lightthedragonfires":{w:"Escort Martin and the Amulet to the Imperial City. Fight through the invasion to the Temple of the One for the climactic finale.",bug:"Save before starting — this is the point of no return for the main quest."},
-  // Knights of the Nine
-  "pilgrimage":{w:"Speak to the Prophet in Anvil, who marks the Nine wayshrines on your map. Pray at each of the nine Divine wayshrines across Cyrodiil; a vision of Pelinal Whitestrake then triggers the next quest.",bug:"Pelinal's vision dialogue can cut off at high framerates — cap FPS to 60. Don't mount a horse before the cutscene."},
-  "theshrineofthecrusader":{w:"Travel to the submerged Ayleid ruin Vanua and fight through to Sir Amiel's body. Read his journal to advance, then take the Helm of the Crusader from the altar.",bug:"Sir Amiel's Key can stay stuck as an undroppable quest item after completion (PC: setquestobject, or install the Unofficial DLC patch)."},
-  "prioryofthenine":{w:"Use Sir Amiel's ring to enter the Priory in the West Weald and its Undercroft. Pass the Test of Worth against eight ghostly knights, then take the Cuirass of the Crusader.",bug:"Never use reanimation spells (Staff of Worms, Risen Flesh) on the ghost knights — it can break them permanently and block later quests."},
-  "naturesfury":{w:"Go to the Shrine of Kynareth and speak with Avita Vesnia. Enter the Grove of Trials and let the Forest Guardian bear attack without fighting back to open the cave. Take the Boots of the Crusader.",bug:"The Forest Guardian bear occasionally gets stuck where it spawns, but this doesn't prevent completing the trial."},
-  "thepathoftherighteous":{w:"Pray to Zenithar at the Tomb of Saint Kaladas in Leyawiin's Chapel Undercroft. Equip the Boots of the Crusader to walk the mystical path, take the Mace of Zenithar, then defeat the Aurorans.",bug:"You can't wear the Boots with any Infamy or while wearing the Gray Cowl of Nocturnal — redo the Pilgrimage to reset Infamy, or remove the cowl."},
-  "wisdomoftheages":{w:"Enter Fort Bulwark and solve three puzzles: the lit floor tiles, rotating the four guardian statues inward, and placing Rodgar's eight equipment pieces in the matching chests. Claim the Shield of the Crusader.",bug:"In Remastered the central chest may show 'Empty' — loot it anyway and the items appear."},
-  "stendarrsmercy":{w:"Visit the Chapel of Stendarr in Chorrol and speak with Areldur about the cursed Gauntlets held by Kellen. Pray to take the curse yourself, then use Lay Hands on Kellen to free him and claim the Gauntlets.",bug:"If the curse's knockdown triggers while you're swimming your character can lock up floating — Wait or fast-travel to escape."},
-  "thefaithfulsquire":{w:"Return to the Priory after gathering the four relics to meet the squire Lathon, who gives you the Greaves of the Crusader and reveals the Sword lies in Underpall Cave.",bug:"Lathon may fail to appear at the Priory; on PC use prid his RefID then moveto player to bring him to you."},
-  "theswordofthecrusader":{w:"Enter Underpall Cave and defeat Lord Vlindrel's wraith to claim the Sword of the Crusader. Take it to the Chapel of Arkay in Cheydinhal, defend it, and pray to purify the blade.",bug:"In Remastered Lathon may refuse to enter the cave or get stuck on his horse — kill his horse before he mounts, or walk him back on foot."},
-  "theblessingoftalos":{w:"Return to the Priory to meet the Prophet, attend his sermon, then speak with him to receive the Blessing of Talos greater power, which lets you follow Umaril into the spirit realm.",bug:""},
-  "umariltheunfeathered":{w:"Assault Garlas Malatar and destroy the Dark Orb to stop the Aurorans respawning, then defeat Umaril's physical form. Cast the Blessing of Talos to pursue and kill his spirit above the Imperial City.",bug:"On return you may lose the ability to sit — switch to first person, try to sit, then wait ~10 seconds. Don't let knights follow before Sir Thedret's speech ends."},
-  // Daedric shrines
-  "azura":{w:"Shrine sits in the northeastern mountains north of Cheydinhal; offer Glow Dust at dawn or dusk. Azura sends you to Gutted Mine to slay five worshippers turned to vampires, freeing their souls. Rewards Azura's Star.",bug:""},
-  "sheogorath":{w:"Shrine lies in the Great Forest southwest of Leyawiin; offer Lettuce, Yarn and a Soul Gem. Fulfil the K'Sharra Prophecy at Border Watch by triggering three plagues (vermin, famine, fear). Rewards the Wabbajack.",bug:""},
-  "namira":{w:"Shrine is east-southeast of Bruma; make yourself repulsive by dropping Personality to 20 or below. Cast Namira's Shroud on four priests of Arkay in the ruin Anga so the Forgotten kill them. Rewards the Ring of Namira.",bug:"Completing it awards no Fame point (an oversight). It still must be finished to count toward Hermaeus Mora's requirement."},
-  "vaermina":{w:"Shrine stands on Lake Poppad southwest of Cheydinhal; offer a Black Soul Gem. Enter Arkved's Tower and retrieve the stolen Orb of Vaermina from the sleeping Arkved. Rewards the Skull of Corruption.",bug:"If you carry both empty and filled Black Soul Gems, Vaermina takes an empty one — store any filled ones first."},
-  "sanguine":{w:"Shrine is northwest of Skingrad at the treeline; offer Cyrodilic Brandy. Crash Countess Alessia Caro's dinner at Castle Leyawiin and cast Stark Reality to strip the guests to their underwear, then escape. Rewards the Sanguine Rose.",bug:"The Countess may skip the dinner — wait several days around 6-8pm, or fast-travel between Castle Chorrol and Leyawiin to force her appearance."},
-  "malacath":{w:"Shrine sits on the Gold Coast north of Anvil; offer Troll Fat. Malacath sends you to Lord Drad's Estate to free the ogre slaves locked in Bleak Mine. Rewards the warhammer Volendrung.",bug:"If you don't kill all of Drad's guards, survivors follow you until one dies. Killing the ogres yourself fails the quest and blocks Hermaeus Mora's."},
-  "meridia":{w:"Shrine lies between Kvatch and Skingrad; offer Bonemeal, Ectoplasm or Mort Flesh. Meridia, who loathes the undead, sends you to Howling Cave to wipe out the necromancers desecrating her shrine. Rewards the Ring of Khajiit.",bug:""},
-  "nocturnal":{w:"Shrine is off the Yellow Road north of Leyawiin; no offering needed. Recover the stolen Eye of Nocturnal, submerged in Tidewater Cave. Rewards the Skeleton Key, an unbreakable master lockpick.",bug:""},
-  "peryite":{w:"Shrine sits east of Bravil near the Silverfish River; no offering required. Peryite paralyzes you and sends your spirit into his realm to retrieve five trapped souls. Rewards the shield Spell Breaker.",bug:""},
-  "mephala":{w:"Shrine is north of the Imperial City; offer Nightshade. Reignite a feud in Bleaker's Way by stealing evidence from the two family heads and planting it to frame each, unseen. Rewards the Ebony Blade.",bug:"If a family head catches you planting evidence the quest can fail — but you can kill the witness and loot the evidence back to still finish."},
-  "hermaeusmora":{w:"Shrine lies in the northeast west of Bruma; you must be level 20 and have completed every other Daedric quest. Fill Mora's Soul Trap with ten souls, one of each race. Rewards the Oghma Infinium.",bug:"Mora's Soul Trap often fails to capture a soul — cast it on a throwaway NPC, save, reload, then recast on your intended target."},
-  "hircine":{w:"Shrine sits in the Great Forest south of the Imperial City; offer a Bear or Wolf Pelt. Hircine sends you to Harcane Grove to kill the unicorn and bring back its horn. Rewards the Savior's Hide.",bug:""},
-  "molagbal":{w:"The shrine east of the Imperial City isn't auto-marked; offer a Lion Pelt. Corrupt the honourable Melus Petilius at Brindle Home — drop the Cursed Mace by his wife's grave and goad him into killing you. Rewards the Mace of Molag Bal.",bug:"Petilius can kill you outright — keep health above 20 (lower difficulty if needed). The Cursed Mace is a hard-to-drop quest item."},
-  "boethiah":{w:"Shrine lies in Blackwood south of Cheydinhal; offer a Daedra Heart. Boethiah sends you through a portal to fight the Tournament of Ten Bloods, defeating every opponent in turn. Rewards Goldbrand.",bug:"A tournament opponent can occasionally fail to appear or get stuck — reload an earlier save to continue."},
-  "clavicusvile":{w:"Shrine is in the West Weald near Lake Rumare; offer 500 gold. Go to Vindasel to take the sentient sword Umbra from its Bosmer wielder. Return it for the Masque of Clavicus Vile, or keep Umbra.",bug:"In unpatched versions the game can crash on exit after you return Umbra — the official patch fixes it, or obtain Umbra before the dog-statue quest item is given."},
-  // Shivering Isles
-  "adoorinnibenbay":{w:"Follow the marker to a strange island in Niben Bay, enter the door, and sit at the table to speak with Haskill. Accept Sheogorath's offer and pass through into the Fringe.",bug:"If the accept dialogue option is missing, on PC enter AddTopic SE01HaskillChoice9. If Haskill blocks the door, reload and retry."},
-  "throughthefringeofmadness":{w:"In Passwall, learn about the Gatekeeper and then kill it — Jayred Ice-Veins' bone arrows or Relmyna's Tears poison help greatly. Take its keys and enter the Mania or Dementia gate to reach New Sheoth.",bug:"If the gates won't open after the kill, on PC set SE02.HaskillGreet to 2. If the adventurers won't fight, wait an hour or reload."},
-  "baitingthetrap":{w:"In Xedilian, decide the fate of three intruding adventurers at each chamber with lethal Dementia traps or maddening Mania illusions. Collect your reward, fight the Knights of Order, and report to Sheogorath.",bug:"NPCs may misbehave so switches can't be used — wait an hour or reload. If gates to the next area won't open, relaunch the game."},
-  "abettermousetrap":{w:"Speak with Sheogorath and Haskill, then go to Xedilian. Retrieve three Focus Crystals from Grummite Shamans, place them in their Judgment Nexuses, and arm the dungeon with the Attenuator.",bug:"A Shaman carrying a needed staff sometimes fails to spawn — wait for the cell to respawn, or use tcl if one is stuck behind a gate."},
-  "understandingmadness":{w:"Learn Summon Haskill from Sheogorath, then join both courts — speak with Thadon, Duke of Mania, and Syl, Duchess of Dementia — completing a task for each to prove yourself.",bug:"Summon Haskill may wrongly say 'You must be in the Shivering Isles' — fix by leaving through the Door to Cyrodiil and returning."},
-  "thecoldflameofagnon":{w:"At Cylarne, side with the Golden Saints or Dark Seducers and help them win the battle. After the commander sacrifices themselves to light the Flame of Agnon, carry it to New Sheoth and light the Great Torch.",bug:"If the quest fails to update at the sacrifice, on PC use setstage SE06 170 (Saints) or 175 (Seducers)."},
-  "ritualofaccession":{w:"Speak with Sheogorath about your promotion, consult the priests Arctus and Dervenin about each ritual, then return and choose to become Duke/Duchess of Mania or of Dementia.",bug:"This choice is permanent — it changes your rewards and some later content."},
-  "ritualofmaniaritualofdementia":{w:"Carry out the accession ritual for whichever side you chose — Mania (poison Thadon with Greenmote) or Dementia (assassinate Syl) — to seize the dukedom.",bug:"Follow the chosen court's steps exactly; the other side's ritual becomes unavailable once you commit."},
-  "retakingthefringe":{w:"With the Greymarch begun, Sheogorath sends you back through the Gates of Madness to the Fringe, now overrun by Knights of Order. Destroy the Order obelisk spawning reinforcements and retake Passwall.",bug:"The battle can stall if the Knights or obelisk fail to spawn — saving and reloading inside the Fringe usually resets the encounter."},
-  "rebuildingthegatekeeper":{w:"Seek the Gatekeeper's creator Relmyna Verenim. Gather the flesh-atronach ingredients she needs (Dermis Membrane, Osseous Marrow, Essence of Breath, Blood Liqueur) from the ruin Xaselm so she can birth a new Gatekeeper.",bug:"If an ingredient-bearing creature in Xaselm fails to spawn, wait for the area to respawn or reload."},
-  "thehelplessarmy":{w:"Sheogorath's forces are demoralized by the Greymarch. Rally and unite the feuding Golden Saints and Dark Seducers so they'll stand together, then return to Sheogorath.",bug:""},
-  "symbolsofoffice":{w:"To defeat Jyggalag you need the Staff of Sheogorath. Seek Dyus of Mytheria, imprisoned in Knifepoint Hollow, who explains how the Staff must be reforged and which components to gather.",bug:""},
-  "therootsofmadness":{w:"Descend into the roots of the Tree of Madness beneath the Palace to recover the branch needed to reforge the Staff, fighting through Order forces and Gnarls.",bug:""},
-  "theendoforder":{w:"With the reforged Staff of Sheogorath, use it to shut down the final Obelisk of Order in the throne room. Jyggalag manifests, and you battle to end the Greymarch.",bug:""},
-  "theprinceofmadness":{w:"In the aftermath, Jyggalag is freed from his curse and departs, and you ascend as the new Sheogorath, Prince of Madness and ruler of the Shivering Isles.",bug:""},
-  // Side / city quests
-  "wherespiritshavelease":{w:"Buy Benirus Manor in Anvil from Velwyn Benirus (5,000g), then sleep to trigger ghost attacks. Find Lorgren's skeletal hand and diary, get Velwyn to unseal the basement portal, and destroy the lich Lorgren.",bug:"Velwyn often won't open the sealed basement wall — cast Charm, wait an hour, or use setstage MS02 90. The skeletal hand may also fail to spawn (setstage MS02 45)."},
-  "zerovisibility":{w:"Enter the invisible town of Aleswell and speak to the disembodied Diram Serethi, who sends you to the mage Ancotar at his fort. Get the reversal scroll, then read it inside Aleswell to restore the villagers.",bug:"Reading the scroll drains 50 Luck unless you first raise Ancotar's disposition and get his Ring of Protection; cure Luck loss at a chapel altar."},
-  "theghostshipofanvil":{w:"Speak to Varulae at the Anvil docks, then board the ghost ship Serpent's Wake and fight through three decks of spectral crew. Retrieve Varulae's crystal ball from the hold and return it for the enchanted cutlass Redwave.",bug:""},
-  "thesirensdeception":{w:"Maelona in Anvil reports married men being robbed. At the Flowing Bowl, Signy and Faustina recruit you; go to Gweden Farm around 11pm. When the Sirens turn hostile, defeat them to end the scheme.",bug:"The gang may not follow their schedule to the farm — if accomplices attack while Faustina doesn't, killing her can register as murder."},
-  "caughtinthehunt":{w:"In Bravil, Ursanne Loche's husband owes Kurdan gro-Dragol. Kurdan sends you to Fort Grief for an 'axe' — actually a deadly hunting trap. Fight through, free Aleron, kill Kurdan, take the real key, and tell Ursanne.",bug:"Attacking Kurdan before talking to him can permanently break the quest. If the key won't register, take it singly rather than 'take all'."},
-  "theforlornwatchman":{w:"At the Wawnet Inn near the Imperial City, Grantham Blakeley tells of a shore ghost. At night the Forlorn Watchman leads you to the wreck of the Emma May — board it, read the captain's log, and free the ghost.",bug:"The Watchman sometimes fails to appear or wanders into the water — you can find the Wreck of the Emma May yourself along the shore, or reload."},
-  "abrotherhoodbetrayed":{w:"In Bruma, investigate Bradon Lirrian's death — question townsfolk and find Gelebourne's Journal in Raynil Dralas's room. Report to Captain Carius, then kill the vampire Raynil at Boreal Stone Cave and return the amulet to widow Erline.",bug:"Carius may never appear — go straight to Boreal Stone Cave and take the keys from Raynil yourself. Reach the cave within 24 hours or Raynil escapes."},
-  "liftingthevale":{w:"Countess Carvain of Bruma wants the Draconian Madstone. Via Serpent's Trail, reach Pale Pass, fight through the Akaviri fort to Commander Mishaxhi, open the hidden chamber, take the Madstone, and return it.",bug:"The reward Ring of the Vipereye is an undroppable quest item; consider also stealing the original Draconian Madstone displayed behind the Countess's throne (it's better and removable)."},
-  "sinsofthefather":{w:"Enter Redguard Valley Cave, defeat the ogres, and take the Honorblade of Chorrol from the Ogre Chieftain. Return it to Castle Chorrol for the Escutcheon of Chorrol, or sell it to the fence Fathis Ules.",bug:"If you return the blade honourably, Fathis Ules may refuse to fence for you after you join the Thieves Guild."},
-  "twosidesofthecoin":{w:"In Bruma, raise Arnora's disposition past 60, then get jailed to speak with her lover Jorundr. Side with one, then dig up the treasure outside Bruma's north gate.",bug:"Never punch Jorundr in jail — a guard enters and kills him, making the quest impossible."},
-  "abrushwithdeath":{w:"In Cheydinhal, painter Rythe Lythandas has vanished; his wife Tivela asks for help. Enter his sealed studio, take the Brush of Truepaint, and use it on the painting to enter the Painted World. Kill the trolls, find Rythe, and paint a way out.",bug:"The painted trolls can only be killed, and the exit made, with the Brush of Truepaint — if you drop or lose it inside you become trapped."},
-  "corruptionandconscience":{w:"In Cheydinhal, Llevana Nedaren and guard Garrus report corrupt Captain Ulrich Leland. Either retrieve the incriminating letter from Ulrich's quarters to have him arrested, or lure him to Llevana's house to be killed.",bug:"Ulrich stays essential until you complete the 'Allies for Bruma' main-quest stage, so plan your method around that."},
-  "thewaywardknight":{w:"Count Andel Indarys of Cheydinhal asks you to rescue his son Farwil and the Knights of the Thorn from an Oblivion Gate. Fight through the Chaos Stronghold keeping Farwil and Bremman alive, reach the Sigil Stone, and return.",bug:"Farwil may leave Oblivion on his own, completing it oddly while the Count falsely claims you killed his son — reload to avoid this. Bring target-healing spells."},
-  "throughanightmaredarkly":{w:"Kud-Ei in Bravil sends you to the comatose Henantier. Wear the Dreamworld Amulet and sleep to enter his dream, pass four trials (Patience, Perception, Courage, Resolve) to collect the Elements, and return them to wake him.",bug:"Wearing gear like the Boots of Springheel Jak in the dream makes their bonus permanent but the item unusable. Don't attempt while in the Shivering Isles."},
-  "ashadowoverhackdirt":{w:"Seed-Neeus in Chorrol asks you to find her missing daughter Dar-Ma in eerie Hackdirt. Find Dar-Ma's diary at the inn, meet Jiv Hiriel after dark for a key, descend into the Caverns, rescue Dar-Ma, and escort her home.",bug:"Fast-traveling after the rescue can hang the quest — instead talk to Seed-Neeus about the 'missing daughter' topic to complete it. Don't run ahead of Dar-Ma."},
-  "canvasthecastle":{w:"Countess Arriana Valga of Castle Chorrol hires you to recover a portrait stolen from her throne room. Question the suspects and gather evidence, then confront the thief and choose to report them or stay quiet.",bug:""},
-  "legacylost":{w:"Guilbert Jemane at Chorrol's Grey Mare wants to reclaim the family estate, Weatherleah. Have Sabine Laul mark it on your map, travel south, kill the ogres occupying the homestead, and escort both brothers back.",bug:"The defending ogres sometimes wander far from Weatherleah — search the surrounding wilderness, as ogres roam long distances."},
-  "separatedatbirth":{w:"Reynald Jemane at Chorrol's Grey Mare is baffled that people in Cheydinhal seem to know him. Investigate there to find his long-lost twin Guilbert, and arrange for the brothers to meet back in Chorrol.",bug:""},
-  "thekillingfield":{w:"Valus Odiil in Chorrol fears goblins will destroy his farm and kill his sons. Meet sons Antus and Rion at Odiil Farm and defend against three waves of goblins, keeping both sons alive.",bug:"The sons are reckless and die easily, lowering your reward — hang back and use healing or shielding spells on them."},
-  "knightsofthewhitestallion":{w:"Count Marius Caro of Leyawiin gives you the White Stallion cuirass and sends you after the Black Bow Bandits. Kill their leader at Telepe, collect proof, and return for the Ring of the White Stallion.",bug:""},
-  "mazogatheorc":{w:"In Leyawiin's castle, ask Count Caro about the Orc Mazoga, then persuade the hunter Weebam-Na to talk to her. Escort Mazoga to Fisherman's Rock, help kill Mogens Wind-Shifter's bandits, and report to the Count.",bug:"Mazoga may just stand there instead of attacking — start the fight yourself and she'll join in."},
-  "raidongreyland":{w:"Lerexus Callidus in Leyawiin sends you to raid a criminal house in Greyland, southwest of the city. Defeat the skooma dealer Kylius Lonavo and the marauder inside, take Kylius's ring as proof, and return it.",bug:""},
-  "whomgodsannoy":{w:"Rosentia Gallenus in Leyawiin is followed by four scamps from the cursed Staff of the Everscamp. Take the staff from her, carry it to Darkfathom Cave, and place it on the altar to pass on the curse.",bug:"While you hold the staff the four scamps follow you and can't be permanently killed — they only stop once you place it on the altar."},
-  "helpinghands":{w:"After buying and furnishing Rosethorn Hall in Skingrad, find Eyja at the Colovian Traders shop. Offer her 150 gold to become your housekeeper, and she moves into the Servant's Quarters.",bug:""},
-  "paranoia":{w:"In Skingrad, the paranoid Bosmer Glarthir has you spy on three townsfolk and report at nightly meetings behind the Great Chapel. Tell him the truth (he turns on you) or feed his delusions (he attacks them) — it ends in violence.",bug:"Glarthir may not show for the midnight meetings — wait until the exact scheduled time or reload, as his schedule is finicky."},
-  "therosethorncache":{w:"Inside Rosethorn Hall in Skingrad, find the Long Forgotten Note atop a top-floor cabinet (climb the furniture). Solve its riddle — the answer is an hourglass — then take the battered hourglass from the basement pillar for the cache.",bug:"The battered hourglass won't appear on the basement pillar until you've first picked up the Long Forgotten Note."},
-  "vampirecure":{w:"Once infected, seek the witch Melisande near Skingrad (Drakelowe). She sends you for five empty Grand Soul Gems, the ashes of the vampire Hindaril at Redwater Slough, and reagents like nightshade and bloodgrass, then brews the cure.",bug:"At advanced vampirism stages NPCs refuse to talk, blocking progress — feed on a sleeping victim to lower your stage first. The five Grand Soul Gems must be empty."},
-  "anunexpectedvoyage":{w:"Resting on the Bloated Float tavern-ship at the Imperial City Waterfront, you wake to find it hijacked and sailed off. Defeat Lynch, Minx, Wrath and leader Selene (or talk Selene down), then rest to return and collect your reward from Ormil.",bug:"Having certain other quests active can freeze the game when you sleep to return — finish conflicting quests first or reload."},
-  "imperialcorruption":{w:"Beggars in the Imperial City name corrupt guard captain Audens Avidius. Visit the watch captains until Itius Hayn agrees to arrest him given two witnesses; convince Ruslan and Luronk gro-Glurzog to testify.",bug:"Using a Charm scroll on Itius before he asks for witnesses resets his dialogue so he demands them again — kill Audens instead, or reload."},
-  "orderofthevirtuousblood":{w:"Seridur of the Order in the Imperial City hires you to hunt the vampire Roland Jenseric. Track Roland to Memorial Cave, where he reveals Seridur is the real vampire. Kill Seridur and report to Gilen Norvalo.",bug:"Roland is innocent — if you kill him before hearing his explanation at Memorial Cave, the quest can fail to progress."},
-  "unfriendlycompetition":{w:"Jensine's Society of Concerned Merchants asks you to investigate Thoronir's cheap goods. Follow him at night to supplier Agarmir, find the Macabre Manifest in Agarmir's house, then kill him at the Trentius Mausoleum.",bug:"Don't grab the shovel proof before talking to Agarmir, or you get no completion. Take the mausoleum key after the fight or you can't re-enter."},
-  "thecollector":{w:"Lord Umbacano in the Imperial City's Talos Plaza pays well for Ayleid Statues recovered from ruins. Collect all ten statues and deliver them to him for a bonus, opening his further Ayleid quests.",bug:"Sell the statues all at once rather than one at a time — individual sales pay less and you miss the completion bonus."},
-  "secretsoftheayleids":{w:"Umbacano gives you a carved map-stone to retrieve the Ayleid Crown of Lindai from Lipsand Tarn. Sell it to Umbacano or to rival scholar Herminia Cinna in Bruma; Umbacano ultimately wants crowning as king at Nenalata.",bug:"Umbacano can get stuck pathing to Nenalata for the crowning — wait or reload. Siding with Herminia Cinna avoids the escort entirely."},
-  "nothingyoucanpossess":{w:"Umbacano sends you to the Ayleid ruin Malada for a carved panel, using his sketch and the book 'Cleansing of the Fane'. Reach the central chamber, defeat the lich, take the carving, deal with rival Claude Maric outside, and return.",bug:"Claude Maric actually holds the stone key — take it from him. If reading 'Cleansing of the Fane' from your inventory won't advance it, drop it and read it off the floor."},
-  "goblintrouble":{w:"Barthel Gernand, settling Cropsford southwest of the Imperial City, needs the local goblins dealt with. Recover the Totem Head from Timberscar Cave and destroy the enemy totem at Cracked Wood Cave, or wipe out the goblins.",bug:"The marker may point at a goblin carrying the Totem when it's actually on the ground in Timberscar Cave — search the cave if it's not on the body."},
-  "tearsofthesavior":{w:"S'drassa in Leyawiin collects Garridan's Tears. Read the book 'Knightfall' for background, then travel to Frostfire Glade near Bruma (enter with refined frost salts) and find the five tiny tears around the frozen knight Garridan.",bug:"The tears are tiny and easily lost under rocks — move slowly in sneak, use Night-Eye or a light spell, and a third-person overhead view to spot them."},
-};
+<script type="module">
+import * as THREE from 'three';
 
-/* ---------- Quest-givers (who to talk to / where the quest begins) ---------- */
-const GIVER_RAW = {
-  // Setup & homes
-  "The Tutorial (escape the Imperial sewers)":"Emperor Uriel Septim VII — the Imperial Prison",
-  "Zero Visibility":"The villagers of Aleswell (the disembodied Diram Serethi)",
-  "Where Spirits Have Lease":"Velwyn Benirus — Anvil (sells you Benirus Manor)",
-  // Arena
-  "Pit Dog — Brawler — Bloodletter":"Owyn — Imperial City Arena",
-  "Myrmidon — Warrior — Gladiator":"Owyn — Imperial City Arena",
-  "Hero":"Owyn — Imperial City Arena",
-  "Origin of the Gray Prince":"Agronak gro-Malog, the Gray Prince — Imperial City Arena",
-  "Champion (defeat the Gray Prince)":"Owyn — Imperial City Arena",
-  "Grand Champion":"Owyn — Imperial City Arena",
-  // Fighters Guild
-  "A Rat Problem":"Azzan — Anvil Fighters Guild",
-  "The Unfortunate Shopkeeper":"Azzan — Anvil Fighters Guild",
-  "The Desolate Mine":"Burz gro-Khash — Cheydinhal Fighters Guild",
-  "Unfinished Business":"Modryn Oreyn — Chorrol Fighters Guild",
-  "Drunk and Disorderly":"Modryn Oreyn — Chorrol Fighters Guild",
-  "Den of Thieves":"Azzan — Anvil Fighters Guild",
-  "Amelion's Debt":"Burz gro-Khash — Cheydinhal Fighters Guild",
-  "The Master's Son":"Modryn Oreyn — Chorrol Fighters Guild",
-  "More Unfinished Business":"Modryn Oreyn — Chorrol Fighters Guild",
-  "Azani Blackheart":"Modryn Oreyn — Chorrol Fighters Guild",
-  "The Fugitives":"Burz gro-Khash — Cheydinhal Fighters Guild",
-  "The Wandering Scholar":"Azzan — Anvil Fighters Guild",
-  "Trolls of Forsaken Mine":"Burz gro-Khash — Cheydinhal Fighters Guild",
-  "The Stone of St. Alessia":"Modryn Oreyn — Chorrol Fighters Guild",
-  "The Noble's Daughter":"Modryn Oreyn — Chorrol Fighters Guild",
-  "Mystery at Harlun's Watch":"Burz gro-Khash — Cheydinhal Fighters Guild",
-  "Information Gathering":"Modryn Oreyn — Chorrol Fighters Guild",
-  "Infiltration":"Modryn Oreyn — Chorrol Fighters Guild",
-  "The Hist":"Modryn Oreyn — Chorrol Fighters Guild",
-  // Mages Guild
-  "Anvil Recommendation":"Carahil — Anvil Mages Guild",
-  "Bravil Recommendation":"Kud-Ei — Bravil Mages Guild",
-  "Bruma Recommendation":"Jeanne Frasoric — Bruma Mages Guild",
-  "Cheydinhal Recommendation":"Deetsan — Cheydinhal Mages Guild",
-  "Chorrol Recommendation":"Teekeeus — Chorrol Mages Guild",
-  "Leyawiin Recommendation":"Dagail — Leyawiin Mages Guild",
-  "Skingrad Recommendation":"Adrienne Berene — Skingrad Mages Guild",
-  "A Mage's Staff":"Raminus Polus — Arcane University",
-  "Ulterior Motives":"Raminus Polus — Arcane University",
-  "Vahtacen's Secret":"Raminus Polus — Arcane University",
-  "Necromancer's Moon":"Raminus Polus — Arcane University",
-  "Liberation or Apprehension?":"Arch-Mage Hannibal Traven — Arcane University",
-  "Information at a Price":"Hannibal Traven — Arcane University",
-  "A Plot Revealed":"Hannibal Traven — Arcane University",
-  "The Bloodworm Helm":"Hannibal Traven — Arcane University",
-  "The Necromancer's Amulet":"Hannibal Traven — Arcane University",
-  "Ambush":"Hannibal Traven — Arcane University",
-  "Confront the King":"Hannibal Traven — Arcane University",
-  "Alchemy Acquisitions":"Julienne Fanis — Arcane University",
-  // Thieves Guild
-  "Finding the Thieves Guild":"Armand Christophe — IC Waterfront, Garden of Dareloth (at night)",
-  "May the Best Thief Win":"Armand Christophe — IC Waterfront",
-  "Untaxing the Poor":"Armand Christophe — IC Waterfront",
-  "The Elven Maiden":"Armand Christophe — IC Waterfront",
-  "Ahdarji's Heirloom":"Ahdarji — Leyawiin",
-  "Misdirection":"S'Krivva — Bravil",
-  "Lost Histories":"S'Krivva — Bravil",
-  "Taking Care of Lex":"The Gray Fox",
-  "Turning a Blind Eye":"The Gray Fox",
-  "Arrow of Extrication":"The Gray Fox",
-  "Boots of Springheel Jak":"The Gray Fox",
-  "The Ultimate Heist":"The Gray Fox",
-  // Dark Brotherhood
-  "A Knife in the Dark":"Lucien Lachance (visits you in your sleep after you murder an innocent)",
-  "A Watery Grave":"Ocheeva — Cheydinhal Sanctuary",
-  "Accidents Happen":"Ocheeva — Cheydinhal Sanctuary",
-  "Scheduled for Execution":"Ocheeva — Cheydinhal Sanctuary",
-  "The Assassinated Man":"Ocheeva — Cheydinhal Sanctuary",
-  "The Lonely Wanderer":"Ocheeva — Cheydinhal Sanctuary",
-  "Bad Medicine":"Ocheeva — Cheydinhal Sanctuary",
-  "Whodunit?":"Ocheeva — Cheydinhal Sanctuary",
-  "Permanent Retirement":"Ocheeva — Cheydinhal Sanctuary",
-  "Of Secret and Shadow":"Lucien Lachance — Cheydinhal Sanctuary",
-  "The Purification":"Lucien Lachance",
-  "Affairs of a Wizard":"Lucien Lachance (dead-drop orders)",
-  "Next of Kin":"Lucien Lachance (dead-drop orders)",
-  "Broken Vows":"Lucien Lachance (dead-drop orders)",
-  "Final Justice":"Lucien Lachance (dead-drop orders)",
-  "A Matter of Honor":"Lucien Lachance (dead-drop orders)",
-  "The Coldest Sleep":"Lucien Lachance (dead-drop orders)",
-  "A Kiss Before Dying":"The Black Hand (Arquen)",
-  "Following a Lead":"The Night Mother",
-  "Honor Thy Mother":"The Night Mother",
-  // Main Quest
-  "Deliver the Amulet":"Jauffre — Weynon Priory, near Chorrol",
-  "Breaking the Siege of Kvatch":"Savlian Matius — outside ruined Kvatch",
-  "The Battle for Castle Kvatch":"Savlian Matius — Kvatch",
-  "Weynon Priory":"Jauffre — Weynon Priory",
-  "The Path of Dawn":"Martin — Cloud Ruler Temple, Bruma",
-  "Dagon Shrine":"Martin — Cloud Ruler Temple",
-  "Spies":"Jauffre — Cloud Ruler Temple",
-  "Blood of the Daedra":"Martin — Cloud Ruler Temple",
-  "Blood of the Divines":"Martin — Cloud Ruler Temple",
-  "Miscarcand":"Martin — Cloud Ruler Temple",
-  "Defense of Bruma":"Martin — Cloud Ruler Temple",
-  "Allies for Bruma":"Martin — Cloud Ruler Temple",
-  "The Great Gate":"Martin — Bruma",
-  "Paradise":"Martin — Cloud Ruler Temple",
-  "Light the Dragonfires":"Martin — Imperial City",
-  // Knights of the Nine
-  "Pilgrimage":"The Prophet — outside the Chapel of Dibella, Anvil",
-  "Nature's Fury":"Avita Vesnia — Shrine of Kynareth",
-  "Stendarr's Mercy":"Areldur — Chapel of Stendarr, Chorrol",
-  "The Faithful Squire":"Lathon — Priory of the Nine",
-  "The Blessing of Talos":"The Prophet — Priory of the Nine",
-  // Shivering Isles
-  "A Door in Niben Bay":"Haskill (through the mysterious Door in Niben Bay)",
-  "Through the Fringe of Madness":"Haskill, on Sheogorath's behalf",
-  "Baiting the Trap":"Sheogorath — New Sheoth Palace",
-  "A Better Mousetrap":"Sheogorath — New Sheoth Palace",
-  "Understanding Madness":"Sheogorath — New Sheoth Palace",
-  "The Cold Flame of Agnon":"Sheogorath — New Sheoth Palace",
-  "Ritual of Accession":"Sheogorath — New Sheoth Palace",
-  "Retaking the Fringe":"Sheogorath — New Sheoth Palace",
-  "Rebuilding the Gatekeeper":"Relmyna Verenim",
-  "The Helpless Army":"Sheogorath — New Sheoth Palace",
-  "Symbols of Office":"Sheogorath — New Sheoth Palace",
-  "The Roots of Madness":"Sheogorath — New Sheoth Palace",
-  "The End of Order":"Sheogorath — New Sheoth Palace",
-  "The Prince of Madness":"Sheogorath",
-  // City & side quests
-  "The Ghost Ship of Anvil":"Varulae — Anvil docks",
-  "The Siren's Deception":"Maelona — Anvil",
-  "Caught in the Hunt":"Ursanne Loche — Bravil",
-  "The Forlorn Watchman":"Grantham Blakeley — Wawnet Inn, near the Imperial City",
-  "A Brotherhood Betrayed":"Captain Carius & townsfolk — Bruma",
-  "Lifting the Vale":"Countess Narina Carvain — Castle Bruma",
-  "Sins of the Father":"Jorundr — Bruma jail",
-  "Two Sides of the Coin":"Arnora Auria — Bruma",
-  "A Brush with Death":"Tivela Lythandas — Cheydinhal",
-  "Corruption and Conscience":"Guardsman Garrus Darelliun — Cheydinhal",
-  "The Wayward Knight":"Count Andel Indarys — Castle Cheydinhal",
-  "Through a Nightmare, Darkly":"Kud-Ei — Bravil",
-  "A Shadow Over Hackdirt":"Seed-Neeus — Chorrol",
-  "Canvas the Castle":"Countess Arriana Valga — Castle Chorrol",
-  "Legacy Lost":"Guilbert Jemane — the Grey Mare, Chorrol",
-  "Separated at Birth":"Reynald Jemane — the Grey Mare, Chorrol",
-  "The Killing Field":"Valus Odiil — Chorrol",
-  "Knights of the White Stallion":"Count Marius Caro — Castle Leyawiin",
-  "Mazoga the Orc":"Mazoga (ask Count Caro about her) — Castle Leyawiin",
-  "Raid on Greyland":"Legionnaire Lerexus Callidus — Leyawiin",
-  "Whom Gods Annoy":"Rosentia Gallenus — Leyawiin",
-  "Helping Hands":"Eyja — Skingrad (after buying Rosethorn Hall)",
-  "Paranoia":"Glarthir — Skingrad",
-  "The Rosethorn Cache":"The Long Forgotten Note — inside Rosethorn Hall, Skingrad",
-  "Vampire Cure":"Count Janus Hassildor — Castle Skingrad",
-  "An Unexpected Voyage":"Ormil — the Bloated Float, IC Waterfront",
-  "Imperial Corruption":"The beggars of the Imperial City",
-  "Order of the Virtuous Blood":"Seridur — Imperial City, Temple District",
-  "Unfriendly Competition":"Jensine — Imperial City Market District",
-  "The Collector":"Umbacano — Imperial City, Talos Plaza District",
-  "Secrets of the Ayleids":"Umbacano — Imperial City, Talos Plaza District",
-  "Nothing You Can Possess":"Umbacano — Imperial City, Talos Plaza District",
-  "Goblin Trouble":"Barthel Gernand — Crestbridge Camp",
-  "Tears of the Savior":"S'drassa — Castle Leyawiin",
-};
-const GIVERS={};
-for(const k in GIVER_RAW){GIVERS[norm(k)]=GIVER_RAW[k]}
+const canvas = document.getElementById('scene');
+const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-/* ---------- State ---------- */
-const STORE_KEY="oblivion_checklist_v2", COLLAPSE_KEY="oblivion_collapsed_v2", VIEW_KEY="oblivion_view_v2";
-function slug(s){return s.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/(^-|-$)/g,"")}
-Q.forEach(q=>{q.id=slug(q.n)});
-let state=load(STORE_KEY), collapsed=load(COLLAPSE_KEY), view=localStorage.getItem(VIEW_KEY)||"loc";
-function load(k){try{return JSON.parse(localStorage.getItem(k))||{}}catch(e){return{}}}
-function persist(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
-function saveState(){persist(STORE_KEY,state);flash()}
+/* ---------- capability check on a throwaway canvas ---------- */
+function webglOK(){
+  try{
+    const c = document.createElement('canvas');
+    return !!(window.WebGLRenderingContext && (c.getContext('webgl2') || c.getContext('webgl')));
+  }catch(e){ return false; }
+}
 
-function uespURL(q){const s=q.u||q.n.replace(/\s+/g,"_");const base=s.indexOf(":")>-1?"https://en.uesp.net/wiki/Oblivion-"+s.replace(":","%3A"):"https://en.uesp.net/wiki/Oblivion:"+s;return base}
+function init(){
+  /* ======================= renderer / scene / camera ======================= */
+  const renderer = new THREE.WebGLRenderer({canvas, antialias:true, powerPreference:'high-performance'});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.22;
 
-/* ---------- Render ---------- */
-function render(){
-  const root=document.getElementById("phases");root.innerHTML="";
-  const viewKey=view==="loc"?"loc":"opt";
-  const order=view==="loc"?ORDER_LOC:ORDER_OPT;
-  order.forEach(sid=>{
-    const meta=SECT[sid];if(!meta)return;
-    const items=Q.filter(q=>q[viewKey]===sid);
-    if(!items.length)return;
-    const sec=document.createElement("section");
-    sec.className="phase"+(collapsed[view+":"+sid]?" collapsed":"");
-    const head=document.createElement("div");head.className="phase-head";
-    head.innerHTML='<span class="chev">▶</span><div class="phase-title">'+meta.t+'<small>'+meta.s+'</small></div>'+
-      '<div class="phase-mini"><i></i></div><div class="phase-count"></div>';
-    head.addEventListener("click",()=>{sec.classList.toggle("collapsed");collapsed[view+":"+sid]=sec.classList.contains("collapsed");persist(COLLAPSE_KEY,collapsed)});
-    sec.appendChild(head);
-    const body=document.createElement("div");body.className="phase-body";
-    if(meta.note){const nt=document.createElement("div");nt.className="note"+(meta.note.type==="warn"?" warn":"");nt.innerHTML=meta.note.text;body.appendChild(nt)}
-    const ul=document.createElement("ul");ul.className="quests";
-    items.forEach(q=>{
-      const li=document.createElement("li");li.className="q"+(state[q.id]?" done":"");li.dataset.id=q.id;
-      const badge=q.b?'<span class="badge '+q.b.c+'">'+q.b.t+'</span>':"";
-      const caret=(q.o||!q.x)?'<span class="q-caret">▶</span>':'<span style="width:10px;flex:none"></span>';
-      let detail="";
-      const showLoc = view==="opt" && CITY_SET.has(q.loc);
-      const info = WALK[norm(q.n)]||{};
-      const walk = info.w||"";
-      const bug = info.bug||"";
-      const giver = GIVERS[norm(q.n)]||"";
-      if(q.o||walk||!q.x){
-        detail='<div class="q-detail">'+
-          (showLoc?'<p class="loc-tag">📍 '+SECT[q.loc].t+'</p>':'')+
-          (giver?'<p class="q-giver"><b>Quest-giver</b> '+giver+'</p>':'')+
-          (q.o?'<p class="q-obj">'+q.o+'</p>':'')+
-          (walk?'<p class="q-walk">'+walk+'</p>':(q.o?'':'<p class="q-walk">Full walkthrough steps are on the linked page.</p>'))+
-          (bug?'<div class="q-bug warn"><b>⚠ Known bug:</b> '+bug+'</div>':'')+
-          (q.x&&!q.u?'':'<a class="q-link" href="'+uespURL(q)+'" target="_blank" rel="noopener">Full walkthrough &amp; bug fixes on UESP ↗</a>')+
-          '</div>';
+  const FOG_COLOR = new THREE.Color(0x2a170d);
+  const FOG_DENSITY = 0.00135;
+
+  const scene = new THREE.Scene();
+  scene.fog = new THREE.FogExp2(FOG_COLOR, FOG_DENSITY);
+  renderer.setClearColor(FOG_COLOR, 1);
+
+  const camera = new THREE.PerspectiveCamera(48, window.innerWidth/window.innerHeight, 1, 3000);
+
+  /* ======================= light ======================= */
+  const sunDir = new THREE.Vector3(-0.52, 0.17, -0.84).normalize();
+
+  const sun = new THREE.DirectionalLight(0xffb066, 3.2);
+  sun.position.copy(sunDir).multiplyScalar(600);
+  scene.add(sun);
+
+  /* warm bounce from the far side so the shaded face of the city still reads */
+  const bounce = new THREE.DirectionalLight(0xc98a4e, 0.85);
+  bounce.position.set(0.62, 0.3, 0.78).multiplyScalar(500);
+  scene.add(bounce);
+
+  const hemi = new THREE.HemisphereLight(0x36415a, 0x2a1a0b, 0.95);
+  scene.add(hemi);
+  scene.add(new THREE.AmbientLight(0x241a0e, 1.9));
+
+  /* ======================= sky dome ======================= */
+  const skyMat = new THREE.ShaderMaterial({
+    side: THREE.BackSide,
+    depthWrite:false,
+    uniforms:{
+      uTop:{value:new THREE.Color(0x0a0806)},
+      uHorizon:{value:new THREE.Color(0x3a1f10)},
+      uGlow:{value:new THREE.Color(0xe08a3a)},
+      uSunDir:{value:sunDir.clone()}
+    },
+    vertexShader:`
+      varying vec3 vDir;
+      void main(){
+        vDir = normalize(position);
+        vec4 wp = modelMatrix * vec4(position,1.0);
+        gl_Position = projectionMatrix * viewMatrix * wp;
+      }`,
+    fragmentShader:`
+      uniform vec3 uTop; uniform vec3 uHorizon; uniform vec3 uGlow; uniform vec3 uSunDir;
+      varying vec3 vDir;
+      void main(){
+        vec3 d = normalize(vDir);
+        float h = clamp(d.y, 0.0, 1.0);
+        vec3 col = mix(uHorizon, uTop, pow(h, 0.55));
+        float toSun = max(dot(d, normalize(uSunDir)), 0.0);
+        col += uGlow * pow(toSun, 6.0)  * 0.3 * (1.0 - h*0.7);
+        col += uGlow * pow(toSun, 42.0) * 0.85;
+        col = mix(col, uHorizon * 0.5, smoothstep(0.0, -0.3, d.y));
+        gl_FragColor = vec4(col, 1.0);
+        #include <tonemapping_fragment>
+        #include <colorspace_fragment>
+      }`
+  });
+  scene.add(new THREE.Mesh(new THREE.SphereGeometry(1400, 32, 20), skyMat));
+
+  /* soft sun disc / haze sprite */
+  function glowTexture(inner, outer){
+    const c = document.createElement('canvas'); c.width = c.height = 128;
+    const g = c.getContext('2d');
+    const grad = g.createRadialGradient(64,64,0,64,64,64);
+    grad.addColorStop(0, inner);
+    grad.addColorStop(0.35, outer);
+    grad.addColorStop(1, 'rgba(0,0,0,0)');
+    g.fillStyle = grad; g.fillRect(0,0,128,128);
+    const t = new THREE.CanvasTexture(c);
+    t.colorSpace = THREE.SRGBColorSpace;
+    return t;
+  }
+  const sunSprite = new THREE.Sprite(new THREE.SpriteMaterial({
+    map: glowTexture('rgba(255,206,140,0.95)', 'rgba(216,110,40,0.45)'),
+    blending: THREE.AdditiveBlending, depthWrite:false, fog:false, transparent:true, opacity:0.85
+  }));
+  sunSprite.position.copy(sunDir).multiplyScalar(1150);
+  sunSprite.scale.setScalar(540);
+  scene.add(sunSprite);
+
+  /* ======================= Lake Rumare ======================= */
+  const waterUniforms = {
+    uTime:{value:0},
+    uSunDir:{value:sunDir.clone()},
+    uCamPos:{value:new THREE.Vector3()},
+    uDeep:{value:new THREE.Color(0x0c1016)},
+    uShallow:{value:new THREE.Color(0x3a2a18)},
+    uSunColor:{value:new THREE.Color(0xffb668)},
+    uFogColor:{value:FOG_COLOR.clone()},
+    uFogDensity:{value:FOG_DENSITY}
+  };
+  const WAVE = `
+    float wave(vec2 p, float t){
+      return sin(p.x*0.045 + t*0.62)*0.55
+           + sin(p.y*0.061 - t*0.44)*0.45
+           + sin((p.x+p.y)*0.028 + t*0.85)*0.35
+           + sin(length(p)*0.05 - t*1.05)*0.30;
+    }`;
+  const waterMat = new THREE.ShaderMaterial({
+    uniforms: waterUniforms,
+    vertexShader: WAVE + `
+      uniform float uTime;
+      varying vec3 vWorldPos;
+      void main(){
+        vec3 pos = position;
+        pos.z += wave(pos.xy, uTime);
+        vec4 wp = modelMatrix * vec4(pos, 1.0);
+        vWorldPos = wp.xyz;
+        gl_Position = projectionMatrix * viewMatrix * wp;
+      }`,
+    fragmentShader: WAVE + `
+      uniform float uTime;
+      uniform vec3 uSunDir, uCamPos, uDeep, uShallow, uSunColor, uFogColor;
+      uniform float uFogDensity;
+      varying vec3 vWorldPos;
+      void main(){
+        vec2 p = vWorldPos.xz;
+        float e = 1.4;
+        float hC = wave(p, uTime);
+        float hX = wave(p + vec2(e, 0.0), uTime);
+        float hZ = wave(p + vec2(0.0, e), uTime);
+        vec3 n = normalize(vec3(hC - hX, e * 0.85, hC - hZ));
+        vec3 V = normalize(uCamPos - vWorldPos);
+        vec3 L = normalize(uSunDir);
+        vec3 H = normalize(L + V);
+        float ndv = max(dot(n, V), 0.0);
+        float fres = pow(1.0 - ndv, 3.0);
+        vec3 col = mix(uDeep, uShallow, fres * 0.9);
+        float ndh = max(dot(n, H), 0.0);
+        col += uSunColor * pow(ndh, 160.0) * 2.6;   /* sharp glints */
+        col += uSunColor * pow(ndh, 16.0)  * 0.22;  /* broad warm sheen */
+        float dist = length(uCamPos - vWorldPos);
+        float fog = 1.0 - exp(-uFogDensity * uFogDensity * dist * dist);
+        col = mix(col, uFogColor, clamp(fog, 0.0, 1.0));
+        gl_FragColor = vec4(col, 1.0);
+        #include <tonemapping_fragment>
+        #include <colorspace_fragment>
+      }`
+  });
+  const water = new THREE.Mesh(new THREE.PlaneGeometry(2800, 2800, 150, 150), waterMat);
+  water.rotation.x = -Math.PI/2;
+  scene.add(water);
+
+  /* ======================= materials ======================= */
+  const stoneIvory  = new THREE.MeshStandardMaterial({color:0xd9ccab, roughness:0.86, metalness:0.04});
+  const stoneWarm   = new THREE.MeshStandardMaterial({color:0xcbb98d, roughness:0.9,  metalness:0.02});
+  const stoneDark   = new THREE.MeshStandardMaterial({color:0x5d4e33, roughness:0.95});
+  const groundMat   = new THREE.MeshStandardMaterial({color:0x55462c, roughness:1.0});
+  const rockMat     = new THREE.MeshStandardMaterial({color:0x2e2416, roughness:1.0});
+  const roofMat     = new THREE.MeshStandardMaterial({color:0x6e4a33, roughness:0.92});
+  const buildingMat = new THREE.MeshStandardMaterial({color:0xffffff, roughness:0.88, metalness:0.03});
+  const spireMat    = new THREE.MeshStandardMaterial({color:0xe6d6a6, roughness:0.55, metalness:0.35});
+
+  const city = new THREE.Group();
+  scene.add(city);
+
+  /* ======================= the island ======================= */
+  const CITY_Y = 4; /* deck height above the lake */
+  const ground = new THREE.Mesh(new THREE.CylinderGeometry(114, 122, 14, 96), groundMat);
+  ground.position.y = CITY_Y - 7;
+  city.add(ground);
+  const skirt = new THREE.Mesh(new THREE.CylinderGeometry(122, 138, 10, 96), rockMat);
+  skirt.position.y = -8;
+  city.add(skirt);
+
+  /* ======================= ring walls ======================= */
+  function ringWall(rOuter, thickness, height, mat){
+    const shape = new THREE.Shape();
+    shape.absarc(0, 0, rOuter, 0, Math.PI*2, false);
+    const hole = new THREE.Path();
+    hole.absarc(0, 0, rOuter - thickness, 0, Math.PI*2, true);
+    shape.holes.push(hole);
+    const geo = new THREE.ExtrudeGeometry(shape, {depth:height, bevelEnabled:false, curveSegments:72});
+    geo.rotateX(-Math.PI/2);
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.position.y = CITY_Y;
+    return mesh;
+  }
+  const rings = [
+    {r:108, t:5.0, h:11, towers:12, towerR:3.4, mat:stoneIvory},
+    {r:78,  t:4.0, h:9,  towers:8,  towerR:2.8, mat:stoneWarm},
+    {r:48,  t:4.0, h:8,  towers:8,  towerR:2.4, mat:stoneIvory},
+    {r:26,  t:3.0, h:7,  towers:6,  towerR:2.0, mat:stoneIvory}
+  ];
+  const towerGeo = new THREE.CylinderGeometry(1, 1.15, 1, 10);
+  const capGeo = new THREE.ConeGeometry(1, 1, 10);
+  for(const ring of rings){
+    city.add(ringWall(ring.r, ring.t, ring.h, ring.mat));
+    for(let i = 0; i < ring.towers; i++){
+      const a = (i / ring.towers) * Math.PI * 2 + 0.18;
+      const th = ring.h + 6;
+      const tower = new THREE.Mesh(towerGeo, stoneIvory);
+      tower.scale.set(ring.towerR, th, ring.towerR);
+      tower.position.set(Math.cos(a)*(ring.r - ring.t/2), CITY_Y + th/2, Math.sin(a)*(ring.r - ring.t/2));
+      city.add(tower);
+      const cap = new THREE.Mesh(capGeo, stoneDark);
+      cap.scale.set(ring.towerR*1.25, 3.4, ring.towerR*1.25);
+      cap.position.set(tower.position.x, CITY_Y + th + 1.7, tower.position.z);
+      city.add(cap);
+    }
+  }
+
+  /* ======================= districts (instanced rooftops) ======================= */
+  function scatter(rIn, rOut, tries, streetEvery, streetHalf, hMin, hMax){
+    const out = [];
+    for(let i = 0; i < tries; i++){
+      const a = Math.random() * Math.PI * 2;
+      const m = a % streetEvery;
+      if(m < streetHalf || m > streetEvery - streetHalf) continue; /* radial street gap */
+      const r = rIn + Math.random() * (rOut - rIn);
+      out.push({
+        x: Math.cos(a) * r, z: Math.sin(a) * r,
+        w: 2.6 + Math.random() * 4.6, d: 2.6 + Math.random() * 4.6,
+        h: hMin + Math.random() * (hMax - hMin),
+        rot: a + Math.PI/2 + (Math.random() - .5) * 0.25
+      });
+    }
+    return out;
+  }
+  const lots = [
+    ...scatter(31, 43, 120, Math.PI/3, 0.075, 4.5, 9.5),
+    ...scatter(53, 73, 300, Math.PI/3, 0.062, 3.5, 8.0),
+    ...scatter(83, 102, 420, Math.PI/4, 0.05, 3.0, 7.0)
+  ];
+  const boxGeo = new THREE.BoxGeometry(1, 1, 1);
+  boxGeo.translate(0, 0.5, 0);
+  const buildings = new THREE.InstancedMesh(boxGeo, buildingMat, lots.length);
+  const dummy = new THREE.Object3D();
+  const tint = new THREE.Color();
+  lots.forEach((b, i) => {
+    dummy.position.set(b.x, CITY_Y, b.z);
+    dummy.rotation.set(0, b.rot, 0);
+    dummy.scale.set(b.w, b.h, b.d);
+    dummy.updateMatrix();
+    buildings.setMatrixAt(i, dummy.matrix);
+    tint.setHSL(0.105 + Math.random()*0.02, 0.24 + Math.random()*0.12, 0.5 + Math.random()*0.2);
+    buildings.setColorAt(i, tint);
+  });
+  city.add(buildings);
+
+  /* pitched roofs on most lots */
+  const roofLots = lots.filter(() => Math.random() < 0.7);
+  const roofGeo = new THREE.ConeGeometry(1, 1, 4);
+  roofGeo.rotateY(Math.PI/4);
+  roofGeo.translate(0, 0.5, 0);
+  const roofs = new THREE.InstancedMesh(roofGeo, roofMat, roofLots.length);
+  roofLots.forEach((b, i) => {
+    dummy.position.set(b.x, CITY_Y + b.h, b.z);
+    dummy.rotation.set(0, b.rot, 0);
+    const rr = Math.max(b.w, b.d) * 0.78;
+    dummy.scale.set(rr, 1.6 + Math.random()*2.0, rr);
+    dummy.updateMatrix();
+    roofs.setMatrixAt(i, dummy.matrix);
+    tint.setHSL(0.05 + Math.random()*0.03, 0.3, 0.22 + Math.random()*0.1);
+    roofs.setColorAt(i, tint);
+  });
+  city.add(roofs);
+
+  /* a few civic domes (Temple district) */
+  const domeMat = new THREE.MeshStandardMaterial({color:0xbfae86, roughness:0.6, metalness:0.2});
+  [[37, 0.5, 8], [-30, 2.4, 5], [34, 3.9, 4]].forEach(([r, a, s]) => {
+    const dome = new THREE.Mesh(new THREE.SphereGeometry(1, 20, 12, 0, Math.PI*2, 0, Math.PI/2), domeMat);
+    dome.scale.setScalar(s);
+    dome.position.set(Math.cos(a)*r, CITY_Y + 5, Math.sin(a)*r);
+    city.add(dome);
+    const drum = new THREE.Mesh(new THREE.CylinderGeometry(s*0.98, s*1.05, 5, 20), stoneIvory);
+    drum.position.set(dome.position.x, CITY_Y + 2.5, dome.position.z);
+    city.add(drum);
+  });
+
+  /* ======================= the White-Gold Tower ======================= */
+  const wgt = new THREE.Group();
+  const tiers = [
+    {rTop:11.5, rBot:13.5, h:28, mat:stoneIvory},
+    {rTop:8.2,  rBot:9.6,  h:30, mat:stoneIvory},
+    {rTop:5.4,  rBot:6.6,  h:26, mat:stoneWarm}
+  ];
+  let ty = CITY_Y;
+  for(const t of tiers){
+    const tier = new THREE.Mesh(new THREE.CylinderGeometry(t.rTop, t.rBot, t.h, 20), t.mat);
+    tier.position.y = ty + t.h/2;
+    wgt.add(tier);
+    ty += t.h;
+    const ledge = new THREE.Mesh(new THREE.TorusGeometry(t.rTop + 0.7, 0.8, 8, 24), spireMat);
+    ledge.rotation.x = Math.PI/2;
+    ledge.position.y = ty;
+    wgt.add(ledge);
+  }
+  const spire = new THREE.Mesh(new THREE.ConeGeometry(4.6, 30, 16), spireMat);
+  spire.position.y = ty + 15;
+  wgt.add(spire);
+  const tipMat = new THREE.MeshStandardMaterial({
+    color:0xffe9b0, emissive:0xffca6e, emissiveIntensity:2.2, roughness:0.3
+  });
+  const tip = new THREE.Mesh(new THREE.ConeGeometry(1.4, 9, 10), tipMat);
+  tip.position.y = ty + 30 + 3.5;
+  wgt.add(tip);
+  const tipLight = new THREE.PointLight(0xffca6e, 90, 220, 2);
+  tipLight.position.y = tip.position.y + 2;
+  wgt.add(tipLight);
+  const tipGlow = new THREE.Sprite(new THREE.SpriteMaterial({
+    map: glowTexture('rgba(255,226,160,0.95)', 'rgba(228,160,80,0.4)'),
+    blending: THREE.AdditiveBlending, depthWrite:false, transparent:true, fog:false
+  }));
+  tipGlow.position.y = tip.position.y + 1;
+  tipGlow.scale.setScalar(26);
+  wgt.add(tipGlow);
+  city.add(wgt);
+
+  /* ======================= causeways over the lake ======================= */
+  const bridgeMat = stoneWarm;
+  const pierGeo = new THREE.CylinderGeometry(2.2, 2.8, 14, 8);
+  [0.55, 2.65, 4.55].forEach(a => {
+    const len = 250;
+    const midR = 122 + len/2;
+    const deck = new THREE.Mesh(new THREE.BoxGeometry(len, 4, 8), bridgeMat);
+    deck.position.set(Math.cos(a)*midR, 3, Math.sin(a)*midR);
+    deck.rotation.y = -a;
+    scene.add(deck);
+    for(let r = 150; r < 122 + len; r += 42){
+      const pier = new THREE.Mesh(pierGeo, stoneDark);
+      pier.position.set(Math.cos(a)*r, -2, Math.sin(a)*r);
+      scene.add(pier);
+    }
+  });
+
+  /* ======================= far shores of Rumare ======================= */
+  const hillMat = new THREE.MeshStandardMaterial({color:0x2b2012, roughness:1.0});
+  const hillGeo = new THREE.SphereGeometry(1, 12, 8, 0, Math.PI*2, 0, Math.PI/2);
+  for(let i = 0; i < 20; i++){
+    const a = (i/20) * Math.PI * 2 + Math.random()*0.28;
+    const r = 500 + Math.random()*180;
+    const hill = new THREE.Mesh(hillGeo, hillMat);
+    hill.scale.set(90 + Math.random()*130, 14 + Math.random()*20, 90 + Math.random()*130);
+    hill.position.set(Math.cos(a)*r, -4, Math.sin(a)*r);
+    hill.rotation.y = Math.random()*Math.PI;
+    scene.add(hill);
+  }
+
+  /* ======================= a distant Oblivion Gate ======================= */
+  const gateGroup = new THREE.Group();
+  const gateGeo = new THREE.TorusGeometry(16, 2.4, 7, 22);
+  const gpos = gateGeo.attributes.position;
+  for(let i = 0; i < gpos.count; i++){ /* jagged daedric stone */
+    gpos.setXYZ(i,
+      gpos.getX(i) + (Math.random()-.5)*1.6,
+      gpos.getY(i) + (Math.random()-.5)*1.6,
+      gpos.getZ(i) + (Math.random()-.5)*1.2
+    );
+  }
+  gateGeo.computeVertexNormals();
+  const gateRing = new THREE.Mesh(gateGeo, new THREE.MeshStandardMaterial({
+    color:0x1a0d08, emissive:0xc0562a, emissiveIntensity:1.5, roughness:0.7
+  }));
+  gateRing.position.y = 17;
+  gateGroup.add(gateRing);
+  const gateFire = new THREE.Sprite(new THREE.SpriteMaterial({
+    map: glowTexture('rgba(255,110,40,0.9)', 'rgba(192,60,26,0.35)'),
+    blending: THREE.AdditiveBlending, depthWrite:false, transparent:true, fog:false, opacity:0.55
+  }));
+  gateFire.position.y = 17;
+  gateFire.scale.setScalar(70);
+  gateGroup.add(gateFire);
+  const gateLight = new THREE.PointLight(0xe0562a, 40, 260, 2);
+  gateLight.position.y = 20;
+  gateGroup.add(gateLight);
+  const GA = 2.72, GR = 360;
+  gateGroup.position.set(Math.cos(GA)*GR, 0, Math.sin(GA)*GR);
+  gateGroup.lookAt(0, 20, 0);
+  scene.add(gateGroup);
+
+  /* ======================= city window-lights ======================= */
+  function pointsFrom(list){
+    const arr = new Float32Array(list.length * 3);
+    list.forEach((p, i) => { arr[i*3] = p[0]; arr[i*3+1] = p[1]; arr[i*3+2] = p[2]; });
+    const g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.BufferAttribute(arr, 3));
+    return g;
+  }
+  const windowPts = [];
+  for(let i = 0; i < 240; i++){
+    const b = lots[(Math.random()*lots.length)|0];
+    windowPts.push([b.x + (Math.random()-.5)*b.w, CITY_Y + 1.5 + Math.random()*(b.h-1.5), b.z + (Math.random()-.5)*b.d]);
+  }
+  const windows = new THREE.Points(pointsFrom(windowPts), new THREE.PointsMaterial({
+    color:0xffb45e, size:1.7, sizeAttenuation:true, transparent:true, opacity:0.9,
+    map: glowTexture('rgba(255,214,150,1)', 'rgba(255,150,70,0.5)'),
+    blending: THREE.AdditiveBlending, depthWrite:false
+  }));
+  scene.add(windows);
+
+  /* ======================= drifting embers ======================= */
+  const EMBERS = 420;
+  const emberPos = new Float32Array(EMBERS * 3);
+  const emberSeed = new Float32Array(EMBERS * 2); /* speed, phase */
+  const emberCol = new Float32Array(EMBERS * 3);
+  const cGold = new THREE.Color(0xffcf7d), cEmber = new THREE.Color(0xff7a3c);
+  for(let i = 0; i < EMBERS; i++){
+    const a = Math.random()*Math.PI*2, r = Math.sqrt(Math.random()) * 300;
+    emberPos[i*3]   = Math.cos(a)*r;
+    emberPos[i*3+1] = 2 + Math.random()*160;
+    emberPos[i*3+2] = Math.sin(a)*r;
+    emberSeed[i*2]   = 2.2 + Math.random()*5.5;
+    emberSeed[i*2+1] = Math.random()*Math.PI*2;
+    tint.copy(cGold).lerp(cEmber, Math.random());
+    emberCol[i*3] = tint.r; emberCol[i*3+1] = tint.g; emberCol[i*3+2] = tint.b;
+  }
+  const emberGeo = new THREE.BufferGeometry();
+  emberGeo.setAttribute('position', new THREE.BufferAttribute(emberPos, 3));
+  emberGeo.setAttribute('color', new THREE.BufferAttribute(emberCol, 3));
+  const embers = new THREE.Points(emberGeo, new THREE.PointsMaterial({
+    size:2.6, sizeAttenuation:true, vertexColors:true, transparent:true, opacity:0.85,
+    map: glowTexture('rgba(255,235,200,1)', 'rgba(255,160,80,0.5)'),
+    blending: THREE.AdditiveBlending, depthWrite:false
+  }));
+  scene.add(embers);
+
+  /* ======================= camera rig — orbit / parallax / scroll ======================= */
+  const target = new THREE.Vector3(0, 30, 0);
+  const rig = {
+    theta: 0.12,            tTheta: 0.12,
+    phi:   1.07,            tPhi:   1.07,
+    radius: 340,            tRadius: 340,
+    parX: 0, parY: 0, tParX: 0, tParY: 0
+  };
+  const PHI_MIN = 0.6, PHI_MAX = 1.34;
+  let dragging = false, lastX = 0, lastY = 0, scrollT = 0;
+
+  canvas.addEventListener('pointerdown', e => {
+    dragging = true; lastX = e.clientX; lastY = e.clientY;
+    canvas.classList.add('dragging');
+    try{ canvas.setPointerCapture(e.pointerId); }catch(err){}
+  });
+  window.addEventListener('pointermove', e => {
+    if(dragging){
+      const dx = e.clientX - lastX, dy = e.clientY - lastY;
+      lastX = e.clientX; lastY = e.clientY;
+      rig.tTheta -= dx * 0.0052;
+      if(e.pointerType === 'mouse'){ /* touch keeps vertical for page scroll */
+        rig.tPhi = Math.min(PHI_MAX, Math.max(PHI_MIN, rig.tPhi - dy * 0.0032));
       }
-      li.innerHTML='<div class="q-row"><input type="checkbox" '+(state[q.id]?"checked":"")+'>'+
-        '<div class="q-main">'+caret+'<span class="q-text"><span class="q-name">'+q.n+badge+'</span></span></div></div>'+detail;
-      ul.appendChild(li);
-    });
-    body.appendChild(ul);sec.appendChild(body);root.appendChild(sec);
+    }
+    if(e.pointerType === 'mouse' && !reduced){
+      rig.tParX = (e.clientX / window.innerWidth  - 0.5) * 2;
+      rig.tParY = (e.clientY / window.innerHeight - 0.5) * 2;
+    }
   });
-  // wire events
-  root.querySelectorAll("li.q").forEach(li=>{
-    const id=li.dataset.id;
-    li.querySelector("input").addEventListener("change",e=>{
-      if(e.target.checked)state[id]=true;else delete state[id];
-      li.classList.toggle("done",e.target.checked);saveState();updateProgress();
-    });
-    const main=li.querySelector(".q-main");
-    if(main&&li.querySelector(".q-detail"))main.addEventListener("click",()=>li.classList.toggle("open"));
+  const endDrag = () => { dragging = false; canvas.classList.remove('dragging'); };
+  window.addEventListener('pointerup', endDrag);
+  window.addEventListener('pointercancel', endDrag);
+
+  window.addEventListener('scroll', () => {
+    scrollT = Math.min(1, (window.scrollY || 0) / (window.innerHeight * 1.5));
+  }, {passive:true});
+
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setSize(window.innerWidth, window.innerHeight);
   });
-  updateProgress();
+
+  /* ======================= animation loop ======================= */
+  const clock = new THREE.Clock();
+  let elapsed = 0;
+
+  function frame(){
+    const dt = Math.min(clock.getDelta(), 0.05);
+    if(!reduced) elapsed += dt;
+
+    /* idle auto-rotation */
+    if(!dragging && !reduced) rig.tTheta += 0.045 * dt;
+
+    /* damping */
+    const k = 1 - Math.pow(0.0016, dt); /* frame-rate independent smoothing */
+    rig.theta  += (rig.tTheta  - rig.theta)  * k;
+    rig.phi    += (rig.tPhi    - rig.phi)    * k;
+    rig.parX   += (rig.tParX   - rig.parX)   * k * 0.6;
+    rig.parY   += (rig.tParY   - rig.parY)   * k * 0.6;
+
+    /* scroll pushes the camera in and lowers the eye */
+    rig.tRadius = 340 - scrollT * 95;
+    rig.radius += (rig.tRadius - rig.radius) * k;
+
+    const phi = Math.min(PHI_MAX, Math.max(PHI_MIN,
+      rig.phi + rig.parY * 0.05 - scrollT * 0.1));
+    const theta = rig.theta + rig.parX * 0.06;
+
+    camera.position.set(
+      target.x + rig.radius * Math.sin(phi) * Math.cos(theta),
+      target.y + rig.radius * Math.cos(phi),
+      target.z + rig.radius * Math.sin(phi) * Math.sin(theta)
+    );
+    camera.lookAt(target.x, target.y + 6 - scrollT * 14, target.z);
+
+    /* living details */
+    waterUniforms.uTime.value = elapsed;
+    waterUniforms.uCamPos.value.copy(camera.position);
+
+    if(!reduced){
+      /* embers drift upward with a lateral sway */
+      const pos = emberGeo.attributes.position.array;
+      for(let i = 0; i < EMBERS; i++){
+        pos[i*3+1] += emberSeed[i*2] * dt;
+        pos[i*3]   += Math.sin(elapsed * 0.7 + emberSeed[i*2+1]) * dt * 2.0;
+        if(pos[i*3+1] > 170) pos[i*3+1] = 2;
+      }
+      emberGeo.attributes.position.needsUpdate = true;
+
+      /* the tower breathes, the gate seethes */
+      tipMat.emissiveIntensity = 2.2 + Math.sin(elapsed * 1.4) * 0.5;
+      tipLight.intensity = 90 + Math.sin(elapsed * 1.4) * 18;
+      gateLight.intensity = 40 + Math.sin(elapsed * 6.7) * 7 + Math.sin(elapsed * 17.3) * 4;
+      gateFire.material.opacity = 0.55 + Math.sin(elapsed * 5.1) * 0.12;
+    }
+
+    renderer.render(scene, camera);
+    requestAnimationFrame(frame);
+  }
+  frame();
 }
-const CITY_SET=new Set(["Anvil","Bravil","Bruma","Cheydinhal","Chorrol","Leyawiin","Skingrad","Imperial City"]);
 
-function updateProgress(){
-  const viewKey=view==="loc"?"loc":"opt";
-  const order=view==="loc"?ORDER_LOC:ORDER_OPT;
-  const secs=document.querySelectorAll(".phase");let idx=0,total=0,done=0;
-  order.forEach(sid=>{
-    const items=Q.filter(q=>q[viewKey]===sid);if(!items.length)return;
-    let d=items.filter(q=>state[q.id]).length;total+=items.length;done+=d;
-    const sec=secs[idx++];if(!sec)return;
-    const pct=Math.round(d/items.length*100);
-    sec.querySelector(".phase-mini>i").style.width=pct+"%";
-    sec.querySelector(".phase-count").textContent=d+" / "+items.length;
-  });
-  const pct=total?Math.round(done/total*100):0;
-  document.getElementById("overallFill").style.width=pct+"%";
-  document.getElementById("overallLabel").textContent=done+" / "+total+" ("+pct+"%)";
+try{
+  if(!webglOK()) throw new Error('WebGL unavailable');
+  init();
+  window.__oblivion3D = true;
+  document.body.classList.add('webgl-on');
+}catch(err){
+  document.body.classList.add('no-webgl');
 }
-
-let flashTimer;
-function flash(){const f=document.getElementById("flash");f.classList.add("show");clearTimeout(flashTimer);flashTimer=setTimeout(()=>f.classList.remove("show"),900)}
-
-document.querySelectorAll("#viewSeg button").forEach(b=>b.addEventListener("click",()=>{
-  view=b.dataset.view;localStorage.setItem(VIEW_KEY,view);
-  document.querySelectorAll("#viewSeg button").forEach(x=>x.classList.toggle("active",x===b));
-  render();
-}));
-document.getElementById("expandAll").addEventListener("click",()=>{document.querySelectorAll(".phase").forEach(s=>s.classList.remove("collapsed"));(view==="loc"?ORDER_LOC:ORDER_OPT).forEach(sid=>collapsed[view+":"+sid]=false);persist(COLLAPSE_KEY,collapsed)});
-document.getElementById("collapseAll").addEventListener("click",()=>{document.querySelectorAll(".phase").forEach(s=>s.classList.add("collapsed"));(view==="loc"?ORDER_LOC:ORDER_OPT).forEach(sid=>collapsed[view+":"+sid]=true);persist(COLLAPSE_KEY,collapsed)});
-document.getElementById("resetBtn").addEventListener("click",()=>{if(confirm("Clear all checked quests? Backups are unaffected.")){state={};saveState();render()}});
-document.getElementById("exportBtn").addEventListener("click",()=>{
-  const blob=new Blob([JSON.stringify({app:"oblivion-completionist",v:2,state},null,2)],{type:"application/json"});
-  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="oblivion-progress.json";a.click();URL.revokeObjectURL(a.href);
-});
-document.getElementById("importBtn").addEventListener("click",()=>document.getElementById("importFile").click());
-document.getElementById("importFile").addEventListener("change",e=>{
-  const file=e.target.files[0];if(!file)return;const r=new FileReader();
-  r.onload=()=>{try{const d=JSON.parse(r.result);const inc=d.state||d;if(typeof inc==="object"){state=inc;saveState();render();alert("Progress loaded.")}}catch(err){alert("That file couldn't be read as a progress backup.")}};
-  r.readAsText(file);e.target.value="";
-});
-
-render();
 </script>
 </body>
 </html>

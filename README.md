@@ -1,8 +1,15 @@
-# The Completionist's Codex — Oblivion Remastered
+# Oblivion Remastered — Codex
 
-An interactive, single-file completionist checklist for **The Elder Scrolls IV: Oblivion Remastered**. Every guild, the main quest, both DLCs, all fifteen Daedric shrines, side quests, player homes, offerings and collection quests — charted end to end.
+A fan-made companion for **The Elder Scrolls IV: Oblivion Remastered**, in two parts:
 
-**Live version:** open [`index.html`](index.html) in any browser, or use the GitHub Pages link once enabled.
+- **[`index.html`](index.html) — the landing page.** A cinematic hero with a fully interactive **WebGL** backdrop: an orbitable aerial view of the Imperial City rising out of Lake Rumare, the White-Gold Tower glowing at its heart, drifting embers, and an Oblivion Gate burning on the horizon. Drag to orbit, move to parallax, scroll to descend.
+- **[`codex.html`](codex.html) — the completionist checklist.** Every guild, the main quest, both DLCs, all fifteen Daedric shrines, side quests, player homes, offerings and collection quests — charted end to end, with per-quest walkthroughs, known bugs, and quest-givers.
+
+**Live:** open [`index.html`](index.html) in any browser, or use the GitHub Pages link.
+
+*Fan work. Not affiliated with Bethesda or ZeniMax.*
+
+## The completionist checklist (`codex.html`)
 
 ## Features
 
