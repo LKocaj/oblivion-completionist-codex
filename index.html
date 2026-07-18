@@ -165,6 +165,9 @@
   .q-detail p{margin:0 0 9px;font-size:.98rem}
   .loc-tag{font-family:var(--display);font-weight:600;font-size:.74rem;letter-spacing:.08em;
     color:var(--gold-soft);text-transform:uppercase}
+  .q-giver{font-size:.98rem;color:var(--text);margin:0 0 10px}
+  .q-giver b{font-family:var(--display);font-weight:600;font-size:.66rem;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--gold-soft);margin-right:9px;position:relative;top:-1px}
   .q-obj{font-size:.98rem;color:var(--muted);font-style:italic;margin:0 0 9px !important;
     padding-left:12px;border-left:2px solid var(--edge)}
   .q-walk{font-size:1rem;color:var(--text);margin:0 0 10px;line-height:1.62}
@@ -688,6 +691,169 @@ const WALK = {
   "tearsofthesavior":{w:"S'drassa in Leyawiin collects Garridan's Tears. Read the book 'Knightfall' for background, then travel to Frostfire Glade near Bruma (enter with refined frost salts) and find the five tiny tears around the frozen knight Garridan.",bug:"The tears are tiny and easily lost under rocks — move slowly in sneak, use Night-Eye or a light spell, and a third-person overhead view to spot them."},
 };
 
+/* ---------- Quest-givers (who to talk to / where the quest begins) ---------- */
+const GIVER_RAW = {
+  // Setup & homes
+  "The Tutorial (escape the Imperial sewers)":"Emperor Uriel Septim VII — the Imperial Prison",
+  "Zero Visibility":"The villagers of Aleswell (the disembodied Diram Serethi)",
+  "Where Spirits Have Lease":"Velwyn Benirus — Anvil (sells you Benirus Manor)",
+  // Arena
+  "Pit Dog — Brawler — Bloodletter":"Owyn — Imperial City Arena",
+  "Myrmidon — Warrior — Gladiator":"Owyn — Imperial City Arena",
+  "Hero":"Owyn — Imperial City Arena",
+  "Origin of the Gray Prince":"Agronak gro-Malog, the Gray Prince — Imperial City Arena",
+  "Champion (defeat the Gray Prince)":"Owyn — Imperial City Arena",
+  "Grand Champion":"Owyn — Imperial City Arena",
+  // Fighters Guild
+  "A Rat Problem":"Azzan — Anvil Fighters Guild",
+  "The Unfortunate Shopkeeper":"Azzan — Anvil Fighters Guild",
+  "The Desolate Mine":"Burz gro-Khash — Cheydinhal Fighters Guild",
+  "Unfinished Business":"Modryn Oreyn — Chorrol Fighters Guild",
+  "Drunk and Disorderly":"Modryn Oreyn — Chorrol Fighters Guild",
+  "Den of Thieves":"Azzan — Anvil Fighters Guild",
+  "Amelion's Debt":"Burz gro-Khash — Cheydinhal Fighters Guild",
+  "The Master's Son":"Modryn Oreyn — Chorrol Fighters Guild",
+  "More Unfinished Business":"Modryn Oreyn — Chorrol Fighters Guild",
+  "Azani Blackheart":"Modryn Oreyn — Chorrol Fighters Guild",
+  "The Fugitives":"Burz gro-Khash — Cheydinhal Fighters Guild",
+  "The Wandering Scholar":"Azzan — Anvil Fighters Guild",
+  "Trolls of Forsaken Mine":"Burz gro-Khash — Cheydinhal Fighters Guild",
+  "The Stone of St. Alessia":"Modryn Oreyn — Chorrol Fighters Guild",
+  "The Noble's Daughter":"Modryn Oreyn — Chorrol Fighters Guild",
+  "Mystery at Harlun's Watch":"Burz gro-Khash — Cheydinhal Fighters Guild",
+  "Information Gathering":"Modryn Oreyn — Chorrol Fighters Guild",
+  "Infiltration":"Modryn Oreyn — Chorrol Fighters Guild",
+  "The Hist":"Modryn Oreyn — Chorrol Fighters Guild",
+  // Mages Guild
+  "Anvil Recommendation":"Carahil — Anvil Mages Guild",
+  "Bravil Recommendation":"Kud-Ei — Bravil Mages Guild",
+  "Bruma Recommendation":"Jeanne Frasoric — Bruma Mages Guild",
+  "Cheydinhal Recommendation":"Deetsan — Cheydinhal Mages Guild",
+  "Chorrol Recommendation":"Teekeeus — Chorrol Mages Guild",
+  "Leyawiin Recommendation":"Dagail — Leyawiin Mages Guild",
+  "Skingrad Recommendation":"Adrienne Berene — Skingrad Mages Guild",
+  "A Mage's Staff":"Raminus Polus — Arcane University",
+  "Ulterior Motives":"Raminus Polus — Arcane University",
+  "Vahtacen's Secret":"Raminus Polus — Arcane University",
+  "Necromancer's Moon":"Raminus Polus — Arcane University",
+  "Liberation or Apprehension?":"Arch-Mage Hannibal Traven — Arcane University",
+  "Information at a Price":"Hannibal Traven — Arcane University",
+  "A Plot Revealed":"Hannibal Traven — Arcane University",
+  "The Bloodworm Helm":"Hannibal Traven — Arcane University",
+  "The Necromancer's Amulet":"Hannibal Traven — Arcane University",
+  "Ambush":"Hannibal Traven — Arcane University",
+  "Confront the King":"Hannibal Traven — Arcane University",
+  "Alchemy Acquisitions":"Julienne Fanis — Arcane University",
+  // Thieves Guild
+  "Finding the Thieves Guild":"Armand Christophe — IC Waterfront, Garden of Dareloth (at night)",
+  "May the Best Thief Win":"Armand Christophe — IC Waterfront",
+  "Untaxing the Poor":"Armand Christophe — IC Waterfront",
+  "The Elven Maiden":"Armand Christophe — IC Waterfront",
+  "Ahdarji's Heirloom":"Ahdarji — Leyawiin",
+  "Misdirection":"S'Krivva — Bravil",
+  "Lost Histories":"S'Krivva — Bravil",
+  "Taking Care of Lex":"The Gray Fox",
+  "Turning a Blind Eye":"The Gray Fox",
+  "Arrow of Extrication":"The Gray Fox",
+  "Boots of Springheel Jak":"The Gray Fox",
+  "The Ultimate Heist":"The Gray Fox",
+  // Dark Brotherhood
+  "A Knife in the Dark":"Lucien Lachance (visits you in your sleep after you murder an innocent)",
+  "A Watery Grave":"Ocheeva — Cheydinhal Sanctuary",
+  "Accidents Happen":"Ocheeva — Cheydinhal Sanctuary",
+  "Scheduled for Execution":"Ocheeva — Cheydinhal Sanctuary",
+  "The Assassinated Man":"Ocheeva — Cheydinhal Sanctuary",
+  "The Lonely Wanderer":"Ocheeva — Cheydinhal Sanctuary",
+  "Bad Medicine":"Ocheeva — Cheydinhal Sanctuary",
+  "Whodunit?":"Ocheeva — Cheydinhal Sanctuary",
+  "Permanent Retirement":"Ocheeva — Cheydinhal Sanctuary",
+  "Of Secret and Shadow":"Lucien Lachance — Cheydinhal Sanctuary",
+  "The Purification":"Lucien Lachance",
+  "Affairs of a Wizard":"Lucien Lachance (dead-drop orders)",
+  "Next of Kin":"Lucien Lachance (dead-drop orders)",
+  "Broken Vows":"Lucien Lachance (dead-drop orders)",
+  "Final Justice":"Lucien Lachance (dead-drop orders)",
+  "A Matter of Honor":"Lucien Lachance (dead-drop orders)",
+  "The Coldest Sleep":"Lucien Lachance (dead-drop orders)",
+  "A Kiss Before Dying":"The Black Hand (Arquen)",
+  "Following a Lead":"The Night Mother",
+  "Honor Thy Mother":"The Night Mother",
+  // Main Quest
+  "Deliver the Amulet":"Jauffre — Weynon Priory, near Chorrol",
+  "Breaking the Siege of Kvatch":"Savlian Matius — outside ruined Kvatch",
+  "The Battle for Castle Kvatch":"Savlian Matius — Kvatch",
+  "Weynon Priory":"Jauffre — Weynon Priory",
+  "The Path of Dawn":"Martin — Cloud Ruler Temple, Bruma",
+  "Dagon Shrine":"Martin — Cloud Ruler Temple",
+  "Spies":"Jauffre — Cloud Ruler Temple",
+  "Blood of the Daedra":"Martin — Cloud Ruler Temple",
+  "Blood of the Divines":"Martin — Cloud Ruler Temple",
+  "Miscarcand":"Martin — Cloud Ruler Temple",
+  "Defense of Bruma":"Martin — Cloud Ruler Temple",
+  "Allies for Bruma":"Martin — Cloud Ruler Temple",
+  "The Great Gate":"Martin — Bruma",
+  "Paradise":"Martin — Cloud Ruler Temple",
+  "Light the Dragonfires":"Martin — Imperial City",
+  // Knights of the Nine
+  "Pilgrimage":"The Prophet — outside the Chapel of Dibella, Anvil",
+  "Nature's Fury":"Avita Vesnia — Shrine of Kynareth",
+  "Stendarr's Mercy":"Areldur — Chapel of Stendarr, Chorrol",
+  "The Faithful Squire":"Lathon — Priory of the Nine",
+  "The Blessing of Talos":"The Prophet — Priory of the Nine",
+  // Shivering Isles
+  "A Door in Niben Bay":"Haskill (through the mysterious Door in Niben Bay)",
+  "Through the Fringe of Madness":"Haskill, on Sheogorath's behalf",
+  "Baiting the Trap":"Sheogorath — New Sheoth Palace",
+  "A Better Mousetrap":"Sheogorath — New Sheoth Palace",
+  "Understanding Madness":"Sheogorath — New Sheoth Palace",
+  "The Cold Flame of Agnon":"Sheogorath — New Sheoth Palace",
+  "Ritual of Accession":"Sheogorath — New Sheoth Palace",
+  "Retaking the Fringe":"Sheogorath — New Sheoth Palace",
+  "Rebuilding the Gatekeeper":"Relmyna Verenim",
+  "The Helpless Army":"Sheogorath — New Sheoth Palace",
+  "Symbols of Office":"Sheogorath — New Sheoth Palace",
+  "The Roots of Madness":"Sheogorath — New Sheoth Palace",
+  "The End of Order":"Sheogorath — New Sheoth Palace",
+  "The Prince of Madness":"Sheogorath",
+  // City & side quests
+  "The Ghost Ship of Anvil":"Varulae — Anvil docks",
+  "The Siren's Deception":"Maelona — Anvil",
+  "Caught in the Hunt":"Ursanne Loche — Bravil",
+  "The Forlorn Watchman":"Grantham Blakeley — Wawnet Inn, near the Imperial City",
+  "A Brotherhood Betrayed":"Captain Carius & townsfolk — Bruma",
+  "Lifting the Vale":"Countess Narina Carvain — Castle Bruma",
+  "Sins of the Father":"Jorundr — Bruma jail",
+  "Two Sides of the Coin":"Arnora Auria — Bruma",
+  "A Brush with Death":"Tivela Lythandas — Cheydinhal",
+  "Corruption and Conscience":"Guardsman Garrus Darelliun — Cheydinhal",
+  "The Wayward Knight":"Count Andel Indarys — Castle Cheydinhal",
+  "Through a Nightmare, Darkly":"Kud-Ei — Bravil",
+  "A Shadow Over Hackdirt":"Seed-Neeus — Chorrol",
+  "Canvas the Castle":"Countess Arriana Valga — Castle Chorrol",
+  "Legacy Lost":"Guilbert Jemane — the Grey Mare, Chorrol",
+  "Separated at Birth":"Reynald Jemane — the Grey Mare, Chorrol",
+  "The Killing Field":"Valus Odiil — Chorrol",
+  "Knights of the White Stallion":"Count Marius Caro — Castle Leyawiin",
+  "Mazoga the Orc":"Mazoga (ask Count Caro about her) — Castle Leyawiin",
+  "Raid on Greyland":"Legionnaire Lerexus Callidus — Leyawiin",
+  "Whom Gods Annoy":"Rosentia Gallenus — Leyawiin",
+  "Helping Hands":"Eyja — Skingrad (after buying Rosethorn Hall)",
+  "Paranoia":"Glarthir — Skingrad",
+  "The Rosethorn Cache":"The Long Forgotten Note — inside Rosethorn Hall, Skingrad",
+  "Vampire Cure":"Count Janus Hassildor — Castle Skingrad",
+  "An Unexpected Voyage":"Ormil — the Bloated Float, IC Waterfront",
+  "Imperial Corruption":"The beggars of the Imperial City",
+  "Order of the Virtuous Blood":"Seridur — Imperial City, Temple District",
+  "Unfriendly Competition":"Jensine — Imperial City Market District",
+  "The Collector":"Umbacano — Imperial City, Talos Plaza District",
+  "Secrets of the Ayleids":"Umbacano — Imperial City, Talos Plaza District",
+  "Nothing You Can Possess":"Umbacano — Imperial City, Talos Plaza District",
+  "Goblin Trouble":"Barthel Gernand — Crestbridge Camp",
+  "Tears of the Savior":"S'drassa — Castle Leyawiin",
+};
+const GIVERS={};
+for(const k in GIVER_RAW){GIVERS[norm(k)]=GIVER_RAW[k]}
+
 /* ---------- State ---------- */
 const STORE_KEY="oblivion_checklist_v2", COLLAPSE_KEY="oblivion_collapsed_v2", VIEW_KEY="oblivion_view_v2";
 function slug(s){return s.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/(^-|-$)/g,"")}
@@ -727,9 +893,11 @@ function render(){
       const info = WALK[norm(q.n)]||{};
       const walk = info.w||"";
       const bug = info.bug||"";
+      const giver = GIVERS[norm(q.n)]||"";
       if(q.o||walk||!q.x){
         detail='<div class="q-detail">'+
           (showLoc?'<p class="loc-tag">📍 '+SECT[q.loc].t+'</p>':'')+
+          (giver?'<p class="q-giver"><b>Quest-giver</b> '+giver+'</p>':'')+
           (q.o?'<p class="q-obj">'+q.o+'</p>':'')+
           (walk?'<p class="q-walk">'+walk+'</p>':(q.o?'':'<p class="q-walk">Full walkthrough steps are on the linked page.</p>'))+
           (bug?'<div class="q-bug warn"><b>⚠ Known bug:</b> '+bug+'</div>':'')+
