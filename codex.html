@@ -116,6 +116,16 @@
   button:hover{color:var(--gold-bright);
     box-shadow:0 6px 16px -6px rgba(201,162,75,.55),0 0 0 1px rgba(201,162,75,.28)}
   button.danger:hover{color:#eaa088;box-shadow:0 6px 16px -6px rgba(193,88,59,.55),0 0 0 1px rgba(193,88,59,.3)}
+  #signInBtn{color:var(--gold-soft)}
+  #signInBtn:hover{color:var(--gold-bright)}
+  .user-chip{display:inline-flex;align-items:center;gap:8px;padding:5px 6px 5px 8px;border-radius:9px;
+    background:linear-gradient(180deg,var(--panel3),var(--panel2));box-shadow:0 2px 8px -3px rgba(0,0,0,.55);
+    font-family:var(--display);font-weight:600;font-size:.72rem;letter-spacing:.04em;color:var(--gold-soft)}
+  .user-chip img{width:22px;height:22px;border-radius:50%;object-fit:cover;box-shadow:0 0 0 1px rgba(201,162,75,.4)}
+  .user-chip .signout{font-family:var(--display);font-weight:600;font-size:.64rem;letter-spacing:.06em;
+    text-transform:uppercase;color:var(--muted);cursor:pointer;padding:4px 8px;border-radius:7px;transition:.15s}
+  .user-chip .signout:hover{color:#eaa088}
+  .sync-flag{font-family:var(--serif);font-style:italic;font-size:.82rem;color:var(--done)}
 
   /* ---------- Phase cards ---------- */
   .phase{position:relative;background:linear-gradient(180deg,var(--panel2),var(--panel));
@@ -266,6 +276,8 @@
       <button id="exportBtn">↓ Backup</button>
       <button id="importBtn">↑ Load</button>
       <button id="resetBtn" class="danger">Reset</button>
+      <button id="signInBtn" hidden>Sign in with Google</button>
+      <span id="userChip" class="user-chip" hidden></span>
       <input type="file" id="importFile" accept="application/json" hidden>
     </div>
   </div>
@@ -966,7 +978,13 @@ Q.forEach(q=>{q.id=slug(q.n)});
 let state=load(STORE_KEY), collapsed=load(COLLAPSE_KEY), view=localStorage.getItem(VIEW_KEY)||"loc";
 function load(k){try{return JSON.parse(localStorage.getItem(k))||{}}catch(e){return{}}}
 function persist(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
-function saveState(){persist(STORE_KEY,state);flash()}
+let _syncFn=null;
+window.CodexSync={
+  get:()=>state,
+  replace:(o)=>{state=o||{};persist(STORE_KEY,state);render();},
+  subscribe:(fn)=>{_syncFn=fn;}
+};
+function saveState(){persist(STORE_KEY,state);flash();if(_syncFn){try{_syncFn(state)}catch(e){}}}
 
 function uespURL(q){const s=q.u||q.n.replace(/\s+/g,"_");const base=s.indexOf(":")>-1?"https://en.uesp.net/wiki/Oblivion-"+s.replace(":","%3A"):"https://en.uesp.net/wiki/Oblivion:"+s;return base}
 
@@ -1099,6 +1117,98 @@ window.addEventListener("hashchange",applyHashTarget);
 
 render();
 applyHashTarget();
+</script>
+
+<!-- ============================================================================
+     OPTIONAL: Google sign-in + cross-device cloud save (Firebase).
+     The checklist works fully WITHOUT this (progress saves in your browser).
+     To turn on cloud sync so progress follows your Google account across devices:
+       1. Create a free Firebase project at https://console.firebase.google.com
+       2. Build > Authentication > Sign-in method > enable Google.
+       3. Authentication > Settings > Authorized domains > add:  lkocaj.github.io
+       4. Build > Firestore Database > Create database (production mode).
+          Then set Rules to:
+             rules_version = '2';
+             service cloud.firestore {
+               match /databases/{database}/documents {
+                 match /progress/{uid} {
+                   allow read, write: if request.auth != null && request.auth.uid == uid;
+                 }
+               }
+             }
+       5. Project settings > General > "Your apps" > Web app > copy the config
+          values into FIREBASE_CONFIG below. Save & push. The "Sign in" button appears.
+     (The Firebase apiKey is safe to expose publicly — access is controlled by the rules above.)
+============================================================================ -->
+<script type="module">
+  const FIREBASE_CONFIG = {
+    apiKey: "",
+    authDomain: "",
+    projectId: "",
+    appId: ""
+  };
+
+  const signInBtn = document.getElementById("signInBtn");
+  const userChip  = document.getElementById("userChip");
+
+  const ready = FIREBASE_CONFIG.apiKey && FIREBASE_CONFIG.projectId;
+  if (ready) {
+    try {
+      const { initializeApp } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js");
+      const { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } =
+        await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js");
+      const { getFirestore, doc, getDoc, setDoc } =
+        await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js");
+
+      const app = initializeApp(FIREBASE_CONFIG);
+      const auth = getAuth(app);
+      const db = getFirestore(app);
+      const provider = new GoogleAuthProvider();
+
+      signInBtn.hidden = false;
+      signInBtn.onclick = () => signInWithPopup(auth, provider).catch(e => alert("Sign-in failed: " + e.message));
+
+      let uid = null, t = null;
+      const pushCloud = (state) => {
+        if (!uid) return;
+        clearTimeout(t);
+        t = setTimeout(async () => {
+          try { await setDoc(doc(db, "progress", uid), { state, updated: Date.now() }); }
+          catch (e) { console.warn("cloud save failed", e); }
+        }, 800);
+      };
+      window.CodexSync.subscribe(pushCloud);
+
+      onAuthStateChanged(auth, async (user) => {
+        if (user) {
+          uid = user.uid;
+          signInBtn.hidden = true;
+          userChip.hidden = false;
+          userChip.innerHTML =
+            (user.photoURL ? '<img src="' + user.photoURL + '" alt="">' : '') +
+            '<span>' + (user.displayName || user.email || "Signed in") + '</span>' +
+            '<span class="signout">Sign out</span>';
+          userChip.querySelector(".signout").onclick = () => signOut(auth);
+          // merge cloud + local so nothing is lost, then keep in sync
+          let cloud = {};
+          try { const snap = await getDoc(doc(db, "progress", uid)); if (snap.exists()) cloud = snap.data().state || {}; }
+          catch (e) { console.warn("cloud load failed", e); }
+          const local = window.CodexSync.get();
+          const merged = Object.assign({}, cloud, local);
+          window.CodexSync.replace(merged);
+          pushCloud(merged);
+        } else {
+          uid = null;
+          userChip.hidden = true;
+          userChip.innerHTML = "";
+          signInBtn.hidden = false;
+        }
+      });
+    } catch (e) {
+      console.warn("Cloud sync unavailable:", e);
+      signInBtn.hidden = true;
+    }
+  }
 </script>
 </body>
 </html>
