@@ -63,7 +63,7 @@
     border-bottom:1px solid var(--edge-soft);padding:12px 20px;margin-bottom:26px;
     box-shadow:0 10px 30px -20px rgba(0,0,0,.9)}
   .toolbar-inner{max-width:940px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:14px}
-  .seg{display:flex;border:1px solid var(--edge);border-radius:10px;overflow:hidden;
+  .seg{display:flex;border-radius:10px;overflow:hidden;box-shadow:0 2px 8px -3px rgba(0,0,0,.55);
     background:linear-gradient(180deg,var(--panel2),var(--panel))}
   .seg button{border:0;border-radius:0;background:transparent;padding:9px 17px;
     font-family:var(--display);font-weight:600;font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;
@@ -72,7 +72,7 @@
   .seg button.active{background:linear-gradient(180deg,#4a3c1e,#33290f);color:var(--gold-bright);
     box-shadow:inset 0 1px 0 rgba(255,255,255,.08),inset 0 -6px 12px -6px rgba(0,0,0,.7)}
   .bar-track{position:relative;flex:1;min-width:160px;height:16px;background:#0b0906;
-    border:1px solid var(--edge);border-radius:11px;overflow:hidden;
+    border-radius:11px;overflow:hidden;
     box-shadow:inset 0 2px 4px rgba(0,0,0,.6)}
   .bar-fill{position:relative;height:100%;width:0;border-radius:11px;
     background:linear-gradient(90deg,var(--gold-deep),var(--gold) 55%,var(--gold-bright));
@@ -86,14 +86,14 @@
   .btns{display:flex;gap:8px;flex-wrap:wrap}
   button{font-family:var(--display);font-weight:500;font-size:.72rem;letter-spacing:.06em;cursor:pointer;
     background:linear-gradient(180deg,var(--panel3),var(--panel2));color:var(--text);
-    border:1px solid var(--edge);border-radius:8px;padding:8px 13px;transition:.16s}
-  button:hover{border-color:var(--gold);color:var(--gold-bright);
-    box-shadow:0 0 0 3px rgba(201,162,75,.1)}
-  button.danger:hover{border-color:var(--danger);color:#eaa088;box-shadow:0 0 0 3px rgba(193,88,59,.12)}
+    border-radius:8px;padding:9px 14px;transition:.16s;box-shadow:0 2px 7px -3px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.045)}
+  button:hover{color:var(--gold-bright);
+    box-shadow:0 6px 16px -6px rgba(201,162,75,.55),0 0 0 1px rgba(201,162,75,.28)}
+  button.danger:hover{color:#eaa088;box-shadow:0 6px 16px -6px rgba(193,88,59,.55),0 0 0 1px rgba(193,88,59,.3)}
 
   /* ---------- Phase cards ---------- */
   .phase{position:relative;background:linear-gradient(180deg,var(--panel2),var(--panel));
-    border:1px solid var(--edge-soft);border-radius:15px;margin-bottom:18px;overflow:hidden;
+    border-radius:15px;margin-bottom:18px;overflow:hidden;scroll-margin-top:84px;
     box-shadow:inset 0 1px 0 rgba(255,255,255,.025),0 16px 40px -26px rgba(0,0,0,.9)}
   .phase::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
     background:linear-gradient(180deg,var(--gold-bright),var(--gold-deep));opacity:.4;transition:opacity .25s}
@@ -110,17 +110,19 @@
   .phase-count{font-family:var(--display);font-weight:600;font-size:.78rem;color:var(--muted);
     white-space:nowrap;letter-spacing:.04em}
   .phase-mini{height:6px;background:#0b0906;border-radius:4px;width:88px;overflow:hidden;
-    border:1px solid var(--edge-soft);box-shadow:inset 0 1px 2px rgba(0,0,0,.6)}
+    box-shadow:inset 0 1px 2px rgba(0,0,0,.6)}
   .phase-mini>i{display:block;height:100%;width:0;border-radius:4px;
     background:linear-gradient(90deg,var(--gold-deep),var(--gold-soft));transition:width .45s ease}
   .phase-body{padding:6px 12px 14px}
   .phase.collapsed .phase-body{display:none}
+  .phase.flash-target{animation:flashTarget 1.8s ease}
+  @keyframes flashTarget{0%,100%{box-shadow:inset 0 1px 0 rgba(255,255,255,.025),0 16px 40px -26px rgba(0,0,0,.9)}28%{box-shadow:0 0 0 2px rgba(201,162,75,.75),0 0 34px rgba(201,162,75,.4)}}
 
   /* ---------- Notes ---------- */
   .note{margin:10px 8px 14px;padding:12px 15px;background:rgba(77,106,56,.1);
-    border:1px solid rgba(77,106,56,.35);border-left:3px solid var(--done);border-radius:8px;
+    border-left:3px solid var(--done);border-radius:8px;box-shadow:0 3px 12px -6px rgba(0,0,0,.45);
     color:#c7d6b3;font-size:.92rem;line-height:1.55}
-  .note.warn{background:rgba(192,124,52,.1);border-color:rgba(192,124,52,.4);
+  .note.warn{background:rgba(192,124,52,.16);
     border-left-color:var(--accent);color:#e6c89c}
 
   /* ---------- Quest rows ---------- */
@@ -133,12 +135,12 @@
   li.q.open{background:rgba(201,162,75,.045)}
   .q-row{display:flex;align-items:flex-start;gap:13px;padding:11px 13px}
   input[type=checkbox]{appearance:none;-webkit-appearance:none;width:21px;height:21px;margin:2px 0 0;flex:none;
-    border:1.5px solid var(--edge-bright);border-radius:6px;background:linear-gradient(180deg,#100d08,#171207);
-    cursor:pointer;position:relative;transition:.18s;box-shadow:inset 0 1px 2px rgba(0,0,0,.55)}
-  input[type=checkbox]:hover{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,162,75,.14)}
-  input[type=checkbox]:checked{border-color:var(--gold-soft);
+    border-radius:6px;background:linear-gradient(180deg,#100d08,#171207);
+    cursor:pointer;position:relative;transition:.18s;box-shadow:inset 0 1px 2px rgba(0,0,0,.6),0 0 0 1px rgba(201,162,75,.24)}
+  input[type=checkbox]:hover{box-shadow:inset 0 1px 2px rgba(0,0,0,.6),0 0 0 2px rgba(201,162,75,.5)}
+  input[type=checkbox]:checked{
     background:linear-gradient(180deg,var(--gold-bright),var(--gold-deep));
-    box-shadow:0 0 12px rgba(201,162,75,.45)}
+    box-shadow:0 0 12px rgba(201,162,75,.5),0 0 0 1px rgba(201,162,75,.55)}
   input[type=checkbox]:checked::after{content:"";position:absolute;left:6px;top:2px;width:6px;height:11px;
     border:solid #1c1507;border-width:0 2.5px 2.5px 0;transform:rotate(45deg)}
   .q-main{flex:1;cursor:pointer;display:flex;align-items:flex-start;gap:9px}
@@ -151,12 +153,12 @@
   .q-sub{display:block;font-size:.85rem;color:var(--muted);margin-top:1px}
 
   .badge{font-family:var(--display);font-weight:600;font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;
-    padding:3px 9px;border-radius:20px;border:1px solid;vertical-align:middle;margin-left:9px;white-space:nowrap;
+    padding:3px 10px;border-radius:20px;vertical-align:middle;margin-left:9px;white-space:nowrap;
     position:relative;top:-1px}
-  .badge.start{color:var(--gold-bright);border-color:var(--gold-deep);background:rgba(138,108,42,.18)}
-  .badge.lvl{color:#a6c1e0;border-color:#3f5a72;background:rgba(30,52,72,.4)}
-  .badge.home{color:#d6b1e0;border-color:#6a4f78;background:rgba(48,28,60,.4)}
-  .badge.rank{color:#e0b998;border-color:#78573f;background:rgba(60,40,24,.4)}
+  .badge.start{color:var(--gold-bright);background:rgba(138,108,42,.34)}
+  .badge.lvl{color:#a6c1e0;background:rgba(40,66,92,.6)}
+  .badge.home{color:#d6b1e0;background:rgba(66,40,82,.6)}
+  .badge.rank{color:#e0b998;background:rgba(82,54,32,.6)}
 
   /* ---------- Quest detail ---------- */
   .q-detail{display:none;padding:4px 16px 16px 47px}
@@ -176,7 +178,7 @@
   .q-link:hover{color:#cfe2f2;border-bottom-color:#cfe2f2}
   .q-bug{font-size:.86rem;color:var(--muted);margin-top:8px}
   .q-bug.warn{display:block;color:#eac89c;background:linear-gradient(180deg,rgba(74,53,25,.5),rgba(42,29,16,.6));
-    border:1px solid #6a4d28;border-left:3px solid var(--accent);border-radius:8px;padding:10px 13px;margin:10px 0;
+    border-left:3px solid var(--accent);border-radius:8px;padding:10px 13px;margin:10px 0;box-shadow:0 3px 12px -6px rgba(0,0,0,.5);
     font-size:.9rem;line-height:1.55}
   .q-bug.warn b{color:#f4bc7c;font-family:var(--display);font-weight:600;font-size:.82rem;letter-spacing:.03em}
 
@@ -186,7 +188,7 @@
   footer b{font-style:normal;color:var(--gold-soft);font-weight:600}
   a{color:var(--gold-soft)}
   .save-flash{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:50;
-    background:linear-gradient(180deg,#33290f,#221a09);border:1px solid var(--gold);
+    background:linear-gradient(180deg,#3a2f12,#221a09);
     color:var(--gold-bright);font-family:var(--display);font-weight:600;font-size:.8rem;letter-spacing:.06em;
     padding:10px 20px;border-radius:9px;opacity:0;transition:opacity .3s;pointer-events:none;
     box-shadow:0 12px 30px -12px rgba(0,0,0,.8),0 0 20px rgba(201,162,75,.2)}
@@ -876,6 +878,7 @@ function render(){
     if(!items.length)return;
     const sec=document.createElement("section");
     sec.className="phase"+(collapsed[view+":"+sid]?" collapsed":"");
+    sec.id="section-"+sid;sec.dataset.slug=slug(sid);
     const head=document.createElement("div");head.className="phase-head";
     head.innerHTML='<span class="chev">▶</span><div class="phase-title">'+meta.t+'<small>'+meta.s+'</small></div>'+
       '<div class="phase-mini"><i></i></div><div class="phase-count"></div>';
@@ -963,7 +966,35 @@ document.getElementById("importFile").addEventListener("change",e=>{
   r.readAsText(file);e.target.value="";
 });
 
+/* ---------- Deep-linking: codex.html#<city-slug> jumps to that section ---------- */
+function sidFromHash(){
+  let h=(location.hash||"").replace(/^#/,"");try{h=decodeURIComponent(h)}catch(e){}
+  h=h.trim();if(!h)return null;
+  if(SECT[h])return h;
+  const s=slug(h);
+  for(const sid of ORDER_LOC){if(slug(sid)===s||slug(SECT[sid].t)===s)return sid}
+  return null;
+}
+function applyHashTarget(){
+  const sid=sidFromHash();if(!sid)return;
+  if(view!=="loc"){
+    view="loc";localStorage.setItem(VIEW_KEY,view);
+    document.querySelectorAll("#viewSeg button").forEach(x=>x.classList.toggle("active",x.dataset.view==="loc"));
+    render();
+  }
+  collapsed["loc:"+sid]=false;persist(COLLAPSE_KEY,collapsed);
+  const sec=document.getElementById("section-"+sid);
+  if(sec){
+    sec.classList.remove("collapsed");
+    sec.scrollIntoView({behavior:"smooth",block:"start"});
+    sec.classList.add("flash-target");
+    setTimeout(()=>sec.classList.remove("flash-target"),1800);
+  }
+}
+window.addEventListener("hashchange",applyHashTarget);
+
 render();
+applyHashTarget();
 </script>
 </body>
 </html>
