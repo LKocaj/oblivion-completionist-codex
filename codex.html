@@ -82,6 +82,16 @@
     backdrop-filter:blur(16px) saturate(1.25);-webkit-backdrop-filter:blur(16px) saturate(1.25);
     padding:12px 20px;margin-bottom:26px;box-shadow:0 14px 34px -22px rgba(0,0,0,.85)}
   .toolbar-inner{max-width:960px;margin:0 auto;display:flex;flex-wrap:wrap;align-items:center;gap:14px}
+  .sectionnav{max-width:960px;margin:10px auto 0;display:flex;gap:7px;overflow-x:auto;overscroll-behavior-x:contain;
+    touch-action:pan-y;padding-bottom:3px;scrollbar-width:thin;scrollbar-color:rgba(216,180,90,.35) transparent}
+  .sectionnav::-webkit-scrollbar{height:5px}
+  .sectionnav::-webkit-scrollbar-thumb{background:rgba(216,180,90,.35);border-radius:4px}
+  .sec-chip{flex:none;cursor:pointer;font-family:var(--display);font-weight:600;font-size:.66rem;letter-spacing:.08em;
+    text-transform:uppercase;white-space:nowrap;color:var(--ink-soft);background:rgba(30,38,52,.6);
+    border:0;border-radius:999px;padding:7px 13px;transition:.15s;box-shadow:var(--sh-sm)}
+  .sec-chip:hover{color:var(--gold-soft);transform:translateY(-1px);box-shadow:var(--sh-md)}
+  .sec-chip.active{color:#1a1508;background:linear-gradient(180deg,var(--gold-soft),var(--gold-deep));
+    box-shadow:0 4px 14px -4px rgba(216,180,90,.6)}
   .seg{display:flex;border-radius:11px;overflow:hidden;box-shadow:var(--sh-sm);background:rgba(30,38,52,.55)}
   .seg button{border:0;border-radius:0;background:transparent;padding:9px 17px;
     font-family:var(--display);font-weight:600;font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;
@@ -268,6 +278,7 @@
       <input type="file" id="importFile" accept="application/json" hidden>
     </div>
   </div>
+  <nav class="sectionnav" id="sectionNav" aria-label="Jump to section"></nav>
 </div>
 
 <div class="wrap" id="phases"></div>
@@ -511,13 +522,13 @@ const Q = [
   {n:"Nothing You Can Possess",opt:"cities",loc:"Imperial City",u:"Nothing_You_Can_Possess",o:"Umbacano finale: retrieve the Crown of Nenalata and choose whether to give it to him or to the scholar Herminia Cinna."},
   {n:"Goblin Trouble",opt:"cities",loc:"mWild",u:"Goblin_Trouble",o:"Barthel Gernand at Crestbridge Camp wants to found Cropsford; clear the goblins blocking the site."},
   {n:"Tears of the Savior",opt:"cities",loc:"mWild",u:"Tears_of_the_Savior",o:"Fisherman Aelwin Merowald in Weye asks you to gather twelve pearls from the slaughterfish of Lake Rumare."},
-  {n:"Buy a house — Imperial City",opt:"cities",loc:"Imperial City",b:{c:"home",t:"Home"},u:"Houses",o:"Purchase the Talos Plaza District house from the estate agent."},
-  {n:"Buy a house — Bravil",opt:"cities",loc:"Bravil",b:{c:"home",t:"Home"},u:"Houses",o:"Purchase the Bravil house."},
-  {n:"Buy a house — Bruma",opt:"cities",loc:"Bruma",b:{c:"home",t:"Home"},u:"Houses",o:"Purchase the Bruma house."},
-  {n:"Buy a house — Cheydinhal",opt:"cities",loc:"Cheydinhal",b:{c:"home",t:"Home"},u:"Houses",o:"Purchase the Cheydinhal house."},
-  {n:"Buy a house — Chorrol",opt:"cities",loc:"Chorrol",b:{c:"home",t:"Home"},u:"Houses",o:"Purchase the Chorrol house."},
-  {n:"Buy a house — Leyawiin",opt:"cities",loc:"Leyawiin",b:{c:"home",t:"Home"},u:"Houses",o:"Purchase the Leyawiin house."},
-  {n:"Buy Rosethorn Hall — Skingrad",opt:"cities",loc:"Skingrad",b:{c:"home",t:"Home"},u:"Houses",o:"Purchase Rosethorn Hall, the largest player home, in Skingrad — unlocks Helping Hands & The Rosethorn Cache."},
+  {n:"Buy the Waterfront shack — Imperial City",opt:"cities",loc:"Imperial City",b:{c:"home",t:"Home"},u:"Shack_for_Sale",o:"The city's only home is the small shack in the Waterfront District. Buy it for 2,000 gold from Vinicia Melissaeia (raise her disposition to 50+), found at the Office of Imperial Commerce in the Market District. Upgrades from Sergius Verus."},
+  {n:"Buy a house — Bravil",opt:"cities",loc:"Bravil",b:{c:"home",t:"Home"},u:"Bravil_House_for_Sale",o:"Buy the Bravil house for 4,000 gold from Count Regulus Terentius at Castle Bravil (disposition 50+). Upgrades from Nilawen."},
+  {n:"Buy a house — Bruma",opt:"cities",loc:"Bruma",b:{c:"home",t:"Home"},u:"Bruma_House_for_Sale",o:"Buy the Bruma house for 10,000 gold from Countess Narina Carvain at Castle Bruma (disposition 60+). Upgrades from Suurootan."},
+  {n:"Buy a house — Cheydinhal",opt:"cities",loc:"Cheydinhal",b:{c:"home",t:"Home"},u:"Cheydinhal_House_for_Sale",o:"Buy the Cheydinhal house for 15,000 gold from Count Andel Indarys at Castle Cheydinhal (disposition 60+). Upgrades from Borba gra-Uzgash."},
+  {n:"Buy Arborwatch — Chorrol",opt:"cities",loc:"Chorrol",b:{c:"home",t:"Home"},u:"Arborwatch",o:"Buy Arborwatch for 20,000 gold from Countess Arriana Valga at Castle Chorrol (disposition 70+ and Fame 12+). Upgrades from Seed-Neeus."},
+  {n:"Buy a house — Leyawiin",opt:"cities",loc:"Leyawiin",b:{c:"home",t:"Home"},u:"Leyawiin_House_for_Sale",o:"Buy the Leyawiin house for 7,000 gold from Count Marius Caro at Castle Leyawiin (disposition 60+). Upgrades from Gundalas."},
+  {n:"Buy Rosethorn Hall — Skingrad",opt:"cities",loc:"Skingrad",b:{c:"home",t:"Home"},u:"Rosethorn_Hall",o:"Rosethorn Hall is the largest player home. Buy it for 25,000 gold from Shum gro-Yarug at Castle Skingrad (disposition 70+ and Fame 15+). Upgrades from Gunder — unlocks Helping Hands & The Rosethorn Cache."},
   // --- Other DLC & plug-ins ---
   {n:"Mehrunes' Razor",opt:"dlcx",loc:"mDLC",u:"Mehrunes_Razor",o:"Clear the lost city of Varsa Baalim for the artifact dagger. The toughest DLC dungeon — save it for later."},
   {n:"The Vile Lair — Deepscorn Hollow",opt:"dlcx",loc:"mDLC",b:{c:"home",t:"Home"},u:"Deepscorn_Hollow",o:"Claim and outfit an evil-themed underground lair."},
@@ -1033,8 +1044,52 @@ function render(){
     if(main&&li.querySelector(".q-detail"))main.addEventListener("click",()=>li.classList.toggle("open"));
   });
   updateProgress();
+  buildSectionNav();
 }
 const CITY_SET=new Set(["Anvil","Bravil","Bruma","Cheydinhal","Chorrol","Leyawiin","Skingrad","Imperial City"]);
+
+/* ---------- Section jump-nav (one point per guild / quest line / city in the current view) ---------- */
+function gotoSection(sid){
+  collapsed[view+":"+sid]=false;persist(COLLAPSE_KEY,collapsed);
+  const sec=document.getElementById("section-"+sid);
+  if(!sec)return;
+  sec.classList.remove("collapsed");
+  sec.scrollIntoView({behavior:"smooth",block:"start"});
+  sec.classList.add("flash-target");
+  setTimeout(()=>sec.classList.remove("flash-target"),1800);
+}
+function chipLabel(t){return t.replace(/^Phase\s+\d+\s+—\s+/,"").replace(/\s*\(DLC\)/,"");}
+let _secObs=null;
+function buildSectionNav(){
+  const nav=document.getElementById("sectionNav");if(!nav)return;
+  const viewKey=view==="loc"?"loc":"opt";
+  const order=view==="loc"?ORDER_LOC:ORDER_OPT;
+  nav.innerHTML="";
+  const chips={};
+  order.forEach(sid=>{
+    const meta=SECT[sid];if(!meta)return;
+    if(!Q.some(q=>q[viewKey]===sid))return;
+    const b=document.createElement("button");
+    b.className="sec-chip";b.dataset.sid=sid;b.type="button";
+    b.textContent=chipLabel(meta.t);
+    b.title="Jump to "+meta.t;
+    b.addEventListener("click",()=>gotoSection(sid));
+    nav.appendChild(b);chips[sid]=b;
+  });
+  // highlight the section currently in view; keep its chip scrolled into the strip
+  if(_secObs)_secObs.disconnect();
+  _secObs=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{
+      if(!e.isIntersecting)return;
+      const sid=e.target.id.replace("section-","");
+      const c=chips[sid];if(!c)return;
+      nav.querySelectorAll(".sec-chip.active").forEach(x=>x.classList.remove("active"));
+      c.classList.add("active");
+      c.scrollIntoView({block:"nearest",inline:"center"});
+    });
+  },{rootMargin:"-42% 0px -52% 0px",threshold:0});
+  document.querySelectorAll(".phase").forEach(s=>_secObs.observe(s));
+}
 
 function updateProgress(){
   const viewKey=view==="loc"?"loc":"opt";
@@ -1091,14 +1146,7 @@ function applyHashTarget(){
     document.querySelectorAll("#viewSeg button").forEach(x=>x.classList.toggle("active",x.dataset.view==="loc"));
     render();
   }
-  collapsed["loc:"+sid]=false;persist(COLLAPSE_KEY,collapsed);
-  const sec=document.getElementById("section-"+sid);
-  if(sec){
-    sec.classList.remove("collapsed");
-    sec.scrollIntoView({behavior:"smooth",block:"start"});
-    sec.classList.add("flash-target");
-    setTimeout(()=>sec.classList.remove("flash-target"),1800);
-  }
+  gotoSection(sid);
 }
 window.addEventListener("hashchange",applyHashTarget);
 
