@@ -949,10 +949,14 @@ function init(){
   }
 
   /* ======================= the Cyrodiil mainland ======================= */
-  /* Lake Rumare is an INLAND lake: green mainland surrounds it on every side,
-     and the lake itself is a widening of the Niben — the Upper Niben winds in
-     from the north, the Niben proper flows out south toward Niben Bay, and the
-     little Corbolo creeps in from the east.
+  /* Cyrodiil is a mountain-ringed bowl with the Imperial City at its center.
+     Lake Rumare is an INLAND lake in the low Heartlands: the Upper Niben winds
+     in from the north, the Corbolo creeps in from the east, and the Niben
+     flows out south — opening into broad Niben Bay on its way to Topal Bay.
+     The rim of the bowl: the snow-capped Jerall Mountains due north, the Valus
+     Mountains east toward Morrowind, the Colovian Highlands west and
+     north-west. Only the far south-west opens to sea — the Abecean, beyond
+     Anvil and the Gold Coast. The south stays low: Blackwood marsh.
      Compass: world angle = NORTH_A + bearing (radians clockwise from north). */
   const NORTH_A = 2.03;                                /* due north, chosen clear of the bridge bearings */
   const bearing = deg => NORTH_A + deg * Math.PI / 180;
@@ -968,32 +972,65 @@ function init(){
   }
 
   const RIVERS = [
-    {a: bearing(0),   w0: 26, w1: 36, m1: 26, m2: 14, f1: 0.0060, f2: 0.0130, p1: 1.1, p2: 4.0}, /* the Upper Niben, in from the north */
-    {a: bearing(180), w0: 36, w1: 96, m1: 34, m2: 18, f1: 0.0050, f2: 0.0110, p1: 4.2, p2: 1.7}, /* the Niben, out south and widening toward the Bay */
-    {a: bearing(90),  w0: 16, w1: 22, m1: 20, m2: 10, f1: 0.0070, f2: 0.0150, p1: 2.6, p2: 0.6}  /* the Corbolo, a thin eastern tributary */
+    {a: bearing(0),   w0: 26, w1: 36,  m1: 26, m2: 14, f1: 0.0060, f2: 0.0130, p1: 1.1, p2: 4.0}, /* the Upper Niben, in from the north */
+    {a: bearing(180), w0: 36, w1: 236, m1: 34, m2: 18, f1: 0.0050, f2: 0.0110, p1: 4.2, p2: 1.7}, /* the Niben, out south — opening into Niben Bay */
+    {a: bearing(90),  w0: 16, w1: 22,  m1: 20, m2: 10, f1: 0.0070, f2: 0.0150, p1: 2.6, p2: 0.6}  /* the Corbolo, a thin eastern tributary */
   ];
   for(const rv of RIVERS){
     rv.dx = Math.cos(rv.a); rv.dz = Math.sin(rv.a);
     rv.meander = u => rv.m1 * Math.sin(u * rv.f1 + rv.p1) + rv.m2 * Math.sin(u * rv.f2 + rv.p2);
     rv.half = u => rv.w0 + (rv.w1 - rv.w0) * Math.min(1, Math.max(0, (u - LAKE_R) / 900));
   }
+  /* south of Bravil the Niben swells into Niben Bay, then runs on to the delta */
+  const NIBEN = RIVERS[1];
+  NIBEN.half = u => 36 + 62 * Math.min(1, Math.max(0, (u - LAKE_R) / 700)) + 172 * sstep(560, 800, u);
+  /* a point set back on the Niben's bank (west = the Green Road side) */
+  const nibenBank = (u, west) => {
+    const v = NIBEN.meander(u) + (west ? 1 : -1) * (NIBEN.half(u) + TAPER + 26);
+    return {x: NIBEN.dx * u - NIBEN.dz * v, z: NIBEN.dz * u + NIBEN.dx * v};
+  };
 
   /* signed distance to open water (negative = water); the one water plane shows through */
+  const OCEAN_A = bearing(238);                        /* the Abecean Sea, off the Gold Coast */
   function waterSDF(x, z){
-    let d = Math.hypot(x, z) - lakeRim(Math.atan2(z, x));
+    const rr = Math.hypot(x, z), th = Math.atan2(z, x);
+    let d = rr - lakeRim(th);
     for(const rv of RIVERS){
       const u = x * rv.dx + z * rv.dz;
       if(u > 140) d = Math.min(d, Math.abs(-x * rv.dz + z * rv.dx - rv.meander(u)) - rv.half(u));
     }
+    /* open sea only to the far west/south-west — every other horizon is land */
+    const oc = angDiff(th, OCEAN_A);
+    d = Math.min(d, 880 + 26 * Math.sin(th * 5.0) + 900 * sstep(0.38, 0.98, oc) - rr);
     return d;
+  }
+
+  /* the rim of the bowl — a gaussian lobe of mountain per compass range */
+  const lobe = (th, cdeg, w) => { const da = angDiff(th, bearing(cdeg)); return Math.exp(-(da * da) / (2 * w * w)); };
+  function rimAmp(th){
+    return 205 * lobe(th,   0, 0.62)   /* the Jerall Mountains — tallest, snow-capped */
+         + 132 * lobe(th,  80, 0.55)   /* the Valus Mountains, toward Morrowind */
+         + 118 * lobe(th, 295, 0.72);  /* the Colovian Highlands */
   }
   function landHeight(x, z){
     const d = waterSDF(x, z);
-    if(d <= -TAPER) return -5;                         /* river / lake bed, below the water plane */
+    if(d <= -TAPER) return -5;                         /* river / lake / sea bed, below the water plane */
     const s = sstep(-TAPER, TAPER, d);
     const n    = Math.sin(x * 0.021 + z * 0.017) * Math.sin(x * 0.013 - z * 0.023);
     const roll = Math.sin(x * 0.0042 + 0.7) * Math.sin(z * 0.0051 + 0.2);
-    return -5 + s * 7.4 + s * s * (1.9 + n * 0.7 + roll * 1.1);   /* land tops out 2.5–6.1, above every wave */
+    let h = -5 + s * 7.4 + s * s * (1.9 + n * 0.7 + roll * 1.1);  /* the Heartlands top out 2.5–6.1, above every wave */
+    const rr = Math.hypot(x, z);
+    if(rr > 440){                                      /* the land climbs from the Heartlands into the rim */
+      const rise = Math.pow(sstep(470, 1080, rr), 1.5);
+      if(rise > 0){
+        const ridge = 1 - Math.abs(Math.sin(x * 0.0083 + Math.sin(z * 0.0065) * 1.4))
+                        * Math.abs(Math.sin(z * 0.0071 + Math.sin(x * 0.0049) * 1.3));
+        /* the wide water taper keeps river valleys carved through the ranges */
+        const v = sstep(8, 200, d);
+        h += v * v * rimAmp(Math.atan2(z, x)) * rise * (0.38 + 0.62 * ridge * ridge);
+      }
+    }
+    return h;
   }
 
   /* one big low-poly ground sheet with the lake and both rivers carved in */
@@ -1003,15 +1040,24 @@ function init(){
     const p = g.attributes.position;
     const colors = new Float32Array(p.count * 3);
     const cA = new THREE.Color(0x5d7f3a), cB = new THREE.Color(0x4b6b2d),
-          cSand = new THREE.Color(0xb2a06e), cBed = new THREE.Color(0x77855c), cc = new THREE.Color();
+          cSand = new THREE.Color(0xb2a06e), cBed = new THREE.Color(0x77855c),
+          cRock = new THREE.Color(0x7d7263), cSnow = new THREE.Color(0xf3f5f0),
+          cMarsh = new THREE.Color(0x556839), cc = new THREE.Color();
     for(let i = 0; i < p.count; i++){
       const x = p.getX(i), z = p.getZ(i);
       const h = landHeight(x, z);
       p.setY(i, h);
+      const th = Math.atan2(z, x);
       const mow = 0.5 + 0.5 * Math.sin(x * 0.009 + 1.7) * Math.sin(z * 0.011 + 0.3);
       cc.copy(cA).lerp(cB, mow);                                   /* mottled grass */
+      cc.lerp(cMarsh, 0.7 * lobe(th, 172, 0.62) * (1 - sstep(2.2, 6.8, h))); /* Blackwood — low and wet in the south */
       if(h < 2.6) cc.lerp(cSand, sstep(0, 1, (2.6 - h) / 2.2));    /* sandy banks at the waterline */
       if(h < -1.4) cc.copy(cBed);                                  /* the bed, rarely seen */
+      const rockT = sstep(26, 64, h);                               /* grass gives way to bare rock */
+      if(rockT > 0) cc.lerp(cRock, rockT * 0.92);
+      const snowLine = 118 - 58 * lobe(th, 0, 0.7);                 /* snow bites lowest on the Jeralls */
+      const snowT = sstep(snowLine, snowLine + 22, h);
+      if(snowT > 0) cc.lerp(cSnow, snowT);
       colors[i*3] = cc.r; colors[i*3+1] = cc.g; colors[i*3+2] = cc.b;
     }
     g.setAttribute('color', new THREE.BufferAttribute(colors, 3));
@@ -1019,7 +1065,7 @@ function init(){
     scene.add(mainland);
   }
 
-  /* — rolling hills on the mainland; the tall pair northward hints at the Jeralls — */
+  /* — rolling foothills on the mainland, tucked beneath the mountain rim — */
   const hillMat = new THREE.MeshStandardMaterial({color:0x66875a, roughness:1.0});
   const hillGeo = new THREE.SphereGeometry(1, 12, 8, 0, Math.PI*2, 0, Math.PI/2);
   const hills = [];
@@ -1056,39 +1102,22 @@ function init(){
     return y;
   }
 
-  /* — dirt roads carry the three causeways on into the hinterland — */
-  {
-    const SEG = 6;
-    const roads = new THREE.InstancedMesh(new THREE.BoxGeometry(34, 0.6, 7.2), sandMat, SEG * BRIDGE_AS.length);
-    let ri = 0;
-    for(const a of BRIDGE_AS){
-      for(let s2 = 0; s2 < SEG; s2++){
-        const r = 388 + s2 * 31;
-        const x = Math.cos(a)*r, z = Math.sin(a)*r;
-        dummy.position.set(x, shoreHeight(x, z) + 0.18, z);
-        dummy.rotation.set(0, -a, 0);
-        dummy.scale.set(1, 1, 1);
-        dummy.updateMatrix();
-        roads.setMatrixAt(ri++, dummy.matrix);
-      }
-    }
-    scene.add(roads);
-  }
-
   /* — the distant cities of Cyrodiil, each at its true bearing from the
        White-Gold Tower and half-lost in the haze — */
   const TOWNS = [
-    {deg:   0, r: 640, n: 10, spread: 26},  /* Bruma — due north, under the Jeralls */
-    {deg:  48, r: 570, n:  9, spread: 24},  /* Cheydinhal — northeast */
-    {deg: 310, r: 590, n:  9, spread: 24},  /* Chorrol — northwest */
-    {deg: 243, r: 660, n:  9, spread: 26},  /* Skingrad — west-southwest */
-    {deg: 265, r: 760, n:  8, spread: 22},  /* Kvatch — west, up on its bluff */
-    {deg: 165, r: 500, n:  9, spread: 22},  /* Bravil — south, on the Niben's bank */
-    {deg: 191, r: 780, n:  8, spread: 22}   /* Leyawiin — far south, down the river */
+    {deg:   0, r: 640, n: 10, spread: 26},        /* Bruma — due north, in the lap of the Jeralls */
+    {deg:  48, r: 570, n:  9, spread: 24},        /* Cheydinhal — northeast, under the Valus range */
+    {deg: 310, r: 590, n:  9, spread: 24},        /* Chorrol — northwest, against the Colovian Highlands */
+    {deg: 243, r: 660, n:  9, spread: 26},        /* Skingrad — west-southwest */
+    {deg: 265, r: 760, n:  8, spread: 22},        /* Kvatch — west, up on its bluff */
+    {pos: nibenBank(475, true), n: 9, spread: 22},/* Bravil — south, on Niben Bay's western bank */
+    {pos: nibenBank(815, true), n: 8, spread: 22},/* Leyawiin — far south, at the delta */
+    {deg: 251, r: 830, n:  8, spread: 20}         /* Anvil — far southwest, on the Abecean coast */
   ];
   for(const t of TOWNS){
-    const ta = bearing(t.deg);
-    const tx = Math.cos(ta)*t.r, tz = Math.sin(ta)*t.r;
+    const tx = t.pos ? t.pos.x : Math.cos(bearing(t.deg))*t.r;
+    const tz = t.pos ? t.pos.z : Math.sin(bearing(t.deg))*t.r;
+    t.tx = tx; t.tz = tz;
     for(let i = 0; i < t.n; i++){
       const oa = Math.random()*Math.PI*2, or = 6 + Math.random()*t.spread;
       const x = tx + Math.cos(oa)*or, z = tz + Math.sin(oa)*or;
@@ -1115,6 +1144,41 @@ function init(){
     }
   }
 
+  /* — the roads of Cyrodiil: the Red Ring Road around Lake Rumare, the three
+       causeway roads, and a dirt road out to every city — one instanced mesh — */
+  {
+    const segs = [];
+    const layRoad = (a, r0, r1) => {
+      for(let r = r0; r < r1; r += 30){
+        const x1 = Math.cos(a)*r,      z1 = Math.sin(a)*r;
+        const x2 = Math.cos(a)*(r+30), z2 = Math.sin(a)*(r+30);
+        const h1 = shoreHeight(x1, z1), h2 = shoreHeight(x2, z2);
+        if(h1 < 1.9 || h2 < 1.9) continue;             /* never pave the water */
+        segs.push({x:(x1+x2)/2, y:(h1+h2)/2 + 0.18, z:(z1+z2)/2, ry:-a, rz:Math.atan2(h2 - h1, 30)});
+      }
+    };
+    for(const a of BRIDGE_AS) layRoad(a, 374, 560);
+    for(const t of TOWNS) layRoad(Math.atan2(t.tz, t.tx), 396, Math.hypot(t.tx, t.tz) - 24);
+    const RN = 92;                                     /* the Red Ring Road hugs the lakeshore */
+    for(let i = 0; i < RN; i++){
+      const a = i / RN * Math.PI * 2;
+      const r = lakeRim(a) + 30;
+      const x = Math.cos(a)*r, z = Math.sin(a)*r;
+      const h = shoreHeight(x, z);
+      if(h < 1.9) continue;
+      segs.push({x, y:h + 0.18, z, ry:-(a + Math.PI/2), rz:0});
+    }
+    const roads = new THREE.InstancedMesh(new THREE.BoxGeometry(34, 0.6, 7.2), sandMat, segs.length);
+    segs.forEach((sg, i) => {
+      dummy.position.set(sg.x, sg.y, sg.z);
+      dummy.rotation.set(0, sg.ry, sg.rz);
+      dummy.scale.set(1, 1, 1);
+      dummy.updateMatrix();
+      roads.setMatrixAt(i, dummy.matrix);
+    });
+    scene.add(roads);
+  }
+
   /* — willows along both banks of each river — */
   for(const rv of RIVERS){
     for(let u = LAKE_R + 40; u < 1120; u += 26){
@@ -1136,6 +1200,40 @@ function init(){
       const gy = shoreHeight(x, z);
       if(gy < 1.9) continue;
       treeSpots.push([x, z, gy - 0.6, 5 + Math.random()*3.5]);
+    }
+  }
+
+  /* — the Great Forest: deep woodland blankets the Heartlands, thickest west
+       and north of Lake Rumare, thinning away toward the southern valley — */
+  const forestWeight = th =>
+      0.16 + 0.9 * lobe(th, 315, 0.85) + 0.6 * lobe(th, 0, 0.55) + 0.42 * lobe(th, 262, 0.5)
+           - 0.35 * lobe(th, 172, 0.75);
+  const nearTownSq = 44*44;
+  for(let i = 0; i < 6400; i++){
+    const a = Math.random()*Math.PI*2;
+    const r = 372 + Math.random()*590;
+    if(Math.random() > forestWeight(a)) continue;
+    const x = Math.cos(a)*r, z = Math.sin(a)*r;
+    const gy = shoreHeight(x, z);
+    if(gy < 1.9 || gy > 56) continue;                  /* not in the water, not above the treeline */
+    if(TOWNS.some(t => {
+      const dx = x - t.tx, dz = z - t.tz;
+      if(dx*dx + dz*dz < nearTownSq) return true;      /* keep the town squares clear */
+      const da = angDiff(a, Math.atan2(t.tz, t.tx));   /* …and the road out to each town */
+      return r < Math.hypot(t.tx, t.tz) && r * Math.sin(Math.min(da, Math.PI/2)) < 12;
+    })) continue;
+    if(BRIDGE_AS.some(b => r < 575 && r * Math.sin(Math.min(angDiff(a, b), Math.PI/2)) < 15)) continue;
+    treeSpots.push([x, z, gy - 0.6, 3.6 + Math.random()*4.2]);
+  }
+  /* — Blackwood: dark marsh stands crowd Niben Bay's low shores — */
+  for(let u = 545; u < 1150; u += 17){
+    for(const side of [-1, 1]){
+      if(Math.random() < 0.4) continue;
+      const v = NIBEN.meander(u) + side * (NIBEN.half(u) + TAPER + 4 + Math.random()*34);
+      const x = NIBEN.dx*u - NIBEN.dz*v, z = NIBEN.dz*u + NIBEN.dx*v;
+      const gy = shoreHeight(x, z);
+      if(gy < 1.9) continue;
+      treeSpots.push([x, z, gy - 0.6, 2.8 + Math.random()*3]);
     }
   }
 
@@ -1422,6 +1520,7 @@ function init(){
     parX: 0, parY: 0, tParX: 0, tParY: 0
   };
   const PHI_MIN = 0.6, PHI_MAX = 1.34;
+  window.__rig = rig; /* debug hook, same spirit as window.__info */
   let dragging = false, lastX = 0, lastY = 0, scrollT = 0;
 
   canvas.addEventListener('pointerdown', e => {
