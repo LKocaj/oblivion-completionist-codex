@@ -353,9 +353,11 @@ const SECT = {
   mMaterials:{t:"Materials & Collectibles",s:"Offerings, gather-quests and quest ingredients."},
   mHorses:{t:"Horses — Ranked",s:"Every mount in Cyrodiil, best to worst.",note:{type:"ok",text:"Speeds shown are the Remastered values. Shadowmere — free, from the Dark Brotherhood — is the best mount in the game; the Black Horse in Cheydinhal is the best you can buy. Horses regenerate health slowly (Shadowmere regenerates fast) and can't be healed with normal spells. Each city's stable: Anvil — Horse Whisperer Stables · Bravil — Bay Roan Stables · Bruma — Wildeye Stables · Cheydinhal — Black Waterside Stables · Chorrol — North Country Stables · Imperial City — Chestnut Handy Stables · Leyawiin — Five Riders Stables · Skingrad — Grateful Pass Stables."}},
   horses:{t:"Phase 15 — Horses (Ranked)",s:"Every mount in Cyrodiil, best to worst.",note:{type:"ok",text:"Speeds shown are the Remastered values. Shadowmere — free, from the Dark Brotherhood — is the best mount in the game; the Black Horse in Cheydinhal is the best you can buy. Horses regenerate health slowly (Shadowmere regenerates fast) and can't be healed with normal spells. Each city's stable: Anvil — Horse Whisperer Stables · Bravil — Bay Roan Stables · Bruma — Wildeye Stables · Cheydinhal — Black Waterside Stables · Chorrol — North Country Stables · Imperial City — Chestnut Handy Stables · Leyawiin — Five Riders Stables · Skingrad — Grateful Pass Stables."}},
+  mStables:{t:"Stables — by City",s:"Which horse each city sells, and from whom.",note:{type:"ok",text:"Every city has one stable, each stocking a single breed. (Kvatch's stable is destroyed during the main quest.) Shadowmere and the Unicorn aren't sold — see Horses — Ranked for those."}},
+  stables:{t:"Stables — by City",s:"Which horse each city sells, and from whom.",note:{type:"ok",text:"Every city has one stable, each stocking a single breed. (Kvatch's stable is destroyed during the main quest.) Shadowmere and the Unicorn aren't sold — see Horses — Ranked for those."}},
 };
-const ORDER_OPT = ["setup","arena","fighters","mages","thieves","brotherhood","main","kotn","daedric","shivering","cities","dlcx","offerings","materials","horses"];
-const ORDER_LOC = ["Anvil","Bravil","Bruma","Cheydinhal","Chorrol","Leyawiin","Skingrad","Imperial City","gMages","gFighters","gBrotherhood","gThieves","gArena","mMain","mKotN","mShivering","mDaedric","mDLC","mWild","mMaterials","mHorses"];
+const ORDER_OPT = ["setup","arena","fighters","mages","thieves","brotherhood","main","kotn","daedric","shivering","cities","dlcx","offerings","materials","horses","stables"];
+const ORDER_LOC = ["Anvil","Bravil","Bruma","Cheydinhal","Chorrol","Leyawiin","Skingrad","Imperial City","gMages","gFighters","gBrotherhood","gThieves","gArena","mMain","mKotN","mShivering","mDaedric","mDLC","mWild","mMaterials","mHorses","mStables"];
 
 /* ---------- Master quest list ----------
    fields: n=name, opt=optimal phase, loc=location section,
@@ -598,6 +600,15 @@ const Q = [
   {n:"Armored Old Nag",opt:"horses",loc:"mHorses",b:{c:"rank",t:"F · Worst"},u:"Horses",o:"A joke horse: it comes pre-armored but has just 5 Health, so it dies almost instantly. Free from Snak gra-Bura at Chestnut Handy Stables, Imperial City."},
   {n:"Prior Maborel's Paint Horse (free, main quest)",opt:"horses",loc:"mHorses",b:{c:"start",t:"Free early"},u:"Weynon_Priory",o:"A free Paint Horse (Speed 28) you can take at Weynon Priory during the main quest after the Mythic Dawn attack — handy before you can afford a better mount."},
   {n:"Unicorn",opt:"horses",loc:"mHorses",b:{c:"lvl",t:"Unique"},u:"Unicorn",o:"A unique white mount — Speed 34 with a powerful 45 attack and special abilities. Found at Harcane Grove during Hircine's Daedric quest; the quest asks you to kill it, but you can ride it first."},
+  // --- Stables by city ---
+  {n:"Anvil — Horse Whisperer Stables",opt:"stables",loc:"mStables",b:{c:"rank",t:"A"},u:"Horses",o:"Sells the White Horse — Speed 34, Health 400 (Tier A) — for 4,000 gold, from Clesa."},
+  {n:"Bravil — Bay Roan Stables",opt:"stables",loc:"mStables",b:{c:"rank",t:"C"},u:"Horses",o:"Sells the Bay Horse — Speed 31, Health 250 (Tier C) — for 1,000 gold, from Isabeau Bienne."},
+  {n:"Bruma — Wildeye Stables",opt:"stables",loc:"mStables",b:{c:"rank",t:"D"},u:"Horses",o:"Sells the Paint Horse — Speed 28, Health 300 (Tier D) — for 500 gold, from Petrine."},
+  {n:"Cheydinhal — Black Waterside Stables",opt:"stables",loc:"mStables",b:{c:"rank",t:"A · Best buy"},u:"Horses",o:"Sells the Black Horse — Speed 38, Health 325 (Tier A, best purchasable) — for 5,000 gold, from Tovas Selvani. Shadowmere also waits nearby, outside Fort Farragut."},
+  {n:"Chorrol — North Country Stables",opt:"stables",loc:"mStables",b:{c:"rank",t:"B"},u:"Horses",o:"Sells the Chestnut Horse — Speed 34, Health 200 (Tier B) — for 2,500 gold, from Bongond."},
+  {n:"Leyawiin — Five Riders Stables",opt:"stables",loc:"mStables",b:{c:"rank",t:"D"},u:"Horses",o:"Sells the Paint Horse — Speed 28, Health 300 (Tier D) — for 500 gold, from Cat-Face."},
+  {n:"Skingrad — Grateful Pass Stables",opt:"stables",loc:"mStables",b:{c:"rank",t:"C"},u:"Horses",o:"Sells the Bay Horse — Speed 31, Health 250 (Tier C) — for 1,000 gold, from Ugak gra-Mogakh."},
+  {n:"Imperial City — Chestnut Handy Stables",opt:"stables",loc:"mStables",b:{c:"rank",t:"F"},u:"Horses",o:"Stocks several breeds and the free Armored Old Nag (just 5 Health — a joke horse), from Snak gra-Bura."},
 ];
 
 /* ---------- Walkthroughs + known bugs (keyed by normalized quest name) ---------- */
