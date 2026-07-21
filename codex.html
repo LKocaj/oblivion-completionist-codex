@@ -130,14 +130,28 @@
     text-transform:uppercase;color:var(--ink-faint);cursor:pointer;padding:4px 8px;border-radius:7px;transition:.15s}
   .user-chip .signout:hover{color:#ee9d86}
   .sync-flag{font-family:var(--serif);font-style:italic;font-size:.82rem;color:var(--done)}
+  /* side dock: save / import / export tucked off the main nav */
+  .sidedock{position:fixed;right:16px;top:50%;transform:translateY(-50%);z-index:30;
+    display:flex;flex-direction:column;gap:8px;padding:11px 11px 12px;border-radius:15px;
+    background:var(--glass-lo);backdrop-filter:blur(14px) saturate(1.2);-webkit-backdrop-filter:blur(14px) saturate(1.2);
+    box-shadow:var(--sh-md)}
+  .sidedock .dock-label{font-family:var(--display);font-weight:700;font-size:.56rem;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--ink-faint);text-align:center;margin:0 0 2px}
+  .sidedock button,.sidedock .user-chip{width:100%;justify-content:center;text-align:center}
+  @media (max-width:1180px){
+    .sidedock{top:auto;bottom:16px;right:16px;transform:none;flex-direction:row;flex-wrap:wrap;
+      align-items:center;justify-content:flex-end;max-width:62vw}
+    .sidedock .dock-label{display:none}
+    .sidedock button,.sidedock .user-chip{width:auto}
+  }
+  @media (max-width:560px){
+    .sidedock{left:12px;right:12px;bottom:12px;max-width:none;justify-content:center;padding:9px}
+  }
 
   /* ---------- Phase cards (dark frosted glass, no borders) ---------- */
   .phase{position:relative;background:var(--glass);backdrop-filter:blur(16px) saturate(1.15);
     -webkit-backdrop-filter:blur(16px) saturate(1.15);
     border-radius:18px;margin-bottom:18px;overflow:hidden;scroll-margin-top:86px;box-shadow:var(--sh-md)}
-  .phase::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
-    background:linear-gradient(180deg,var(--gold-bright),var(--gold-deep));opacity:.45;transition:opacity .25s}
-  .phase:hover::before{opacity:1}
   .phase-head{display:flex;align-items:center;gap:14px;padding:17px 20px;cursor:pointer;user-select:none;
     background:linear-gradient(180deg,rgba(255,255,255,.04),transparent)}
   .phase-head:hover{background:linear-gradient(180deg,rgba(120,160,210,.08),transparent)}
@@ -160,17 +174,14 @@
 
   /* ---------- Notes ---------- */
   .note{margin:10px 8px 14px;padding:12px 15px;background:rgba(92,138,68,.16);
-    border-radius:9px;box-shadow:inset 3px 0 0 var(--done),var(--sh-sm);
+    border-radius:9px;box-shadow:var(--sh-sm);
     color:#c9dcb8;font-size:.92rem;line-height:1.55}
-  .note.warn{background:rgba(216,180,90,.14);box-shadow:inset 3px 0 0 var(--gold),var(--sh-sm);color:#e6d29c}
+  .note.warn{background:rgba(216,180,90,.14);box-shadow:var(--sh-sm);color:#e6d29c}
 
   /* ---------- Quest rows ---------- */
   ul.quests{list-style:none;margin:0;padding:0}
   li.q{position:relative;border-radius:11px;margin:1px 0;transition:background .15s}
-  li.q::before{content:"";position:absolute;left:2px;top:9px;bottom:9px;width:2px;border-radius:2px;
-    background:var(--gold);opacity:0;transition:opacity .18s}
   li.q:hover{background:rgba(120,183,236,.07)}
-  li.q:hover::before{opacity:.55}
   li.q.open{background:rgba(120,183,236,.06)}
   .q-row{display:flex;align-items:flex-start;gap:13px;padding:11px 13px}
   input[type=checkbox]{appearance:none;-webkit-appearance:none;width:21px;height:21px;margin:2px 0 0;flex:none;
@@ -215,18 +226,18 @@
   .q-giver-link{color:var(--blue);text-decoration:none;border-bottom:1px dotted rgba(120,183,236,.5);transition:.15s}
   .q-giver-link:hover{color:var(--blue-bright);border-bottom-color:var(--blue-bright)}
   .q-req{font-size:.96rem;color:#e6d09c;margin:0 0 10px;padding:9px 13px;border-radius:9px;
-    background:rgba(216,180,90,.12);box-shadow:inset 3px 0 0 var(--gold)}
+    background:rgba(216,180,90,.12);box-shadow:var(--sh-sm)}
   .q-req b{font-family:var(--display);font-weight:700;font-size:.66rem;letter-spacing:.1em;
     text-transform:uppercase;color:var(--gold-soft);margin-right:9px}
   .q-obj{font-size:.98rem;color:var(--ink-soft);font-style:italic;margin:0 0 9px !important;
-    padding-left:12px;box-shadow:inset 2px 0 0 rgba(255,255,255,.16)}
+    padding-left:0}
   .q-walk{font-size:1rem;color:#d3dbe6;margin:0 0 10px;line-height:1.62}
   .q-link{display:inline-block;font-family:var(--display);font-weight:600;font-size:.76rem;letter-spacing:.04em;
     color:var(--blue);text-decoration:none;border-bottom:1px dotted rgba(120,183,236,.5);padding-bottom:2px;transition:.16s}
   .q-link:hover{color:var(--blue-bright);border-bottom-color:var(--blue-bright)}
   .q-bug{font-size:.86rem;color:var(--ink-soft);margin-top:8px}
   .q-bug.warn{display:block;color:#e6cf9c;background:rgba(216,180,90,.12);
-    border-radius:9px;padding:10px 13px;margin:10px 0;box-shadow:inset 3px 0 0 var(--gold),var(--sh-sm);
+    border-radius:9px;padding:10px 13px;margin:10px 0;box-shadow:var(--sh-sm);
     font-size:.9rem;line-height:1.55}
   .q-bug.warn b{color:var(--gold-soft);font-family:var(--display);font-weight:700;font-size:.82rem;letter-spacing:.03em}
 
@@ -274,16 +285,20 @@
     <div class="btns">
       <button id="expandAll">Expand</button>
       <button id="collapseAll">Collapse</button>
-      <button id="exportBtn">↓ Backup</button>
-      <button id="importBtn">↑ Load</button>
-      <button id="resetBtn" class="danger">Reset</button>
-      <button id="signInBtn" hidden>Sign in with Google</button>
-      <span id="userChip" class="user-chip" hidden></span>
-      <input type="file" id="importFile" accept="application/json" hidden>
     </div>
   </div>
   <nav class="sectionnav" id="sectionNav" aria-label="Jump to section"></nav>
 </div>
+
+<aside class="sidedock" aria-label="Save & progress">
+  <span class="dock-label">Progress</span>
+  <button id="exportBtn">↓ Backup</button>
+  <button id="importBtn">↑ Load</button>
+  <button id="resetBtn" class="danger">Reset</button>
+  <button id="signInBtn" hidden>Sign in</button>
+  <span id="userChip" class="user-chip" hidden></span>
+  <input type="file" id="importFile" accept="application/json" hidden>
+</aside>
 
 <div class="wrap" id="phases"></div>
 
