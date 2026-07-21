@@ -351,9 +351,11 @@ const SECT = {
   mDLC:{t:"Other DLC & Plug-ins",s:"Standalone dungeons and player homes."},
   mWild:{t:"Wilderness & Small Settlements",s:"Quests out in the world, not in a city."},
   mMaterials:{t:"Materials & Collectibles",s:"Offerings, gather-quests and quest ingredients."},
+  mHorses:{t:"Horses — Ranked",s:"Every mount in Cyrodiil, best to worst.",note:{type:"ok",text:"Speeds shown are the Remastered values. Shadowmere — free, from the Dark Brotherhood — is the best mount in the game; the Black Horse in Cheydinhal is the best you can buy. Horses regenerate health slowly (Shadowmere regenerates fast) and can't be healed with normal spells."}},
+  horses:{t:"Phase 15 — Horses (Ranked)",s:"Every mount in Cyrodiil, best to worst.",note:{type:"ok",text:"Speeds shown are the Remastered values. Shadowmere — free, from the Dark Brotherhood — is the best mount in the game; the Black Horse in Cheydinhal is the best you can buy. Horses regenerate health slowly (Shadowmere regenerates fast) and can't be healed with normal spells."}},
 };
-const ORDER_OPT = ["setup","arena","fighters","mages","thieves","brotherhood","main","kotn","daedric","shivering","cities","dlcx","offerings","materials"];
-const ORDER_LOC = ["Anvil","Bravil","Bruma","Cheydinhal","Chorrol","Leyawiin","Skingrad","Imperial City","gMages","gFighters","gBrotherhood","gThieves","gArena","mMain","mKotN","mShivering","mDaedric","mDLC","mWild","mMaterials"];
+const ORDER_OPT = ["setup","arena","fighters","mages","thieves","brotherhood","main","kotn","daedric","shivering","cities","dlcx","offerings","materials","horses"];
+const ORDER_LOC = ["Anvil","Bravil","Bruma","Cheydinhal","Chorrol","Leyawiin","Skingrad","Imperial City","gMages","gFighters","gBrotherhood","gThieves","gArena","mMain","mKotN","mShivering","mDaedric","mDLC","mWild","mMaterials","mHorses"];
 
 /* ---------- Master quest list ----------
    fields: n=name, opt=optimal phase, loc=location section,
@@ -586,6 +588,16 @@ const Q = [
   {n:"◆ Crusader's Relics — Knights of the Nine",opt:"materials",loc:"mMaterials",x:1,u:"Knights_of_the_Nine",o:"Assembled across the DLC; each piece is a quest step, not a random find."},
   {n:"Helm, Cuirass, Gauntlets, Greaves, Boots & Shield of the Crusader",opt:"materials",loc:"mMaterials",x:1,o:"Six armor relics gathered through the KotN questline."},
   {n:"Mace of the Crusader & Sword of the Crusader",opt:"materials",loc:"mMaterials",x:1,o:"The two Crusader weapons."},
+  // --- Horses (ranked best → worst) ---
+  {n:"Shadowmere",opt:"horses",loc:"mHorses",b:{c:"rank",t:"S · Best"},u:"Shadowmere",o:"The best mount in the game — Speed 38, Health 500 — and it fights for you and regenerates health quickly. Free: claim it outside Fort Farragut (near Cheydinhal) after the Dark Brotherhood quest 'The Purification'."},
+  {n:"Black Horse",opt:"horses",loc:"mHorses",b:{c:"rank",t:"A · Best buy"},u:"Horses",o:"The fastest horse you can buy — Speed 38, Health 325. Costs 5,000 gold from Tovas Selvani at Black Waterside Stables, Cheydinhal."},
+  {n:"White Horse",opt:"horses",loc:"mHorses",b:{c:"rank",t:"A"},u:"Horses",o:"Speed 34, Health 400 — the toughest purchasable horse. Costs 4,000 gold from Clesa at Horse Whisperer Stables, Anvil."},
+  {n:"Chestnut Horse",opt:"horses",loc:"mHorses",b:{c:"rank",t:"B"},u:"Horses",o:"Speed 34, Health 200. Costs 2,500 gold from Bongond at North Country Stables, Chorrol."},
+  {n:"Bay Horse",opt:"horses",loc:"mHorses",b:{c:"rank",t:"C"},u:"Horses",o:"Speed 31, Health 250. Costs 1,000 gold from Bay Roan Stables (Bravil) or Grateful Pass Stables (Skingrad)."},
+  {n:"Paint Horse",opt:"horses",loc:"mHorses",b:{c:"rank",t:"D"},u:"Horses",o:"The cheapest and slowest — Speed 28, Health 300. Costs 500 gold from Wildeye Stables (Bruma) or Five Riders Stables (Leyawiin)."},
+  {n:"Armored Old Nag",opt:"horses",loc:"mHorses",b:{c:"rank",t:"F · Worst"},u:"Horses",o:"A joke horse: it comes pre-armored but has just 5 Health, so it dies almost instantly. Free from Snak gra-Bura at Chestnut Handy Stables, Imperial City."},
+  {n:"Prior Maborel's Paint Horse (free, main quest)",opt:"horses",loc:"mHorses",b:{c:"start",t:"Free early"},u:"Weynon_Priory",o:"A free Paint Horse (Speed 28) you can take at Weynon Priory during the main quest after the Mythic Dawn attack — handy before you can afford a better mount."},
+  {n:"Unicorn",opt:"horses",loc:"mHorses",b:{c:"lvl",t:"Unique"},u:"Unicorn",o:"A unique white mount — Speed 34 with a powerful 45 attack and special abilities. Found at Harcane Grove during Hircine's Daedric quest; the quest asks you to kill it, but you can ride it first."},
 ];
 
 /* ---------- Walkthroughs + known bugs (keyed by normalized quest name) ---------- */
