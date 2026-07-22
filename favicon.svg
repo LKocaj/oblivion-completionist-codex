@@ -1,22 +1,25 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
   <defs>
-    <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#f6e4a6"/>
-      <stop offset=".5" stop-color="#d8b45a"/>
-      <stop offset="1" stop-color="#a9781f"/>
-    </linearGradient>
-    <radialGradient id="glow" cx=".5" cy=".14" r=".55">
-      <stop offset="0" stop-color="#ffe9a8" stop-opacity=".85"/>
-      <stop offset="1" stop-color="#ffe9a8" stop-opacity="0"/>
+    <radialGradient id="bg" cx="50%" cy="72%" r="78%">
+      <stop offset="0" stop-color="#2a1206"/>
+      <stop offset="55%" stop-color="#120703"/>
+      <stop offset="100%" stop-color="#070301"/>
     </radialGradient>
+    <linearGradient id="flame" x1="0.5" y1="0" x2="0.5" y2="1">
+      <stop offset="0"   stop-color="#ffe9a8"/>
+      <stop offset="0.30" stop-color="#ffc247"/>
+      <stop offset="0.62" stop-color="#ef7a1a"/>
+      <stop offset="1"   stop-color="#a32206"/>
+    </linearGradient>
+    <linearGradient id="core" x1="0.5" y1="0" x2="0.5" y2="1">
+      <stop offset="0"   stop-color="#fffdf2"/>
+      <stop offset="0.45" stop-color="#ffe9a0"/>
+      <stop offset="1"   stop-color="#ffab2e"/>
+    </linearGradient>
   </defs>
-  <rect width="64" height="64" rx="15" fill="#0d1119"/>
-  <rect width="64" height="64" rx="15" fill="url(#glow)"/>
-  <g fill="url(#gold)">
-    <polygon points="32,8 38.5,33 25.5,33"/>
-    <rect x="26.6" y="33" width="10.8" height="16.5"/>
-    <rect x="21.5" y="47.5" width="21" height="6.5" rx="1.6"/>
-  </g>
-  <rect x="30.6" y="37" width="2.8" height="9" rx="1" fill="#0d1119" opacity=".55"/>
-  <circle cx="32" cy="8.4" r="2.7" fill="#fff3cf"/>
+  <rect width="512" height="512" fill="url(#bg)"/>
+  <!-- outer flame -->
+  <path fill="url(#flame)" d="M256 38c34 74 116 104 96 190-9 39-34 60-34 92 0 41 30 56 30 56-62 22-140 12-176-30-30-35-30-92-2-131 21-29 40-45 44-74 4-28-6-46-6-46 22 8 38 22 46 40 12-33 6-66 2-97z"/>
+  <!-- inner core -->
+  <path fill="url(#core)" d="M262 196c18 40 58 58 46 104-6 22-20 34-20 54 0 24 16 32 16 32-34 12-76 6-96-18-16-20-16-52 0-74 12-16 24-26 26-42 3-16-2-26-2-26 12 5 20 12 26 22 6-18 4-36 4-52z"/>
 </svg>

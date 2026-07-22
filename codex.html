@@ -192,6 +192,8 @@
     box-shadow:0 0 12px rgba(216,180,90,.55),0 0 0 1px rgba(216,180,90,.6)}
   input[type=checkbox]:checked::after{content:"";position:absolute;left:6px;top:2px;width:6px;height:11px;
     border:solid #1a1508;border-width:0 2.5px 2.5px 0;transform:rotate(45deg)}
+  .q-refdot{flex:none;width:21px;height:21px;margin:2px 0 0;display:flex;align-items:center;justify-content:center}
+  .q-refdot::after{content:"";width:6px;height:6px;border-radius:50%;background:var(--gold);opacity:.5}
   .q-main{flex:1;cursor:pointer;display:flex;align-items:flex-start;gap:9px}
   .q-caret{color:var(--ink-faint);font-size:.66rem;margin-top:7px;transition:transform .22s,color .18s;flex:none}
   li.q:hover .q-caret{color:var(--gold)}
@@ -591,24 +593,24 @@ const Q = [
   {n:"Helm, Cuirass, Gauntlets, Greaves, Boots & Shield of the Crusader",opt:"materials",loc:"mMaterials",x:1,o:"Six armor relics gathered through the KotN questline."},
   {n:"Mace of the Crusader & Sword of the Crusader",opt:"materials",loc:"mMaterials",x:1,o:"The two Crusader weapons."},
   // --- Horses (ranked best → worst) ---
-  {n:"Shadowmere",opt:"horses",loc:"mHorses",b:{c:"rank",t:"S · Best"},u:"Shadowmere",o:"The best mount in the game — Speed 38, Health 500 — and it fights for you and regenerates health quickly. Free: claim it outside Fort Farragut (near Cheydinhal) after the Dark Brotherhood quest 'The Purification'."},
-  {n:"Black Horse",opt:"horses",loc:"mHorses",b:{c:"rank",t:"A · Best buy"},u:"Horses",o:"The fastest horse you can buy — Speed 38, Health 325. Costs 5,000 gold from Tovas Selvani at Black Waterside Stables, Cheydinhal."},
-  {n:"White Horse",opt:"horses",loc:"mHorses",b:{c:"rank",t:"A"},u:"Horses",o:"Speed 34, Health 400 — the toughest purchasable horse. Costs 4,000 gold from Clesa at Horse Whisperer Stables, Anvil."},
-  {n:"Chestnut Horse",opt:"horses",loc:"mHorses",b:{c:"rank",t:"B"},u:"Horses",o:"Speed 34, Health 200. Costs 2,500 gold from Bongond at North Country Stables, Chorrol."},
-  {n:"Bay Horse",opt:"horses",loc:"mHorses",b:{c:"rank",t:"C"},u:"Horses",o:"Speed 31, Health 250. Costs 1,000 gold from Bay Roan Stables (Bravil) or Grateful Pass Stables (Skingrad)."},
-  {n:"Paint Horse",opt:"horses",loc:"mHorses",b:{c:"rank",t:"D"},u:"Horses",o:"The cheapest and slowest — Speed 28, Health 300. Costs 500 gold from Wildeye Stables (Bruma) or Five Riders Stables (Leyawiin)."},
-  {n:"Armored Old Nag",opt:"horses",loc:"mHorses",b:{c:"rank",t:"F · Worst"},u:"Horses",o:"A joke horse: it comes pre-armored but has just 5 Health, so it dies almost instantly. Free from Snak gra-Bura at Chestnut Handy Stables, Imperial City."},
-  {n:"Prior Maborel's Paint Horse (free, main quest)",opt:"horses",loc:"mHorses",b:{c:"start",t:"Free early"},u:"Weynon_Priory",o:"A free Paint Horse (Speed 28) you can take at Weynon Priory during the main quest after the Mythic Dawn attack — handy before you can afford a better mount."},
-  {n:"Unicorn",opt:"horses",loc:"mHorses",b:{c:"lvl",t:"Unique"},u:"Unicorn",o:"A unique white mount — Speed 34 with a powerful 45 attack and special abilities. Found at Harcane Grove during Hircine's Daedric quest; the quest asks you to kill it, but you can ride it first."},
+  {n:"Shadowmere",opt:"horses",loc:"mHorses",ref:1,b:{c:"rank",t:"S · Best"},u:"Shadowmere",o:"The best mount in the game — Speed 38, Health 500 — and it fights for you and regenerates health quickly. Free: claim it outside Fort Farragut (near Cheydinhal) after the Dark Brotherhood quest 'The Purification'."},
+  {n:"Black Horse",opt:"horses",loc:"mHorses",ref:1,b:{c:"rank",t:"A · Best buy"},u:"Horses",o:"The fastest horse you can buy — Speed 38, Health 325. Costs 5,000 gold from Tovas Selvani at Black Waterside Stables, Cheydinhal."},
+  {n:"White Horse",opt:"horses",loc:"mHorses",ref:1,b:{c:"rank",t:"A"},u:"Horses",o:"Speed 34, Health 400 — the toughest purchasable horse. Costs 4,000 gold from Clesa at Horse Whisperer Stables, Anvil."},
+  {n:"Chestnut Horse",opt:"horses",loc:"mHorses",ref:1,b:{c:"rank",t:"B"},u:"Horses",o:"Speed 34, Health 200. Costs 2,500 gold from Bongond at North Country Stables, Chorrol."},
+  {n:"Bay Horse",opt:"horses",loc:"mHorses",ref:1,b:{c:"rank",t:"C"},u:"Horses",o:"Speed 31, Health 250. Costs 1,000 gold from Bay Roan Stables (Bravil) or Grateful Pass Stables (Skingrad)."},
+  {n:"Paint Horse",opt:"horses",loc:"mHorses",ref:1,b:{c:"rank",t:"D"},u:"Horses",o:"The cheapest and slowest — Speed 28, Health 300. Costs 500 gold from Wildeye Stables (Bruma) or Five Riders Stables (Leyawiin)."},
+  {n:"Armored Old Nag",opt:"horses",loc:"mHorses",ref:1,b:{c:"rank",t:"F · Worst"},u:"Horses",o:"A joke horse: it comes pre-armored but has just 5 Health, so it dies almost instantly. Free from Snak gra-Bura at Chestnut Handy Stables, Imperial City."},
+  {n:"Prior Maborel's Paint Horse (free, main quest)",opt:"horses",loc:"mHorses",ref:1,b:{c:"start",t:"Free early"},u:"Weynon_Priory",o:"A free Paint Horse (Speed 28) you can take at Weynon Priory during the main quest after the Mythic Dawn attack — handy before you can afford a better mount."},
+  {n:"Unicorn",opt:"horses",loc:"mHorses",ref:1,b:{c:"lvl",t:"Unique"},u:"Unicorn",o:"A unique white mount — Speed 34 with a powerful 45 attack and special abilities. Found at Harcane Grove during Hircine's Daedric quest; the quest asks you to kill it, but you can ride it first."},
   // --- Stables by city ---
-  {n:"Anvil — Horse Whisperer Stables",opt:"stables",loc:"mStables",b:{c:"rank",t:"A"},u:"Horses",o:"Sells the White Horse — Speed 34, Health 400 (Tier A) — for 4,000 gold, from Clesa."},
-  {n:"Bravil — Bay Roan Stables",opt:"stables",loc:"mStables",b:{c:"rank",t:"C"},u:"Horses",o:"Sells the Bay Horse — Speed 31, Health 250 (Tier C) — for 1,000 gold, from Isabeau Bienne."},
-  {n:"Bruma — Wildeye Stables",opt:"stables",loc:"mStables",b:{c:"rank",t:"D"},u:"Horses",o:"Sells the Paint Horse — Speed 28, Health 300 (Tier D) — for 500 gold, from Petrine."},
-  {n:"Cheydinhal — Black Waterside Stables",opt:"stables",loc:"mStables",b:{c:"rank",t:"A · Best buy"},u:"Horses",o:"Sells the Black Horse — Speed 38, Health 325 (Tier A, best purchasable) — for 5,000 gold, from Tovas Selvani. Shadowmere also waits nearby, outside Fort Farragut."},
-  {n:"Chorrol — North Country Stables",opt:"stables",loc:"mStables",b:{c:"rank",t:"B"},u:"Horses",o:"Sells the Chestnut Horse — Speed 34, Health 200 (Tier B) — for 2,500 gold, from Bongond."},
-  {n:"Leyawiin — Five Riders Stables",opt:"stables",loc:"mStables",b:{c:"rank",t:"D"},u:"Horses",o:"Sells the Paint Horse — Speed 28, Health 300 (Tier D) — for 500 gold, from Cat-Face."},
-  {n:"Skingrad — Grateful Pass Stables",opt:"stables",loc:"mStables",b:{c:"rank",t:"C"},u:"Horses",o:"Sells the Bay Horse — Speed 31, Health 250 (Tier C) — for 1,000 gold, from Ugak gra-Mogakh."},
-  {n:"Imperial City — Chestnut Handy Stables",opt:"stables",loc:"mStables",b:{c:"rank",t:"F"},u:"Horses",o:"Stocks several breeds and the free Armored Old Nag (just 5 Health — a joke horse), from Snak gra-Bura."},
+  {n:"Anvil — Horse Whisperer Stables",opt:"stables",loc:"mStables",ref:1,b:{c:"rank",t:"A"},u:"Horses",o:"Sells the White Horse — Speed 34, Health 400 (Tier A) — for 4,000 gold, from Clesa."},
+  {n:"Bravil — Bay Roan Stables",opt:"stables",loc:"mStables",ref:1,b:{c:"rank",t:"C"},u:"Horses",o:"Sells the Bay Horse — Speed 31, Health 250 (Tier C) — for 1,000 gold, from Isabeau Bienne."},
+  {n:"Bruma — Wildeye Stables",opt:"stables",loc:"mStables",ref:1,b:{c:"rank",t:"D"},u:"Horses",o:"Sells the Paint Horse — Speed 28, Health 300 (Tier D) — for 500 gold, from Petrine."},
+  {n:"Cheydinhal — Black Waterside Stables",opt:"stables",loc:"mStables",ref:1,b:{c:"rank",t:"A · Best buy"},u:"Horses",o:"Sells the Black Horse — Speed 38, Health 325 (Tier A, best purchasable) — for 5,000 gold, from Tovas Selvani. Shadowmere also waits nearby, outside Fort Farragut."},
+  {n:"Chorrol — North Country Stables",opt:"stables",loc:"mStables",ref:1,b:{c:"rank",t:"B"},u:"Horses",o:"Sells the Chestnut Horse — Speed 34, Health 200 (Tier B) — for 2,500 gold, from Bongond."},
+  {n:"Leyawiin — Five Riders Stables",opt:"stables",loc:"mStables",ref:1,b:{c:"rank",t:"D"},u:"Horses",o:"Sells the Paint Horse — Speed 28, Health 300 (Tier D) — for 500 gold, from Cat-Face."},
+  {n:"Skingrad — Grateful Pass Stables",opt:"stables",loc:"mStables",ref:1,b:{c:"rank",t:"C"},u:"Horses",o:"Sells the Bay Horse — Speed 31, Health 250 (Tier C) — for 1,000 gold, from Ugak gra-Mogakh."},
+  {n:"Imperial City — Chestnut Handy Stables",opt:"stables",loc:"mStables",ref:1,b:{c:"rank",t:"F"},u:"Horses",o:"Stocks several breeds and the free Armored Old Nag (just 5 Health — a joke horse), from Snak gra-Bura."},
 ];
 
 /* ---------- Walkthroughs + known bugs (keyed by normalized quest name) ---------- */
@@ -1069,7 +1071,9 @@ function render(){
           (q.x&&!q.u?'':'<a class="q-link" href="'+uespURL(q)+'" target="_blank" rel="noopener">Full walkthrough &amp; bug fixes on UESP ↗</a>')+
           '</div>';
       }
-      li.innerHTML='<div class="q-row"><input type="checkbox" '+(state[q.id]?"checked":"")+'>'+
+      const boxHTML = q.ref ? '<span class="q-refdot" aria-hidden="true"></span>'
+                            : '<input type="checkbox" '+(state[q.id]?"checked":"")+'>';
+      li.innerHTML='<div class="q-row">'+boxHTML+
         '<div class="q-main">'+caret+'<span class="q-text"><span class="q-name">'+q.n+badge+'</span></span></div></div>'+detail;
       ul.appendChild(li);
     });
@@ -1078,7 +1082,8 @@ function render(){
   // wire events
   root.querySelectorAll("li.q").forEach(li=>{
     const id=li.dataset.id;
-    li.querySelector("input").addEventListener("change",e=>{
+    const cb=li.querySelector("input");
+    if(cb)cb.addEventListener("change",e=>{
       if(e.target.checked)state[id]=true;else delete state[id];
       li.classList.toggle("done",e.target.checked);saveState();updateProgress();
     });
@@ -1138,9 +1143,17 @@ function updateProgress(){
   const order=view==="loc"?ORDER_LOC:ORDER_OPT;
   const secs=document.querySelectorAll(".phase");let idx=0,total=0,done=0;
   order.forEach(sid=>{
-    const items=Q.filter(q=>q[viewKey]===sid);if(!items.length)return;
-    let d=items.filter(q=>state[q.id]).length;total+=items.length;done+=d;
+    const all=Q.filter(q=>q[viewKey]===sid);if(!all.length)return;
     const sec=secs[idx++];if(!sec)return;
+    const items=all.filter(q=>!q.ref);           // reference rows don't count as progress
+    const mini=sec.querySelector(".phase-mini");
+    if(!items.length){                            // reference-only section
+      if(mini)mini.style.display="none";
+      sec.querySelector(".phase-count").textContent=all.length+" entries";
+      return;
+    }
+    if(mini)mini.style.display="";
+    let d=items.filter(q=>state[q.id]).length;total+=items.length;done+=d;
     const pct=Math.round(d/items.length*100);
     sec.querySelector(".phase-mini>i").style.width=pct+"%";
     sec.querySelector(".phase-count").textContent=d+" / "+items.length;
