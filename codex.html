@@ -210,6 +210,7 @@
   .badge.lvl{color:#a9d0f2;background:rgba(120,183,236,.18)}
   .badge.home{color:#d6b4ec;background:rgba(150,100,190,.2)}
   .badge.rank{color:#e6bd9a;background:rgba(190,120,70,.2)}
+  .badge.miss{color:#f0a98c;background:rgba(210,90,60,.22)}
 
   /* ---------- Quest detail ---------- */
   .q-detail{display:none;padding:4px 16px 16px 47px}
@@ -321,7 +322,7 @@ const SECT = {
   fighters:{t:"Phase 3 — Fighters Guild",s:"Low requirements, spread across Cyrodiil."},
   mages:{t:"Phase 4 — Mages Guild",s:"Seven city recommendations, then the Arcane University.",note:{type:"ok",text:"You need a recommendation from every city's hall before the University opens — a natural time to sweep up city side quests."}},
   thieves:{t:"Phase 5 — Thieves Guild",s:"Meet Armand Christophe at night in the IC Waterfront.",note:{type:"ok",text:"Rank up by selling stolen goods to fences. Meetings happen at night — don't carry a bounty."}},
-  brotherhood:{t:"Phase 6 — Dark Brotherhood",s:"Kill an innocent, then sleep. Longest, most rewarding line.",note:{type:"warn",text:"The Purification wipes out your own sanctuary — do every earlier contract first. Rewards include Shadowmere."}},
+  brotherhood:{t:"Phase 6 — Dark Brotherhood",s:"Kill an innocent, then sleep. Longest, most rewarding line.",note:{type:"warn",text:"The Purification is a POINT OF NO RETURN — it kills your entire Cheydinhal Sanctuary, so Ocheeva and the others can never give you work again. Finish all EIGHT sanctuary contracts first (flagged ‘Do before Purification’): A Watery Grave, Accidents Happen, Scheduled for Execution, The Assassinated Man, The Lonely Wanderer, Bad Medicine, Whodunit?, and Permanent Retirement. Each also has a hidden BONUS objective (extra pay) — do it before you report the kill. Completing the Purification rewards the horse Shadowmere; the questline then continues through Lucien’s dead-drop contracts."}},
   main:{t:"Phase 7 — Main Quest",s:"Close the gates and finish the story.",note:{type:"warn",text:"Save the finale for near the end — areas and NPCs close off once the story concludes."}},
   kotn:{t:"Phase 8 — Knights of the Nine (DLC)",s:"Begins in Anvil at the Chapel of Dibella.",note:{type:"ok",text:"Rewards the full Crusader's Relics set. Crimes break your holy status — play clean here."}},
   daedric:{t:"Phase 9 — Daedric Shrine Quests",s:"All 15 artifacts. Several have level minimums.",note:{type:"warn",text:"Bring each shrine's offering (see Materials). Boethiah & Clavicus Vile need Level 20."}},
@@ -342,7 +343,7 @@ const SECT = {
   // location: guilds (your order)
   gMages:{t:"Mages Guild",s:"Recommendations, then the Arcane University line.",note:{type:"ok",text:"Your pick to run first. Get all seven recommendations to unlock the University."}},
   gFighters:{t:"Fighters Guild",s:"The full Fighters Guild questline."},
-  gBrotherhood:{t:"Dark Brotherhood",s:"The full assassin questline.",note:{type:"warn",text:"The Purification is a point of no return — finish earlier contracts first."}},
+  gBrotherhood:{t:"Dark Brotherhood",s:"The full assassin questline.",note:{type:"warn",text:"The Purification is a POINT OF NO RETURN — it kills your entire Cheydinhal Sanctuary, so Ocheeva and the others can never give you work again. Finish all EIGHT sanctuary contracts first (flagged ‘Do before Purification’): A Watery Grave, Accidents Happen, Scheduled for Execution, The Assassinated Man, The Lonely Wanderer, Bad Medicine, Whodunit?, and Permanent Retirement. Each also has a hidden BONUS objective (extra pay) — do it before you report the kill. Completing the Purification rewards the horse Shadowmere; the questline then continues through Lucien’s dead-drop contracts."}},
   gThieves:{t:"Thieves Guild",s:"The full Gray Fox questline."},
   gArena:{t:"The Arena",s:"Imperial City bloodsport — ranks to Grand Champion."},
   // location: misc
@@ -431,14 +432,14 @@ const Q = [
   {n:"The Ultimate Heist",opt:"thieves",loc:"gThieves",u:"The_Ultimate_Heist",o:"Finale: infiltrate the Imperial Palace and steal an Elder Scroll for the Gray Fox."},
   // --- Dark Brotherhood ---
   {n:"A Knife in the Dark",opt:"brotherhood",loc:"gBrotherhood",u:"A_Knife_in_the_Dark",o:"After Lucien Lachance visits you in your sleep, prove yourself by killing Rufio at the Inn of Ill Omen."},
-  {n:"A Watery Grave",opt:"brotherhood",loc:"gBrotherhood",u:"A_Watery_Grave",o:"Assassinate a captain aboard a moored ship."},
-  {n:"Accidents Happen",opt:"brotherhood",loc:"gBrotherhood",u:"Accidents_Happen",o:"Stage a death so it looks like an accident for the bonus."},
-  {n:"Scheduled for Execution",opt:"brotherhood",loc:"gBrotherhood",u:"Scheduled_for_Execution",o:"Kill a target hiding inside a prison."},
-  {n:"The Assassinated Man",opt:"brotherhood",loc:"gBrotherhood",u:"The_Assassinated_Man",o:"Eliminate a man who faked his own death."},
-  {n:"The Lonely Wanderer",opt:"brotherhood",loc:"gBrotherhood",u:"The_Lonely_Wanderer",o:"Silence a reclusive target for the bonus without being seen."},
-  {n:"Bad Medicine",opt:"brotherhood",loc:"gBrotherhood",u:"Bad_Medicine",o:"Wipe out a mercenary camp on contract."},
-  {n:"Whodunit?",opt:"brotherhood",loc:"gBrotherhood",u:"Whodunit%3F",o:"The famous Summitmist Manor party — pick off five guests one by one without raising alarm for the full bonus."},
-  {n:"Permanent Retirement",opt:"brotherhood",loc:"gBrotherhood",u:"Permanent_Retirement",o:"Assassinate a retired adventurer in his fortified home."},
+  {n:"A Watery Grave",opt:"brotherhood",loc:"gBrotherhood",b:{c:"miss",t:"Do before Purification"},u:"A_Watery_Grave",o:"Assassinate a captain aboard a moored ship."},
+  {n:"Accidents Happen",opt:"brotherhood",loc:"gBrotherhood",b:{c:"miss",t:"Do before Purification"},u:"Accidents_Happen",o:"Stage a death so it looks like an accident for the bonus."},
+  {n:"Scheduled for Execution",opt:"brotherhood",loc:"gBrotherhood",b:{c:"miss",t:"Do before Purification"},u:"Scheduled_for_Execution",o:"Kill a target hiding inside a prison."},
+  {n:"The Assassinated Man",opt:"brotherhood",loc:"gBrotherhood",b:{c:"miss",t:"Do before Purification"},u:"The_Assassinated_Man",o:"Eliminate a man who faked his own death."},
+  {n:"The Lonely Wanderer",opt:"brotherhood",loc:"gBrotherhood",b:{c:"miss",t:"Do before Purification"},u:"The_Lonely_Wanderer",o:"Silence a reclusive target for the bonus without being seen."},
+  {n:"Bad Medicine",opt:"brotherhood",loc:"gBrotherhood",b:{c:"miss",t:"Do before Purification"},u:"Bad_Medicine",o:"Wipe out a mercenary camp on contract."},
+  {n:"Whodunit?",opt:"brotherhood",loc:"gBrotherhood",b:{c:"miss",t:"Do before Purification"},u:"Whodunit%3F",o:"The famous Summitmist Manor party — pick off five guests one by one without raising alarm for the full bonus."},
+  {n:"Permanent Retirement",opt:"brotherhood",loc:"gBrotherhood",b:{c:"miss",t:"Do before Purification"},u:"Permanent_Retirement",o:"Assassinate a retired adventurer in his fortified home."},
   {n:"Of Secret and Shadow",opt:"brotherhood",loc:"gBrotherhood",u:"Of_Secret_and_Shadow",o:"Lucien reveals a traitor in the family and orders the Purification."},
   {n:"The Purification",opt:"brotherhood",loc:"gBrotherhood",b:{c:"lvl",t:"Irreversible"},u:"The_Purification",o:"Point of no return: eliminate every member of your own Cheydinhal sanctuary. Nets you the horse Shadowmere."},
   {n:"Affairs of a Wizard",opt:"brotherhood",loc:"gBrotherhood",u:"Affairs_of_a_Wizard",o:"First dead-drop contract after the Purification."},
